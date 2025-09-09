@@ -152,7 +152,7 @@ function App() {
 
   return (
     <div>
-      <div className="mx-auto min-h-screen w-full max-w-sm bg-white">
+      <div className="mx-auto min-h-screen w-full max-w-sm bg-white shadow-lg md:rounded-lg md:min-h-0 md:my-4">
         <Header />
         <main className="px-4 pb-24">
           {!submitted ? (
@@ -215,7 +215,7 @@ function App() {
           )}
         </main>
       </div>
-      <footer className="fixed bottom-0 w-full p-1 text-center text-xs text-neutral-500 bg-white">
+      <footer className="fixed bottom-0 w-full p-1 text-center text-xs text-neutral-500 bg-white md:relative md:bg-transparent md:mt-4">
         2025 Boga Group. All Rights Reserved
       </footer>
     </div>
