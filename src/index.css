@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mobile-only viewport constraints */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-neutral-50 text-neutral-900;
+}
+
+/* Hide any desktop size rendering; app is mobile-only */
+@media (min-width: 768px) {
+  .mobile-only-mask::before {
+    content: "This app is designed for mobile view";
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: white;
+    color: #111827;
+    z-index: 50;
+    font-weight: 600;
+  }
+}

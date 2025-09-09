@@ -1,0 +1,72 @@
+import { ChevronRight, QrCode } from 'lucide-react'
+import type { LoyaltyCardProps } from '../types'
+
+export function LoyaltyCard(props: LoyaltyCardProps) {
+  const { colorFrom, colorTo, backgroundImageUrl, tierLabel, pointsLabel, cardNumber, holderLabel, selected, onClick, avatarUrl, hideChoose } = props
+  return (
+    <div className="rounded-none shadow-card p-0" onClick={onClick}>
+      <div
+        className="relative rounded-lg p-3 text-white overflow-hidden"
+        style={backgroundImageUrl
+          ? {
+            backgroundImage: `url(${backgroundImageUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }
+          : { background: `linear-gradient(135deg, ${colorFrom}, ${colorTo})` }}
+      >
+        {/* Watermark letter */}
+        <div className="pointer-events-none select-none absolute -right-3 top-0 text-white opacity-20 font-black" style={{ fontSize: 160, lineHeight: 1 }}>
+          {tierLabel?.[0] ?? 'B'}
+        </div>
+
+        {/* Top row: centered tier badge and Show QR */}
+        <div className="relative flex items-start justify-between">
+          <div className="h-20 w-20 rounded-full overflow-hidden ring-1 ring-white/20 -mt-1">
+            <img src={avatarUrl || '/profpict.jpg'} alt="avatar" className="h-full w-full object-cover" />
+          </div>
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <span className="rounded-md bg-white/30 px-2 py-[2px] text-xs font-extrabold uppercase tracking-wide text-white shadow-sm">
+              {tierLabel}
+            </span>
+          </div>
+          <button className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-transparent px-2 py-1 text-xs font-medium text-white">
+            <QrCode className="h-3 w-3" /> Show QR
+          </button>
+        </div>
+
+        {/* Card number */}
+        <div className="mt-[-15px] text-[18px] tracking-[0.25em] font-semibold text-neutral-900/70 text-right">
+          {cardNumber}
+          <div className="border-t border-white/70" />
+        </div>
+        {/* <div className="mt-1 border-t border-white/70" /> */}
+
+        {/* Points row */}
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-white/90">Your points</div>
+          <div className="text-lg font-semibold text-neutral-900/70">{pointsLabel}</div>
+        </div>
+
+        {/* Bottom row */}
+        <div className="mt-3 flex items-center justify-between">
+          <div>
+            <div className="text-sm text-white/90">Card Holder</div>
+            <div className="mt-1 text-lg font-extrabold leading-none text-white drop-shadow-sm">{holderLabel}</div>
+          </div>
+          <button className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs text-amber-500 font-semibold shadow">
+            My XP Status <ChevronRight className="h-3 w-3" />
+          </button>
+        </div>
+      </div>
+      {!hideChoose && (
+        <label className="mt-2 flex w-full items-center justify-center gap-2 p-2 text-sm text-center">
+          <input type="radio" name="card" checked={!!selected} onChange={onClick} required />
+          <span>Choose</span>
+        </label>
+      )}
+    </div>
+  )
+}
+
+
