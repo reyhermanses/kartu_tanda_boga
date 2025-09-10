@@ -16,9 +16,9 @@ export function LoyaltyCard(props: LoyaltyCardProps) {
           : { background: `linear-gradient(135deg, ${colorFrom}, ${colorTo})` }}
       >
         {/* Watermark letter */}
-        <div className="pointer-events-none select-none absolute -right-3 top-0 text-white opacity-20 font-black" style={{ fontSize: 160, lineHeight: 1 }}>
+        {/* <div className="pointer-events-none select-none absolute -right-3 top-0 text-white opacity-20 font-black" style={{ fontSize: 160, lineHeight: 1 }}>
           {tierLabel?.[0] ?? 'B'}
-        </div>
+        </div> */}
 
         {/* Top row: centered tier badge and Show QR */}
         <div className="relative flex items-start justify-between">

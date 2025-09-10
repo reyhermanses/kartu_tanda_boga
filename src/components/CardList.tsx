@@ -47,7 +47,7 @@ export function CardList({ selectedIndex, onSelect }: Props) {
   }
 
   return (
-    <div className="space-y-4 -mx-4">
+    <div className="space-y-4 p-4 -mx-4">
       {images.map((img, idx) => (
         <LoyaltyCard
           key={idx}

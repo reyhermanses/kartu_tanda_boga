@@ -152,7 +152,7 @@ function App() {
 
   return (
     <div>
-      <div className="mx-auto min-h-screen w-full max-w-sm bg-white shadow-lg md:rounded-lg md:min-h-0 md:my-4">
+      <div className="w-full bg-white shadow-lg md:rounded-lg md:min-h-0 md:my-4 md:max-w-[450px] md:w-[550px]">
         <Header />
         <main className="px-4 pb-24">
           {!submitted ? (
