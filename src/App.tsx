@@ -136,7 +136,7 @@ function App() {
     }
     return (
       <>
-        <div className="-mx-0 rounded-lg border border-neutral-200 overflow-hidden p-6">
+        <div className="-mx-0 overflow-hidden p-6">
           <div className="text-sm text-neutral-500 text-center">Your card has been updated!</div>
         </div>
         <button

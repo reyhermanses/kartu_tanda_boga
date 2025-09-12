@@ -6,7 +6,7 @@ export function LoyaltyCard(props: LoyaltyCardProps) {
   return (
     <div className="rounded-none shadow-card p-0" onClick={onClick}>
       <div
-        className="relative rounded-lg p-3 text-white overflow-hidden"
+        className="relative h-[266px] rounded-lg p-4 text-white overflow-hidden"
         style={backgroundImageUrl
           ? {
             backgroundImage: `url(${backgroundImageUrl})`,
@@ -22,13 +22,15 @@ export function LoyaltyCard(props: LoyaltyCardProps) {
 
         {/* Top row: centered tier badge and Show QR */}
         <div className="relative flex items-start justify-between">
-          <div className="h-20 w-20 rounded-full overflow-hidden ring-1 ring-white/20 -mt-1">
-            <img src={avatarUrl || '/profpict.jpg'} alt="avatar" className="h-full w-full object-cover" />
-          </div>
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <span className="rounded-md bg-white/30 px-2 py-[2px] text-xs font-extrabold uppercase tracking-wide text-white shadow-sm">
-              {tierLabel}
-            </span>
+          <div className='flex flex-row items-center justify-center gap-2'>
+            <div className="h-16 w-16 rounded-full overflow-hidden ring-1 ring-white/20 -mt-1">
+              <img src={avatarUrl || '/profpict.jpg'} alt="avatar" className="h-full w-full object-cover" />
+            </div>
+            {/* <div className="absolute left-1/2 -translate-x-1/2"> */}
+              {/* <span className="rounded-md bg-white/30 px-2 py-[2px] text-xs font-extrabold uppercase tracking-wide text-white shadow-sm"> */}
+                {tierLabel}
+              {/* </span> */}
+            {/* </div> */}
           </div>
           <button className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-transparent px-2 py-1 text-xs font-medium text-white">
             <QrCode className="h-3 w-3" /> Show QR
@@ -36,7 +38,7 @@ export function LoyaltyCard(props: LoyaltyCardProps) {
         </div>
 
         {/* Card number */}
-        <div className="mt-[-15px] text-[18px] tracking-[0.25em] font-semibold text-neutral-900/70 text-right">
+        <div className="mt-[20px] text-[18px] tracking-[0.25em] font-semibold text-white/90 text-right">
           {cardNumber}
           <div className="border-t border-white/70" />
         </div>
@@ -45,11 +47,11 @@ export function LoyaltyCard(props: LoyaltyCardProps) {
         {/* Points row */}
         <div className="flex items-center justify-between">
           <div className="text-sm text-white/90">Your points</div>
-          <div className="text-lg font-semibold text-neutral-900/70">{pointsLabel}</div>
+          <div className="text-lg font-semibold text-white/90">{pointsLabel}</div>
         </div>
 
         {/* Bottom row */}
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-12 flex items-center justify-between">
           <div>
             <div className="text-sm text-white/90">Card Holder</div>
             <div className="mt-1 text-lg font-extrabold leading-none text-white drop-shadow-sm">{holderLabel}</div>

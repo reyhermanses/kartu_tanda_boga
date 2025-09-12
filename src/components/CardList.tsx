@@ -47,14 +47,14 @@ export function CardList({ selectedIndex, onSelect }: Props) {
   }
 
   return (
-    <div className="space-y-4 p-4 -mx-4">
+    <div className="space-y-4 p-2 -mx-4">
       {images.map((img, idx) => (
         <LoyaltyCard
           key={idx}
           backgroundImageUrl={img}
           colorFrom="#111827"
           colorTo="#111827"
-          tierLabel="BOGA"
+          tierLabel=""
           name=""
           pointsLabel="0 pts"
           cardNumber="6202 1000 8856 6962"
