@@ -116,9 +116,9 @@ function App() {
     window.open(target, '_blank')
   }
 
-  function navigateHome() {
-    window.location.href = '/'
-  }
+  // function navigateHome() {
+  //   window.location.href = '/'
+  // }
 
   const primaryButtonClass =
     "w-[200px] rounded-md border border-neutral-300 bg-red-600 py-3 text-white font-semibold active:scale-[0.99] block mx-auto"
