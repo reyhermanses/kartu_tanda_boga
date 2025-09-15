@@ -4,6 +4,7 @@ import { FormSection } from './components/FormSection'
 import { CardPicker } from './components/CardPicker'
 import { CardList } from './components/CardList'
 import { LoyaltyCard } from './components/LoyaltyCard'
+import { CouponCarousel } from './components/CouponCarousel'
 import type { CardTier, FormErrors, FormValues, CreateMembershipResponse } from './types'
 
 function App() {
@@ -123,7 +124,7 @@ function App() {
     "w-[200px] rounded-md border border-neutral-300 bg-red-600 py-3 text-white font-semibold active:scale-[0.99] block mx-auto"
 
   function renderPostSubmitActions() {
-    if (created?.isEligibleForCoupon && created.couponImage) {
+    if (created?.isEligibleForCoupon && created.coupons && created.coupons.length > 0) {
       return (
         <button
           type="button"
@@ -141,7 +142,7 @@ function App() {
         </div>
         <button
           type="button"
-          onClick={navigateHome}
+          onClick={handleClaimClick}
           className={primaryButtonClass}
         >
           Open Boga App
@@ -152,9 +153,9 @@ function App() {
 
   return (
     <div>
-      <div className="w-full bg-white shadow-lg md:rounded-lg md:min-h-0 md:my-4 md:max-w-[450px] md:w-[550px]">
+      <div className="w-full bg-white  md:min-h-0 md:my-4 md:max-w-[450px] md:w-[550px]">
         <Header />
-        <main className="px-4 pb-24">
+        <main className={`px-4 ${!submitted ? 'pb-24' : 'pb-4'}`}>
           {!submitted ? (
             <>
               <form onSubmit={handleSubmit} noValidate>
@@ -178,8 +179,8 @@ function App() {
               </form>
             </>
           ) : (
-            <div className="mt-4 -mx-4">
-              <div className="rounded-xl border border-neutral-200 bg-white/90 shadow-sm p-4 space-y-4">
+            <div className="-mx-4">
+              <div className="bg-white/90 p-4 space-y-4">
                 <div>
                   <div className="text-xs text-neutral-500 mb-2">Your card</div>
                   <LoyaltyCard
@@ -195,16 +196,10 @@ function App() {
                     hideChoose
                   />
                 </div>
-                {created?.isEligibleForCoupon && created.couponImage && (
+                {created?.isEligibleForCoupon && created.coupons && created.coupons.length > 0 && (
                   <div className="border-t border-neutral-200 pt-4">
-                    <div className="text-xs text-neutral-500 mb-2">Special offer</div>
-                    <div className="overflow-hidden rounded-lg border border-neutral-200">
-                      <img src={created.couponImage} alt={created.couponName ?? 'Coupon'} className="w-full h-40 object-cover" />
-                      <div className="p-3 text-center">
-                        <div className="text-sm text-neutral-500">Congratulations you just received this promo :</div>
-                        <div className="mt-1 text-base font-semibold">{created.couponName ?? 'Coupon'}</div>
-                      </div>
-                    </div>
+                    <div className="text-xs text-neutral-500 mb-2">Special offers</div>
+                    <CouponCarousel coupons={created.coupons} />
                   </div>
                 )}
                 <div className="pt-2">
@@ -215,7 +210,7 @@ function App() {
           )}
         </main>
       </div>
-      <footer className="fixed bottom-0 w-full p-1 text-center text-xs text-neutral-500 bg-white md:relative md:bg-transparent md:mt-4">
+      <footer className={`w-full p-1 text-center text-xs text-neutral-500 ${!submitted ? 'fixed bottom-0 bg-white md:relative md:bg-transparent md:mt-4' : 'relative bg-transparent mt-4'}`}>
         2025 Boga Group. All Rights Reserved
       </footer>
     </div>

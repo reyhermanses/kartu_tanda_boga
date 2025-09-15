@@ -23,9 +23,9 @@ export function LoyaltyCard(props: LoyaltyCardProps) {
         {/* Top row: centered tier badge and Show QR */}
         <div className="relative flex items-start justify-between">
           <div className='flex flex-row items-center justify-center gap-2'>
-            <div className="h-16 w-16 rounded-full overflow-hidden ring-1 ring-white/20 -mt-1">
-              <img src={avatarUrl || '/profpict.jpg'} alt="avatar" className="h-full w-full object-cover" />
-            </div>
+          <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-white -mt-1">
+            <img src={avatarUrl || '/profpict.jpg'} alt="avatar" className="h-full w-full object-cover" />
+          </div>
             {/* <div className="absolute left-1/2 -translate-x-1/2"> */}
               {/* <span className="rounded-md bg-white/30 px-2 py-[2px] text-xs font-extrabold uppercase tracking-wide text-white shadow-sm"> */}
                 {tierLabel}

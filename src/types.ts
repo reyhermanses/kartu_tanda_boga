@@ -33,13 +33,18 @@ export type FormErrors = {
 }
 
 
+export type Coupon = {
+  image: string
+  name: string
+}
+
 export type CreateMembershipResponse = {
   data: {
     cardImage: string
-    couponImage: string | null
-    couponName: string | null
     tierId: number
+    totalCoupons: number
     serial: string
+    coupons: Coupon[]
     name: string
     tierTitle: string
     profileImage: string
