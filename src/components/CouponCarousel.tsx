@@ -135,7 +135,7 @@ export function CouponCarousel({ coupons }: Props) {
         onTouchEnd={handleTouchEnd}
       >
         <div 
-          className="flex transition-transform duration-300 ease-in-out"
+          className="flex h-48 transition-transform duration-300 ease-in-out"
           style={{ 
             transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`,
             transition: isDragging ? 'none' : 'transform 300ms ease-in-out'
@@ -146,7 +146,7 @@ export function CouponCarousel({ coupons }: Props) {
               <img 
                 src={group.image} 
                 alt={`Coupon ${index + 1}`} 
-                className="w-full h-40 object-cover pointer-events-none" 
+                className="w-full h-48 object-cover pointer-events-none" 
                 draggable={false}
               />
             </div>
