@@ -5,6 +5,7 @@ import { CardPicker } from './components/CardPicker'
 import { CardList } from './components/CardList'
 import { LoyaltyCard } from './components/LoyaltyCard'
 import { CouponCarousel } from './components/CouponCarousel'
+import { AlertModal } from './components/AlertModal'
 import type { CardTier, FormErrors, FormValues, CreateMembershipResponse } from './types'
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
   const [selectedCardUrl, setSelectedCardUrl] = useState<string | null>(null)
   const [created, setCreated] = useState<CreateMembershipResponse['data'] | null>(null)
   const [cardError, setCardError] = useState<string | null>(null)
+  const [showAlert, setShowAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
   function updateValues(next: Partial<FormValues>) {
     setValues((prev) => ({ ...prev, ...next }))
@@ -50,10 +53,16 @@ function App() {
     e.preventDefault()
     const nextErrors = validate(values)
     setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
+    if (Object.keys(nextErrors).length > 0) {
+      setAlertMessage('Please fill in all required fields correctly.')
+      setShowAlert(true)
+      return
+    }
 
     if (selectedCardIdx === null) {
       setCardError('Please choose a card design')
+      setAlertMessage('Please choose a card design to continue.')
+      setShowAlert(true)
       return
     }
 
@@ -94,13 +103,23 @@ function App() {
       })
       if (!res.ok) throw new Error(`Create failed: ${res.status}`)
       const data: CreateMembershipResponse = await res.json()
-      setCreated(data.data)
+      
+      if (data.status === 'Failed') {
+        setAlertMessage(data.message || 'Failed to register Boga App')
+        setShowAlert(true)
+        setCreated(null)
+        return // Jangan lanjut ke setSubmitted(true)
+      } else {
+        setCreated(data.data)
+        setSubmitted(true)
+      }
     } catch (err) {
       console.error(err)
+      setAlertMessage('Network error. Please check your connection and try again.')
+      setShowAlert(true)
       setCreated(null)
+      return // Jangan lanjut ke setSubmitted(true)
     }
-
-    setSubmitted(true)
   }
 
   function handleClaimClick() {
@@ -114,6 +133,11 @@ function App() {
 
     const target = isAndroid ? PLAYSTORE_URL : isIOS ? APPSTORE_URL : FALLBACK_URL
     window.open(target, '_blank')
+  }
+
+  function closeAlert() {
+    setShowAlert(false)
+    setAlertMessage('')
   }
 
   // function navigateHome() {
@@ -161,8 +185,8 @@ function App() {
               <form onSubmit={handleSubmit} noValidate>
                 <FormSection values={values} errors={errors} onChange={updateValues} />
                 <CardPicker selected={selectedTier} onChange={setSelectedTier} />
-                <div className="mt-8">
-                  <p className="text-sm text-neutral-600 mb-2">Available card designs</p>
+                <div className="mt-3">
+                  {/* <p className="text-sm text-neutral-600 mb-2">Available card designs</p> */}
                   <CardList
                     selectedIndex={selectedCardIdx ?? undefined}
                     onSelect={(idx, url) => {
@@ -187,7 +211,7 @@ function App() {
                     backgroundImageUrl={(created?.cardImage || selectedCardUrl) ?? undefined}
                     colorFrom="#ef4444"
                     colorTo="#b91c1c"
-                    tierLabel={created?.tierTitle || 'BOGA'}
+                    tierLabel={created?.tierTitle || ''}
                     name={created?.name || values.name}
                     pointsLabel={created ? String(created.point) : '0 pts'}
                     cardNumber={created?.serial || '6202 1000 8856 6962'}
@@ -213,6 +237,14 @@ function App() {
       <footer className={`w-full p-1 text-center text-xs text-neutral-500 ${!submitted ? 'fixed bottom-0 bg-white md:relative md:bg-transparent md:mt-4' : 'relative bg-transparent mt-4'}`}>
         2025 Boga Group. All Rights Reserved
       </footer>
+      
+      {/* Alert Modal */}
+      <AlertModal
+        isOpen={showAlert}
+        onClose={closeAlert}
+        title="Registration Failed"
+        message={alertMessage}
+      />
     </div>
   )
 }
