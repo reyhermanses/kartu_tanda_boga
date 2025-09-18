@@ -6,9 +6,10 @@ type Props = {
   values: FormValues
   errors: FormErrors
   onChange: (next: Partial<FormValues>) => void
+  onPhotoError?: (message: string) => void
 }
 
-export function FormSection({ values, errors, onChange }: Props) {
+export function FormSection({ values, errors, onChange, onPhotoError }: Props) {
   return (
     <section className="space-y-4">
       <InputField
@@ -47,6 +48,7 @@ export function FormSection({ values, errors, onChange }: Props) {
         required
         error={errors.photoFile}
         onChange={(file) => onChange({ photoFile: file })}
+        onError={onPhotoError}
       />
       <p className="mt-4 text-sm font-semibold">Choose Card :</p>
     </section>

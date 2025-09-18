@@ -20,15 +20,65 @@ function App() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitted, setSubmitted] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [compressedAvatarUrl, setCompressedAvatarUrl] = useState<string | null>(null)
   const [selectedCardIdx, setSelectedCardIdx] = useState<number | null>(null)
   const [selectedCardUrl, setSelectedCardUrl] = useState<string | null>(null)
   const [created, setCreated] = useState<CreateMembershipResponse['data'] | null>(null)
   const [cardError, setCardError] = useState<string | null>(null)
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   function updateValues(next: Partial<FormValues>) {
     setValues((prev) => ({ ...prev, ...next }))
+  }
+
+  // Smart image compression function
+  async function compressImage(file: File, maxSizeKB: number = 1024): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const img = new Image()
+      
+      img.onload = () => {
+        // Calculate new dimensions (max 1200px)
+        const maxDimension = 1200
+        let { width, height } = img
+        
+        if (width > height) {
+          if (width > maxDimension) {
+            height = (height * maxDimension) / width
+            width = maxDimension
+          }
+        } else {
+          if (height > maxDimension) {
+            width = (width * maxDimension) / height
+            height = maxDimension
+          }
+        }
+        
+        canvas.width = width
+        canvas.height = height
+        
+        // Draw and compress
+        ctx?.drawImage(img, 0, 0, width, height)
+        
+        // Try different quality levels
+        let quality = 0.9
+        let dataUrl = canvas.toDataURL('image/jpeg', quality)
+        
+        // If still too large, reduce quality
+        while (dataUrl.length > maxSizeKB * 1024 * 1.33 && quality > 0.1) { // 1.33 for base64 overhead
+          quality -= 0.1
+          dataUrl = canvas.toDataURL('image/jpeg', quality)
+        }
+        
+        resolve(dataUrl)
+      }
+      
+      img.onerror = () => reject(new Error('Failed to load image'))
+      img.src = URL.createObjectURL(file)
+    })
   }
 
   function validate(v: FormValues): FormErrors {
@@ -45,17 +95,35 @@ function App() {
       nextErrors.email = 'Enter a valid email address'
     }
     if (!v.birthday) nextErrors.birthday = 'Birthday is required'
-    if (!v.photoFile) nextErrors.photoFile = 'Photo is required'
+    if (!v.photoFile) {
+      nextErrors.photoFile = 'Photo is required'
+    }
     return nextErrors
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    
+    // Prevent double submission
+    if (isSubmitting) {
+      console.log('Already submitting, ignoring duplicate request')
+      return
+    }
+    
+    // Reset any previous errors
+    setErrors({})
+    setCardError(null)
+    setAlertMessage('')
+    setShowAlert(false)
+    
+    setIsSubmitting(true)
+    
     const nextErrors = validate(values)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) {
       setAlertMessage('Please fill in all required fields correctly.')
       setShowAlert(true)
+      setIsSubmitting(false)
       return
     }
 
@@ -63,76 +131,127 @@ function App() {
       setCardError('Please choose a card design')
       setAlertMessage('Please choose a card design to continue.')
       setShowAlert(true)
+      setIsSubmitting(false)
       return
     }
+    
+    console.log('Starting submission with:', {
+      selectedCardUrl,
+      selectedCardIdx,
+      hasPhotoFile: !!values.photoFile,
+      isSubmitting
+    })
 
-    // Build base64 for profileImage
+    // Build base64 for profileImage with smart compression
     let profileBase64: string | null = null
     if (values.photoFile) {
-      profileBase64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => {
-          const res = typeof reader.result === 'string' ? reader.result : ''
-          // Strip data URL prefix if present
-          const commaIdx = res.indexOf(',')
-          resolve(commaIdx >= 0 ? res.substring(commaIdx + 1) : res)
-        }
-        reader.onerror = () => reject(reader.error)
-        reader.readAsDataURL(values.photoFile as File)
-      })
-      const url = URL.createObjectURL(values.photoFile)
-      if (avatarUrl) URL.revokeObjectURL(avatarUrl)
-      setAvatarUrl(url)
+      try {
+        console.log('Original file size:', values.photoFile.size, 'bytes')
+        
+        // Use smart compression to avoid "entity too large" error
+        profileBase64 = await compressImage(values.photoFile as File, 1024) // Max 1MB
+        
+        console.log('Compressed base64 length:', profileBase64.length)
+        console.log('Compressed base64 preview:', profileBase64.substring(0, 100))
+        
+        // Store compressed image for display
+        setCompressedAvatarUrl(profileBase64)
+        
+        const url = URL.createObjectURL(values.photoFile)
+        if (avatarUrl) URL.revokeObjectURL(avatarUrl)
+        setAvatarUrl(url)
+      } catch (error) {
+        console.error('Error processing image:', error)
+        setAlertMessage('Error processing image. Please try again.')
+        setShowAlert(true)
+        setIsSubmitting(false)
+        return
+      }
     }
 
     try {
+      const requestPayload = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        birthday: values.birthday,
+        profileImage: profileBase64,
+        cardImage: selectedCardUrl
+      }
+      
+      console.log('Request payload:', {
+        ...requestPayload,
+        profileImage: profileBase64 ? `${profileBase64.substring(0, 50)}...` : null
+      })
+      
       const res = await fetch('https://alpha-api.mybogaloyalty.id/membership-card/create', {
         method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
         headers: {
           'X-BOGAMBC-Key': 'ajCJotQ8Ug1USZS3KuoXbqaazY59CAvI',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify({
-          name: values.name,
-          email: values.email,
-          phone: values.phone,
-          birthday: values.birthday,
-          profileImage: profileBase64,
-          cardImage: selectedCardUrl
-        }),
+        body: JSON.stringify(requestPayload),
+        // Add timeout to prevent hanging requests
+        signal: AbortSignal.timeout(30000) // 30 second timeout
       })
-      if (!res.ok) throw new Error(`Create failed: ${res.status}`)
+      if (!res.ok) {
+        const errorText = await res.text()
+        console.error('API Error Response:', {
+          status: res.status,
+          statusText: res.statusText,
+          body: errorText
+        })
+        throw new Error(`Create failed: ${res.status}`)
+      }
       const data: CreateMembershipResponse = await res.json()
       
       if (data.status === 'Failed') {
         setAlertMessage(data.message || 'Failed to register Boga App')
         setShowAlert(true)
         setCreated(null)
+        setIsSubmitting(false)
         return // Jangan lanjut ke setSubmitted(true)
       } else {
+        console.log('API Response profileImage:', data.data.profileImage?.substring(0, 100))
         setCreated(data.data)
         setSubmitted(true)
+        setIsSubmitting(false)
       }
     } catch (err) {
-      console.error(err)
-      setAlertMessage('Network error. Please check your connection and try again.')
+      console.error('Submit error:', err)
+      
+      // Handle different types of errors
+      if (err instanceof Error) {
+        if (err.name === 'TimeoutError') {
+          setAlertMessage('Request timeout. Please try again.')
+        } else if (err.name === 'AbortError') {
+          setAlertMessage('Request was cancelled. Please try again.')
+        } else {
+          setAlertMessage('Network error. Please check your connection and try again.')
+        }
+      } else {
+        setAlertMessage('An unexpected error occurred. Please try again.')
+      }
+      
       setShowAlert(true)
       setCreated(null)
+      setIsSubmitting(false)
       return // Jangan lanjut ke setSubmitted(true)
     }
   }
 
   function handleClaimClick() {
-    const ua = navigator.userAgent || navigator.vendor
-    const isAndroid = /Android/i.test(ua)
-    const isIOS = /iPhone|iPad|iPod/i.test(ua)
-
-    const PLAYSTORE_URL = (import.meta as any).env?.VITE_PLAYSTORE_URL || 'https://play.google.com/store/search?q=Boga%20Group'
-    const APPSTORE_URL = (import.meta as any).env?.VITE_APPSTORE_URL || 'https://apps.apple.com/'
-    const FALLBACK_URL = (import.meta as any).env?.VITE_BOGA_LANDING_URL || 'https://www.bogagroup.com/'
-
-    const target = isAndroid ? PLAYSTORE_URL : isIOS ? APPSTORE_URL : FALLBACK_URL
-    window.open(target, '_blank')
+    // Use smart deeplink that automatically handles device detection and store redirection
+    const DEEPLINK_URL = 'https://bogaapp.boga.id'
+    
+    // Open deeplink - this will automatically:
+    // - Open Boga App if installed
+    // - Redirect to appropriate store (Play Store for Android, App Store for iOS) if not installed
+    // - Fallback to website for other devices
+    window.open(DEEPLINK_URL, '_blank')
   }
 
   function closeAlert() {
@@ -183,7 +302,15 @@ function App() {
           {!submitted ? (
             <>
               <form onSubmit={handleSubmit} noValidate>
-                <FormSection values={values} errors={errors} onChange={updateValues} />
+                <FormSection 
+                  values={values} 
+                  errors={errors} 
+                  onChange={updateValues}
+                  onPhotoError={(message: string) => {
+                    setAlertMessage(message)
+                    setShowAlert(true)
+                  }}
+                />
                 <CardPicker selected={selectedTier} onChange={setSelectedTier} />
                 <div className="mt-3">
                   {/* <p className="text-sm text-neutral-600 mb-2">Available card designs</p> */}
@@ -197,8 +324,16 @@ function App() {
                   />
                   {cardError && <p className="mt-2 text-sm text-red-600">{cardError}</p>}
                 </div>
-                <button type="submit" className="mt-6 w-full rounded-full bg-rose-600 py-3 text-white font-semibold active:scale-[0.99]">
-                  Submit
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className={`mt-6 w-full rounded-full py-3 text-white font-semibold active:scale-[0.99] ${
+                    isSubmitting 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-rose-600 hover:bg-rose-700'
+                  }`}
+                >
+                  {isSubmitting ? 'Creating Card...' : 'Submit'}
                 </button>
               </form>
             </>
@@ -216,7 +351,17 @@ function App() {
                     pointsLabel={created ? String(created.point) : '0 pts'}
                     cardNumber={created?.serial || '6202 1000 8856 6962'}
                     holderLabel={created?.name || values.name}
-                    avatarUrl={created?.profileImage || avatarUrl || undefined}
+                    avatarUrl={(() => {
+                      // Use compressed image that user uploaded, not from API response
+                      const finalAvatarUrl = compressedAvatarUrl || avatarUrl || undefined
+                      
+                      console.log('Final avatarUrl for LoyaltyCard:', finalAvatarUrl?.substring(0, 100))
+                      console.log('compressedAvatarUrl:', compressedAvatarUrl?.substring(0, 100))
+                      console.log('avatarUrl:', avatarUrl)
+                      console.log('created.profileImage (ignored):', created?.profileImage?.substring(0, 100))
+                      
+                      return finalAvatarUrl
+                    })()}
                     hideChoose
                   />
                 </div>

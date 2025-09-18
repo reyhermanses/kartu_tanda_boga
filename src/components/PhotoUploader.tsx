@@ -5,6 +5,7 @@ type Props = {
   onChange?: (file: File | null) => void
   error?: string
   required?: boolean
+  onError?: (message: string) => void
 }
 
 export function PhotoUploader({ onChange, error, required }: Props) {
@@ -18,6 +19,7 @@ export function PhotoUploader({ onChange, error, required }: Props) {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    
     const nextUrl = URL.createObjectURL(file)
     setPreviewUrl((prev) => {
       if (prev) URL.revokeObjectURL(prev)
