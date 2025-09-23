@@ -333,7 +333,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                 return (
                   card.tier !== 'empty' ? <div
                     key={card.id}
-                    className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[200px] sm:h-[220px] md:h-[250px]' : 'w-full h-32 sm:h-36 md:h-44 scale-75'
+                    className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[260px] sm:h-[280px] md:h-[310px]' : 'w-full h-32 sm:h-36 md:h-44 scale-75'
                       } ${!isSelected ? 'blur-[2px]' : ''}`}
                     style={{
                       background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
@@ -396,8 +396,8 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
                     {/* Profile Picture */}
                     {card.tier !== 'empty' && (
-                      <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[60px]' : 'top-[60px]'}`}>
-                        <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
+                      <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[100px]' : 'top-[60px]'}`}>
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
                           {values.photoFile ? (
                             <img
                               src={URL.createObjectURL(values.photoFile)}
@@ -454,7 +454,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
               console.log('Disabled:', currentCardIndex <= 0)
               prevCard()
             }}
-            className="absolute top-12 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
+            className="absolute top-16 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
             disabled={currentCardIndex <= 0}
           >
             <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -469,7 +469,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
               console.log('Disabled:', currentCardIndex >= cards.length - 1)
               nextCard()
             }}
-            className="absolute bottom-12 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
+            className="absolute bottom-16 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
             disabled={currentCardIndex >= cards.length - 1}
           >
             <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
