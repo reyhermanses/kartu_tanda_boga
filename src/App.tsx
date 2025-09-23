@@ -17,6 +17,9 @@ function App() {
     gender: '',
     photoFile: null,
   })
+
+  // cek error
+
   const [errors, setErrors] = useState<FormErrors>({})
   const [created, setCreated] = useState<CreateMembershipResponse['data'] | null>(null)
   const [showAlert, setShowAlert] = useState(false)
