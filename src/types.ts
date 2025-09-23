@@ -21,6 +21,7 @@ export type FormValues = {
   phone: string
   email: string
   birthday: string
+  gender: string
   photoFile: File | null
 }
 
@@ -29,6 +30,7 @@ export type FormErrors = {
   phone?: string
   email?: string
   birthday?: string
+  gender?: string
   photoFile?: string
 }
 
