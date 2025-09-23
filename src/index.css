@@ -1,20 +1,115 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  font-family: Arial, sans-serif;
+  @apply text-white;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
 }
 
 #root {
   height: 100vh;
   background: #dc2626;
+  width: 100%;
+}
+
+/* Background pattern overlay */
+#root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Date input - Keep native datepicker but style it */
+input[type="date"] {
+  color-scheme: dark !important;
+  color: white !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* Specific fix for PhotoUploadPage - no scroll */
+.photo-upload-page {
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #dc2626;
   display: flex;
+  flex-direction: column;
+}
+
+/* Specific fix for CardSelectionPage - no scroll */
+.card-selection-page {
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #dc2626;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Specific fix for SplashScreen - no scroll and proper desktop width */
+.splash-screen {
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #dc2626;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 32px;
-  font-weight: bold;
+  max-width: 100vw;
+  width: 100%;
+}
+
+/* Specific fix for ResultPage - no scroll */
+.result-page {
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #dc2626;
+  display: flex;
+  flex-direction: column;
+  max-width: 100vw;
+  width: 100%;
+}
+
+/* Allow scroll for form pages when needed */
+.form-page {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
