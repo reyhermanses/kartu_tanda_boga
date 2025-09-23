@@ -204,13 +204,6 @@ html, body {
   }
 }
 
-/* iPhone SE and small screens specific */
-@media screen and (max-width: 375px) and (max-height: 667px) {
-  .photo-upload-page {
-    overflow-y: auto;
-  }
-}
-
 /* Specific fix for CardSelectionPage - no scroll */
 .card-selection-page {
   height: 100vh;

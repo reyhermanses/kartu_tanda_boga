@@ -22,6 +22,12 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
   // Start camera
   const startCamera = async () => {
     try {
+      // Check if getUserMedia is supported
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Camera tidak didukung pada perangkat ini')
+        return
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: facingMode,
@@ -52,7 +58,18 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
       }
     } catch (error) {
       console.error('Error accessing camera:', error)
-      alert('Tidak dapat mengakses camera. Pastikan izin camera sudah diberikan.')
+      // More specific error messages
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          alert('Izin camera ditolak. Silakan berikan izin camera dan refresh halaman.')
+        } else if (error.name === 'NotFoundError') {
+          alert('Camera tidak ditemukan pada perangkat ini.')
+        } else {
+          alert('Tidak dapat mengakses camera. Pastikan perangkat mendukung camera.')
+        }
+      } else {
+        alert('Tidak dapat mengakses camera. Pastikan perangkat mendukung camera.')
+      }
     }
   }
 
@@ -133,34 +150,10 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
     }
   }
 
-  // Auto-start camera when component mounts
+  // Auto-start camera when component mounts - DISABLED for mobile compatibility
   useEffect(() => {
-    // Start camera immediately when page loads
-    const initCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: facingMode,
-            width: { ideal: 1280 },
-            height: { ideal: 960 }
-          },
-          audio: false
-        })
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-          streamRef.current = stream
-          setIsCameraOpen(true)
-        }
-      } catch (error) {
-        console.error('Error accessing camera:', error)
-        // Don't show alert on auto-start, just log error
-      }
-    }
-
-    // Start camera immediately
-    initCamera()
-
+    // Don't auto-start camera to avoid permission/HTTPS issues on mobile
+    // Camera will start when user clicks the shutter button
     return () => {
       stopCamera()
     }
