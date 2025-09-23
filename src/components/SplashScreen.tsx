@@ -15,28 +15,47 @@ export function SplashScreen({ onNext }: Props) {
   }, [onNext])
 
   return (
-    <div className="splash-screen">
-      {/* Simple Background */}
-      <div className="absolute inset-0 bg-red-600"></div>
-
-      {/* Main Content */}
-      <div className="flex flex-col items-center justify-center space-y-8 relative z-10">
-        {/* BOGA GROUP Logo */}
-        <div className="text-center">
-          <img 
-            src="/BogaGroupLogo.png" 
-            alt="Boga Group Logo" 
-            className="w-48 h-48 mx-auto mb-4"
-          />
-          {/* <div className="text-4xl font-bold text-white">BOGA</div>
-          <div className="text-2xl text-white">GROUP</div> */}
-        </div>
+    <div style={{
+      height: '100vh',
+      background: '#dc2626',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'white',
+      position: 'relative'
+    }}>
+      {/* BOGA GROUP Logo */}
+      <div style={{ textAlign: 'center' }}>
+        <img 
+          src="/BogaGroupLogo.png" 
+          alt="Boga Group Logo" 
+          style={{ width: '192px', height: '192px', marginBottom: '16px' }}
+        />
+        <div style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '8px' }}>BOGA</div>
+        <div style={{ fontSize: '24px' }}>GROUP</div>
       </div>
 
       {/* Loading indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="w-8 h-1 bg-white/30 rounded-full">
-          <div className="w-8 h-1 bg-white rounded-full animate-pulse"></div>
+      <div style={{
+        position: 'absolute',
+        bottom: '32px',
+        left: '50%',
+        transform: 'translateX(-50%)'
+      }}>
+        <div style={{
+          width: '32px',
+          height: '4px',
+          background: 'rgba(255, 255, 255, 0.3)',
+          borderRadius: '2px'
+        }}>
+          <div style={{
+            width: '32px',
+            height: '4px',
+            background: 'white',
+            borderRadius: '2px',
+            animation: 'pulse 1s infinite'
+          }}></div>
         </div>
       </div>
     </div>
