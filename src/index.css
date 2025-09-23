@@ -113,3 +113,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+/* iPhone safe area fixes */
+@supports (padding: max(0px)) {
+  .card-selection-page {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Ensure submit button is always visible */
+.submit-button {
+  position: fixed !important;
+  bottom: max(1rem, env(safe-area-inset-bottom)) !important;
+  z-index: 9999 !important;
+  background: white !important;
+  border: 2px solid #dc2626 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}

@@ -491,11 +491,14 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center absolute bottom-4 left-4 right-4">
+      <div className="flex justify-center">
         <button
           onClick={handleSubmit}
-          className="p-3 bg-white w-[150px] text-red-600 text-lg rounded-[20px] shadow-lg font-black"
-          style={{ fontFamily: 'Roboto', fontWeight: 900 }}
+          className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
+          style={{ 
+            fontFamily: 'Roboto', 
+            fontWeight: 900
+          }}
         >
           SUBMIT
         </button>
