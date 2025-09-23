@@ -8,6 +8,7 @@ import { ResultPage } from './components/ResultPage'
 import type { FormErrors, FormValues, CreateMembershipResponse } from './types'
 
 function App() {
+  console.log('App component rendering...')
   const [currentPage, setCurrentPage] = useState(1) // 1: Splash, 2: Form, 3: Photo, 4: Card Selection, 5: Result
   const [values, setValues] = useState<FormValues>({
     name: '',

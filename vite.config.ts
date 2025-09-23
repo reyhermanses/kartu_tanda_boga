@@ -8,19 +8,6 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
-    minify: 'esbuild',
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
-  },
-  server: {
-    host: true,
-    port: 3000
-  },
-  preview: {
-    host: true,
-    port: 3000
+    minify: 'esbuild'
   }
 })
