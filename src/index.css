@@ -17,25 +17,12 @@ body {
 }
 
 #root {
-  min-height: 100vh;
+  height: 100vh;
   background: #dc2626;
-  position: relative;
-  overflow-x: hidden;
   width: 100%;
-  max-width: 100vw;
 }
 
-/* Background pattern overlay - simplified */
-#root::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.05);
-  pointer-events: none;
-}
+/* Background pattern overlay - removed for stability */
 
 /* Date input - Keep native datepicker but style it */
 input[type="date"] {
