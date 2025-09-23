@@ -39,10 +39,38 @@ body {
 input[type="date"] {
   color-scheme: dark !important;
   color: white !important;
+  min-height: 60px !important;
+  height: auto !important;
+  line-height: 1.5 !important;
+  padding: 16px 20px !important;
+  font-size: 16px !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
+  width: 20px !important;
+  height: 20px !important;
+  margin-left: 8px !important;
+}
+
+/* iPhone specific date picker fixes */
+@supports (-webkit-touch-callout: none) {
+  input[type="date"] {
+    min-height: 60px !important;
+    padding: 16px 20px !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    width: 24px !important;
+    height: 24px !important;
+    margin-left: 12px !important;
+  }
 }
 
 /* Specific fix for PhotoUploadPage - no scroll */
