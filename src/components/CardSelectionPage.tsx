@@ -246,7 +246,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-4 mb-4">
+      <div className="px-2 sm:px-4 mb-2 sm:mb-4">
         <div
           className="relative overflow-hidden"
           onTouchStart={handleTouchStart}
@@ -333,7 +333,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                 return (
                   card.tier !== 'empty' ? <div
                     key={card.id}
-                    className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[250px]' : 'w-full h-44 scale-75'
+                    className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[200px] sm:h-[220px] md:h-[250px]' : 'w-full h-32 sm:h-36 md:h-44 scale-75'
                       } ${!isSelected ? 'blur-[2px]' : ''}`}
                     style={{
                       background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
@@ -396,8 +396,8 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
                     {/* Profile Picture */}
                     {card.tier !== 'empty' && (
-                      <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[100px]' : 'top-[60px]'}`}>
-                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
+                      <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[60px]' : 'top-[60px]'}`}>
+                        <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
                           {values.photoFile ? (
                             <img
                               src={URL.createObjectURL(values.photoFile)}
@@ -419,20 +419,20 @@ export function CardSelectionPage({ values, onNext }: Props) {
                     {card.tier !== 'empty' && (
                       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
                         <div className={`flex items-center justify-center mb-2 ${isSelected ? 'mb-2' : 'mb-[-16px] scale-75'}`}>
-                          <div className="bg-white rounded-full px-3 py-1 flex items-center shadow-xl">
-                            <span className="text-black font-bold text-sm mr-2">{values.name || 'Valerie'}</span>
-                            <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                              <svg className="w-3 h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
+                          <div className="bg-white rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-xl">
+                            <span className="text-black font-bold text-xs sm:text-sm mr-1 sm:mr-2">{values.name || 'Valerie'}</span>
+                            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                              <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             </div>
                           </div>
                         </div>
                         <div className="flex flex-row items-center justify-center">
-                          <div className="bg-black/60 rounded-full px-3 py-1 flex items-center shadow-lg">
-                            <span className="text-white font-medium text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
+                          <div className="bg-black/60 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg">
+                            <span className="text-white font-medium text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
                           </div>
-                          <span className="text-white font-medium text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
+                          <span className="text-white font-medium text-[10px] sm:text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
                         </div>
                         <div className="text-yellow-200 text-sm space-y-1">
                           {/* <div>{values.phone || '0877-9832-0931'}</div>  */}
@@ -454,10 +454,10 @@ export function CardSelectionPage({ values, onNext }: Props) {
               console.log('Disabled:', currentCardIndex <= 0)
               prevCard()
             }}
-            className="absolute top-16 left-1/2 transform -translate-x-1/2 w-12 h-12 flex items-center justify-center transition-all"
+            className="absolute top-12 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
             disabled={currentCardIndex <= 0}
           >
-            <svg className="w-8 h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 15l7-7 7 7" />
             </svg>
           </button>
@@ -469,10 +469,10 @@ export function CardSelectionPage({ values, onNext }: Props) {
               console.log('Disabled:', currentCardIndex >= cards.length - 1)
               nextCard()
             }}
-            className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-12 h-12 flex items-center justify-center transition-all"
+            className="absolute bottom-12 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
             disabled={currentCardIndex >= cards.length - 1}
           >
-            <svg className="w-8 h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -491,10 +491,10 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center absolute bottom-16 left-4 right-4">
+      <div className="flex justify-center absolute bottom-12 sm:bottom-16 left-2 sm:left-4 right-2 sm:right-4">
         <button
           onClick={handleSubmit}
-          className="p-2 bg-white w-[150px] text-red-600 text-lg rounded-[20px] shadow-lg font-black"
+          className="p-2 bg-white w-[120px] sm:w-[140px] md:w-[150px] text-red-600 text-sm sm:text-base md:text-lg rounded-[20px] shadow-lg font-black"
           style={{ fontFamily: 'Roboto', fontWeight: 900 }}
         >
           SUBMIT

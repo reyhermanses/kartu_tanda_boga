@@ -171,15 +171,15 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
   return (
     <div className="photo-upload-page">
       {/* Header */}
-      <div className="px-4 py-4 flex justify-between items-center">
+      <div className="px-2 sm:px-4 py-2 sm:py-4 flex justify-between items-center">
         <button onClick={onBack} className="text-white">
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h1 className="text-white text-lg font-bold">Upload Foto</h1>
+        <h1 className="text-white text-sm sm:text-lg font-bold">Upload Foto</h1>
         <button onClick={onBack} className="text-white">
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -188,10 +188,10 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
       {/* Main Camera Interface */}
       <div className="flex-1 relative">
         {/* Photo Display Area - Camera Preview */}
-        <div className="relative mx-4 mt-4 mb-4">
-          <div className="p-4">
+        <div className="relative mx-2 sm:mx-4 mt-2 sm:mt-4 mb-2 sm:mb-4">
+          <div className="p-2 sm:p-4">
             {/* Camera Preview Area */}
-            <div className="aspect-[3/4] bg-gray-100 rounded-[30px] flex items-center justify-center relative overflow-hidden">
+            <div className="aspect-[3/4] bg-gray-100 rounded-[20px] sm:rounded-[30px] flex items-center justify-center relative overflow-hidden">
               {values.photoFile && !isCameraOpen ? (
                 // Captured Photo or Photo from Storage (only when camera is closed)
                 <img
@@ -213,7 +213,7 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
               {/* Label Text */}
               {!values.photoFile && !isCameraOpen && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <p className="text-white text-lg font-medium bg-black/50 px-4 py-2 rounded-lg">
+                  <p className="text-white text-sm sm:text-lg font-medium bg-black/50 px-2 py-1 sm:px-4 sm:py-2 rounded-lg">
                     Foto akan muncul disini
                   </p>
                 </div>
@@ -234,19 +234,19 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
         </div>
 
         {/* Camera Controls - Red Background */}
-        <div className="px-6">
-          <div className="flex justify-center items-center space-x-8">
+        <div className="px-3 sm:px-6">
+          <div className="flex justify-center items-center space-x-4 sm:space-x-8">
             {/* Mode Selector */}
-            <button className="w-12 h-12 flex items-center justify-center">
-              <div className="w-8 h-8 rounded-full border-2 border-white"></div>
+            <button className="w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white"></div>
             </button>
 
             {/* Flash Control */}
             <button
               onClick={toggleFlashlight}
-              className={`w-12 h-12 flex items-center justify-center ${flashlightOn ? 'bg-yellow-500 rounded-full' : ''}`}
+              className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center ${flashlightOn ? 'bg-yellow-500 rounded-full' : ''}`}
             >
-              <svg className={`w-8 h-8 ${flashlightOn ? 'text-black' : 'text-white'}`} fill="currentColor" viewBox="0 0 20 20">
+              <svg className={`w-6 h-6 sm:w-8 sm:h-8 ${flashlightOn ? 'text-black' : 'text-white'}`} fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
               </svg>
             </button>
@@ -266,17 +266,17 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
                   startCamera()
                 }
               }}
-              className={`w-[90px] h-[70px] bg-white/70 rounded-full flex items-center justify-center shadow-lg`}
+              className={`w-[70px] h-[50px] sm:w-[90px] sm:h-[70px] bg-white/70 rounded-full flex items-center justify-center shadow-lg`}
             >
-              <div className={`w-12 h-12 ${!values.photoFile ? 'bg-red-700' : 'bg-white'} rounded-full`}></div>
+              <div className={`w-8 h-8 sm:w-12 sm:h-12 ${!values.photoFile ? 'bg-red-700' : 'bg-white'} rounded-full`}></div>
             </button>
 
             {/* Camera Flip */}
             <button
               onClick={flipCamera}
-              className="w-12 h-12 flex items-center justify-center"
+              className="w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center"
             >
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
               </svg>
             </button>
@@ -298,9 +298,9 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
                 }
                 input.click()
               }}
-              className="w-12 h-12 flex items-center justify-center"
+              className="w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center"
             >
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
               </svg>
             </button>
@@ -310,7 +310,7 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
 
         {/* Next Button */}
         {values.photoFile &&
-          <div className="pt-10 px-6 pb-6">
+          <div className="flex justify-center pt-4 sm:pt-6 md:pt-10 px-3 sm:px-6 pb-3 sm:pb-6">
             <button
               onClick={() => {
                 if (isCameraOpen) {
@@ -319,7 +319,7 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
                 onBack()
               }}
               disabled={!values.photoFile}
-              className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${values.photoFile
+              className={`w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all ${values.photoFile
                   ? 'bg-white text-red-600 hover:bg-gray-100'
                   : 'bg-gray-400 text-gray-600 cursor-not-allowed'
                 }`}
