@@ -127,7 +127,7 @@ function App() {
       }
 
       // Compress image with smart compression to avoid "entity too large" error
-      const compressedImage = await compressImage(values.photoFile, 800) // Max 800px with 0.5 quality
+      const compressedImage = await compressImage(values.photoFile!, 800) // Max 800px with 0.5 quality
       
       // Remove data:image/jpeg;base64, prefix to match old app format
       const base64String = compressedImage.replace(/^data:image\/[a-z]+;base64,/, '')
