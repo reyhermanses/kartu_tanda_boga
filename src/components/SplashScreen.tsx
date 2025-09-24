@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Footer } from './Footer'
 
 type Props = {
   onNext: () => void
@@ -45,6 +46,9 @@ export function SplashScreen({ onNext }: Props) {
           <div className="w-8 h-1 bg-white rounded-full animate-pulse"></div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

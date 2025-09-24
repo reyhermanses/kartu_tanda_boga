@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SplashScreen } from './components/SplashScreen'
 import { FormSection } from './components/FormSection'
 import { PhotoUploadPage } from './components/PhotoUploadPage'
@@ -7,6 +7,7 @@ import { ResultPage } from './components/ResultPage'
 import { AlertModal } from './components/AlertModal'
 
 import type { FormValues, FormErrors } from './types'
+import { saveSession, loadSession, clearSession } from './utils/sessionStorage'
 
 export interface CreateMembershipResponse {
   status: string
@@ -50,6 +51,36 @@ function App() {
       setErrors({})
     }
   }
+
+  // Load session data on app mount
+  useEffect(() => {
+    const sessionData = loadSession()
+    if (sessionData) {
+      setCurrentPage(sessionData.currentPage)
+      setValues(sessionData.values)
+      setSelectedCardUrl(sessionData.selectedCardUrl)
+      if (sessionData.created) {
+        setCreated(sessionData.created)
+      }
+    }
+  }, [])
+
+  // Auto save session data when values change
+  useEffect(() => {
+    const saveSessionData = async () => {
+      await saveSession({
+        currentPage,
+        values,
+        selectedCardUrl,
+        created
+      })
+    }
+    
+    // Only save if we're not on the first page (splash screen)
+    if (currentPage > 1) {
+      saveSessionData()
+    }
+  }, [currentPage, values, selectedCardUrl, created])
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -172,6 +203,10 @@ function App() {
       if (result.status === 'Success') {
         setCreated(result.data)
         setCurrentPage(5) // Result page
+        console.log('Success! Clearing session...')
+        // Clear session after successful submit
+        clearSession()
+        console.log('Session cleared successfully')
       } else {
         setAlertMessage(result.message || 'Failed to create membership card')
         setShowAlert(true)

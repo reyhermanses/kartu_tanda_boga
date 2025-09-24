@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { CouponCarousel } from './CouponCarousel'
+import { Footer } from './Footer'
 
 type CreateMembershipResponse = {
   status: string
@@ -168,10 +169,10 @@ export function ResultPage({ created, values }: Props) {
             </div>
           )}
           
-          <div className="pt-2 flex justify-center">
+          <div className="flex justify-center pt-4 sm:pt-6 md:pt-10 px-3 sm:px-6 pb-3 sm:pb-6">
             <button
               onClick={handleClaimClick}
-              className="py-4 px-2 bg-white text-red-600 font-bold text-lg rounded-xl shadow-lg"
+              className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
             >
               Claim Voucher
             </button>
@@ -180,9 +181,7 @@ export function ResultPage({ created, values }: Props) {
       </div>
 
       {/* Footer */}
-      <footer className="w-full p-1 text-center text-xs text-white/70">
-        2025 Boga Group. All Rights Reserved
-      </footer>
+      <Footer />
     </div>
   )
 }

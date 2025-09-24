@@ -1,5 +1,6 @@
 // import { PhotoUploader } from './PhotoUploader'
 import { useState, useRef, useEffect } from 'react'
+import { Footer } from './Footer'
 import type { FormValues, FormErrors } from '../types'
 
 type Props = {
@@ -323,6 +324,9 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
           </div>
         }
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

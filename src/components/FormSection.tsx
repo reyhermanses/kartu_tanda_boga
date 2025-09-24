@@ -1,4 +1,5 @@
 import { InputField } from './InputField'
+import { Footer } from './Footer'
 // import { PhotoUploader } from './PhotoUploader'
 import type { FormErrors, FormValues } from '../types'
 
@@ -171,16 +172,19 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
         </section>
 
         {/* Next Button */}
-        <div className="flex justify-center mt-6 sm:mt-8">
+        <div className="flex justify-center pt-4 sm:pt-6 md:pt-10 px-3 sm:px-6 pb-3 sm:pb-6">
           <button
             type="button"
             onClick={onNext}
-            className="next-button flex items-center justify-center w-[200px] sm:w-[150px] py-4 sm:py-4 bg-white hover:bg-gray-100 text-red-600 font-bold text-lg sm:text-base rounded-xl border border-white transition-all shadow-lg"
+            className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
           >
             Next
           </button>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
