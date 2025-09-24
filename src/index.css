@@ -525,6 +525,35 @@ footer {
     padding-bottom: max(80px, env(safe-area-inset-bottom) + 80px) !important;
   }
   
+  /* PhotoUploadPage - Fix layout below preview image for iPhone */
+  .photo-upload-page .flex-1 > div:last-child {
+    /* Camera controls container */
+    padding: 16px 0 !important;
+    margin: 0 !important;
+  }
+  
+  .photo-upload-page .flex-1 > div:last-child > div {
+    /* Camera controls flex container */
+    gap: 16px !important;
+    padding: 0 12px !important;
+  }
+  
+  .photo-upload-page .flex-1 > div:last-child button {
+    /* Camera control buttons */
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+  }
+  
+  .photo-upload-page .flex-1 > div:last-child button:nth-child(3) {
+    /* Main shutter button */
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
+  }
+  
   /* Additional Safari-specific fixes */
   .form-page,
   .result-page,
@@ -561,6 +590,35 @@ footer {
   
   .photo-upload-page .flex-1 {
     padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
+  }
+  
+  /* iPhone SE - PhotoUploadPage layout fixes */
+  .photo-upload-page .flex-1 > div:last-child {
+    /* Camera controls container - iPhone SE */
+    padding: 12px 0 !important;
+    margin: 0 !important;
+  }
+  
+  .photo-upload-page .flex-1 > div:last-child > div {
+    /* Camera controls flex container - iPhone SE */
+    gap: 12px !important;
+    padding: 0 8px !important;
+  }
+  
+  .photo-upload-page .flex-1 > div:last-child button {
+    /* Camera control buttons - iPhone SE */
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+  
+  .photo-upload-page .flex-1 > div:last-child button:nth-child(3) {
+    /* Main shutter button - iPhone SE */
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
   }
 }
 
