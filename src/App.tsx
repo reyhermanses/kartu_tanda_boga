@@ -6,7 +6,7 @@ import { CardSelectionPage } from './components/CardSelectionPage'
 import { ResultPage } from './components/ResultPage'
 import { AlertModal } from './components/AlertModal'
 
-import type { FormValues } from './types'
+import type { FormValues, FormErrors } from './types'
 
 export interface CreateMembershipResponse {
   status: string
@@ -36,7 +36,7 @@ function App() {
     gender: '',
     photoFile: null
   })
-  const [errors] = useState({})
+  const [errors, setErrors] = useState<FormErrors>({})
   const [created, setCreated] = useState<CreateMembershipResponse['data'] | null>(null)
   const [selectedCardUrl, setSelectedCardUrl] = useState('')
   const [showAlert, setShowAlert] = useState(false)
@@ -45,6 +45,51 @@ function App() {
 
   const updateValues = (newValues: Partial<FormValues>) => {
     setValues(prev => ({ ...prev, ...newValues }))
+    // Clear errors when user starts typing
+    if (Object.keys(errors).length > 0) {
+      setErrors({})
+    }
+  }
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {}
+    
+    if (!values.name.trim()) {
+      newErrors.name = 'Nama lengkap harus diisi'
+    }
+    
+    if (!values.phone.trim()) {
+      newErrors.phone = 'Nomor telepon harus diisi'
+    } else if (!/^[0-9+\-\s()]+$/.test(values.phone)) {
+      newErrors.phone = 'Format nomor telepon tidak valid'
+    }
+    
+    if (!values.email.trim()) {
+      newErrors.email = 'Email harus diisi'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+      newErrors.email = 'Format email tidak valid'
+    }
+    
+    if (!values.birthday) {
+      newErrors.birthday = 'Tanggal lahir harus diisi'
+    } else {
+      const birthDate = new Date(values.birthday)
+      const today = new Date()
+      if (birthDate >= today) {
+        newErrors.birthday = 'Tanggal lahir harus di masa lalu'
+      }
+    }
+    
+    if (!values.gender) {
+      newErrors.gender = 'Jenis kelamin harus dipilih'
+    }
+    
+    if (!values.photoFile) {
+      newErrors.photoFile = 'Foto profil harus diupload'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
   }
 
   const compressImage = (file: File, maxWidth: number = 800, quality: number = 0.5): Promise<string> => {
@@ -74,15 +119,8 @@ function App() {
     
     try {
       // Validate form
-      if (!values.name || !values.birthday || !values.phone || !values.email || !values.gender) {
-        setAlertMessage('Please fill in all required fields')
-        setShowAlert(true)
-        setIsSubmitting(false)
-        return
-      }
-
-      if (!values.photoFile) {
-        setAlertMessage('Please upload a photo')
+      if (!validateForm()) {
+        setAlertMessage('Mohon lengkapi semua field yang wajib diisi')
         setShowAlert(true)
         setIsSubmitting(false)
         return
@@ -163,10 +201,10 @@ function App() {
 
 
   const handleFormNext = () => {
-    if (values.name && values.birthday && values.phone && values.email && values.gender) {
+    if (validateForm()) {
       setCurrentPage(4) // Card selection page
     } else {
-      setAlertMessage('Please fill in all required fields')
+      setAlertMessage('Mohon lengkapi semua field yang wajib diisi')
       setShowAlert(true)
     }
   }

@@ -32,13 +32,18 @@ export function InputField({ label, type = 'text', placeholder, value, onChange,
         required={required}
         aria-invalid={!!error}
         aria-describedby={error ? `${label}-error` : undefined}
-        className={`w-full rounded-[20px] border-2 bg-transparent px-4 py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all ${
+        className={`w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all ${
           error ? 'border-orange-500' : 'border-red-400'
         } ${isDateInput ? 'text-base' : ''}`}
         style={isDateInput ? { 
           colorScheme: 'dark',
-          color: 'white'
-        } : {}}
+          color: 'white',
+          paddingBottom: '20px',
+          marginBottom: '8px'
+        } : {
+          paddingBottom: '20px',
+          marginBottom: '8px'
+        }}
         {...dateInputProps}
       />
       {error && (

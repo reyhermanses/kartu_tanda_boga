@@ -13,7 +13,7 @@ type Props = {
 
 export function FormSection({ values, errors, onChange, onNext, onProfileUpload }: Props) {
   return (
-    <div className="p-6 relative overflow-hidden">
+    <div className="form-page iphone-se-form p-4 sm:p-6 relative overflow-hidden">
       {/* Background Pattern */}
       {/* <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100 opacity-30"></div> */}
       {/* <div className="absolute inset-0 opacity-5">
@@ -25,9 +25,9 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
 
       <div className="relative z-10">
         {/* Profile Picture Section */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-4 sm:mb-6">
           <div className="relative inline-block">
-            <div className="w-[150px] h-[150px] bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
+            <div className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
               {values.photoFile ? (
                 <img
                   src={URL.createObjectURL(values.photoFile)}
@@ -35,7 +35,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <svg className="w-[140px] h-[140px] text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-[110px] h-[110px] sm:w-[140px] sm:h-[140px] text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                 </svg>
               )}
@@ -52,7 +52,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
           </div>
         </div>
 
-        <section className="space-y-4">
+        <section className="space-y-3 sm:space-y-4">
           <InputField
             label="Nama Lengkap"
             placeholder="Masukkan nama lengkap"
@@ -80,7 +80,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
             error={errors.email}
           />
           {/* Tanggal Lahir dan Jenis Kelamin dalam Row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {/* Tanggal Lahir */}
                 <div>
                   <label className="block text-sm font-medium text-white mb-2">
@@ -91,11 +91,13 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                       type="date"
                       value={values.birthday}
                       onChange={(e) => onChange({ birthday: e.target.value })}
-                      className="w-full rounded-[20px] border-2 bg-transparent px-4 py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all border-red-400"
+                      className="w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all border-red-400"
                       style={{ 
                         colorScheme: 'dark',
                         color: 'white',
-                        paddingRight: '50px'
+                        paddingRight: '50px',
+                        paddingBottom: '20px',
+                        marginBottom: '8px'
                       }}
                       id="birthday-input"
                     />
@@ -128,7 +130,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
               <select
                 value={values.gender}
                 onChange={(e) => onChange({ gender: e.target.value })}
-                className="w-full rounded-[20px] border-2 bg-transparent px-4 py-5 text-white outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all border-red-400"
+                className="w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all border-red-400"
                 style={{ 
                   colorScheme: 'dark',
                   paddingBottom: '20px',
@@ -165,11 +167,11 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
         </section>
 
         {/* Next Button */}
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-6 sm:mt-8">
           <button
             type="button"
             onClick={onNext}
-            className="flex items-center justify-center w-[150px] py-4 bg-white hover:bg-gray-100 text-red-600 font-bold rounded-xl border border-white transition-all"
+            className="next-button flex items-center justify-center w-[200px] sm:w-[150px] py-4 sm:py-4 bg-white hover:bg-gray-100 text-red-600 font-bold text-lg sm:text-base rounded-xl border border-white transition-all shadow-lg"
           >
             Next
           </button>
