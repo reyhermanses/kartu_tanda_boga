@@ -454,14 +454,55 @@ footer {
 @media screen and (max-width: 375px) and (max-height: 667px) {
   .card-selection-page .submit-button {
     position: fixed !important;
-    bottom: 20px !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     z-index: 9999 !important;
   }
   
   .card-selection-page {
-    padding-bottom: 80px !important;
+    padding-bottom: max(80px, env(safe-area-inset-bottom) + 80px) !important;
+  }
+}
+
+/* Safari iPhone - Handle URL bar and footer */
+@supports (-webkit-touch-callout: none) {
+  /* iPhone Safari specific fixes */
+  .card-selection-page .submit-button {
+    position: fixed !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+  }
+  
+  .card-selection-page {
+    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+  }
+  
+  /* Ensure content is scrollable */
+  .card-selection-page {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
+
+/* General mobile Safari fixes */
+@media screen and (max-width: 414px) {
+  .card-selection-page .submit-button {
+    position: fixed !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+  }
+  
+  .card-selection-page {
+    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
   }
 }
 
