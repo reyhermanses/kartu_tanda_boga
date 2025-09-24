@@ -177,8 +177,11 @@ export function CardSelectionPage({ values, onNext }: Props) {
     if (cards.length > 0) {
       // Submit the current card based on currentCardIndex
       let selectedCardIndex = currentCardIndex
-      console.log('Submitting card:', selectedCardIndex, cards[selectedCardIndex]?.name)
-      onNext(cards[selectedCardIndex])
+      let selectedCard = cards[selectedCardIndex]
+      console.log('Submitting card:', selectedCardIndex, selectedCard?.name)
+      console.log('Selected card object:', selectedCard)
+      console.log('Selected card image URL:', selectedCard?.imageUrl)
+      onNext(selectedCard)
     }
   }
 

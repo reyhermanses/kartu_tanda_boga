@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { LoyaltyCard } from './LoyaltyCard'
 import { CouponCarousel } from './CouponCarousel'
 
 type CreateMembershipResponse = {
@@ -33,8 +32,18 @@ type Props = {
   onBack: () => void
 }
 
-export function ResultPage({ created, values, selectedCardUrl }: Props) {
+export function ResultPage({ created, values }: Props) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+
+  // Format birthday function (same as CardSelectionPage)
+  function formatBirthday(dateString: string): string {
+    const date = new Date(dateString)
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    const day = date.getDate()
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    return `${day} ${month} ${year}`
+  }
 
   // Create avatar URL from photo file
   useEffect(() => {
@@ -70,33 +79,91 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
       </div> */}
 
       {/* Main Content */}
-      <div className="flex-1 px-4 pb-4 flex items-center justify-center">
+      <div className="flex-1 pb-4 flex items-center justify-center">
         <div className="w-full max-w-md p-4 space-y-4 rounded-xl">
           <div>
             <div className="text-xs text-neutral-300 mb-2">Your card</div>
-            <LoyaltyCard
-              backgroundImageUrl={created?.cardImage || selectedCardUrl}
-              colorFrom="#ef4444"
-              colorTo="#b91c1c"
-              tierLabel={created?.tierTitle || ''}
-              name={created?.name || values.name}
-              pointsLabel={created ? String(created.point) : '0 pts'}
-              cardNumber={created?.serial || '6202 1000 8856 6962'}
-              holderLabel={created?.name || values.name}
-              avatarUrl={avatarUrl || undefined}
-              hideChoose
-            />
+            <div
+              className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[245px] sm:h-[280px] md:h-[310px]"
+              style={{
+                background: created?.cardImage ? `url(${created.cardImage})` : '#f3f4f6',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            >
+              {/* KTB BOGA GROUP Logo - Top Left */}
+              <div className="absolute top-4 left-4 text-white">
+                <div className="font-bold text-lg">KTB</div>
+                <div className="text-sm font-semibold">BOGA GROUP</div>
+              </div>
+
+              {/* BOGA Logo - Top Right */}
+              <div className="absolute top-4 right-4 text-white">
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-2">
+                    <span className="text-black font-bold text-xs">G</span>
+                  </div>
+                  <div>
+                    <div className="font-bold text-sm">BOGA</div>
+                    <div className="text-xs">GROUP</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Profile Picture */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-[100px]">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-blue-200 flex items-center justify-center">
+                      <svg className="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* User Info Card - Centered */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <div className="bg-white rounded-full px-3 py-1 flex items-center shadow-xl">
+                    <span className="text-black font-bold text-sm mr-2">{created?.name || values.name}</span>
+                    <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-row items-center justify-center">
+                  <div className="bg-black/60 rounded-full px-3 py-1 flex items-center shadow-lg">
+                    <span className="text-white font-medium text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
+                  </div>
+                  <span className="text-white font-medium text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
+                </div>
+                <div className="text-yellow-200 text-sm space-y-1">
+                  <div>{values.email || 'valeriebahagia@gmail.com'}</div>
+                </div>
+              </div>
+            </div>
           </div>
           
           {created?.isEligibleForCoupon && created.coupons && created.coupons.length > 0 && (
             <div className="border-t border-neutral-200 pt-4">
-              <div className="text-xs text-neutral-500 mb-2">Special offers</div>
-              <CouponCarousel coupons={created.coupons.map(coupon => ({
-                id: coupon.id,
-                name: coupon.title,
-                image: coupon.imageUrl,
-                description: coupon.description,
-                validUntil: coupon.validUntil
+              <div className="text-xs text-neutral-300 mb-2">Special offers</div>
+              <CouponCarousel coupons={created.coupons.map((coupon, index) => ({
+                id: index + 1,
+                name: coupon.name,
+                image: coupon.image,
+                description: '',
+                validUntil: ''
               }))} />
             </div>
           )}
@@ -106,7 +173,7 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
               onClick={handleClaimClick}
               className="py-4 px-2 bg-white text-red-600 font-bold text-lg rounded-xl shadow-lg"
             >
-              Download Boga App
+              Claim Voucher
             </button>
           </div>
         </div>

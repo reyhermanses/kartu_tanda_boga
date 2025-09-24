@@ -171,11 +171,12 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
           </svg>
         </button>
         <h1 className="text-white text-sm sm:text-lg font-bold">Upload Foto</h1>
-        <button onClick={onBack} className="text-white">
+        {/* <button onClick={onBack} className="text-white">
           <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-        </button>
+        </button> */}
+        <div></div>
       </div>
 
       {/* Main Camera Interface */}

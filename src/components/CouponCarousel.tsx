@@ -180,7 +180,7 @@ export function CouponCarousel({ coupons }: Props) {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-red-600' : 'bg-gray-300'
+                index === currentIndex ? 'bg-yellow-600' : 'bg-gray-300'
               }`}
             />
           ))}

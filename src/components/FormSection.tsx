@@ -95,13 +95,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                       style={{ 
                         colorScheme: 'dark',
                         color: 'white',
-                        paddingRight: '50px',
-                        minHeight: '60px',
-                        height: 'auto',
-                        lineHeight: '1.5',
-                        fontSize: '16px',
-                        WebkitAppearance: 'none',
-                        appearance: 'none'
+                        paddingRight: '50px'
                       }}
                       id="birthday-input"
                     />
@@ -151,8 +145,8 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                 }}
               >
                 <option value="" className="text-gray-800">Pili Jenis Kelamin</option>
-                <option value="male" className="text-gray-800">Laki-laki</option>
-                <option value="female" className="text-gray-800">Perempuan</option>
+                <option value="M" className="text-gray-800">Laki-laki</option>
+                <option value="F" className="text-gray-800">Perempuan</option>
               </select>
               {errors.gender && (
                 <p className="text-sm text-white">{errors.gender}</p>
@@ -171,13 +165,15 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
         </section>
 
         {/* Next Button */}
-        <button
-          type="button"
-          onClick={onNext}
-          className="w-full mt-6 py-4 bg-white hover:bg-gray-100 text-red-600 font-bold rounded-xl border border-white transition-all"
-        >
-          Next
-        </button>
+        <div className="flex justify-center mt-6">
+          <button
+            type="button"
+            onClick={onNext}
+            className="flex items-center justify-center w-[150px] py-4 bg-white hover:bg-gray-100 text-red-600 font-bold rounded-xl border border-white transition-all"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   )

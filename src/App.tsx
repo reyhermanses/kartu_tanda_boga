@@ -47,7 +47,7 @@ function App() {
     setValues(prev => ({ ...prev, ...newValues }))
   }
 
-  const compressImage = (file: File, maxWidth: number = 1200, quality: number = 0.8): Promise<string> => {
+  const compressImage = (file: File, maxWidth: number = 800, quality: number = 0.5): Promise<string> => {
     return new Promise((resolve) => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')!
@@ -88,8 +88,11 @@ function App() {
         return
       }
 
-      // Compress image
-      const compressedImage = await compressImage(values.photoFile)
+      // Compress image with smart compression to avoid "entity too large" error
+      const compressedImage = await compressImage(values.photoFile, 800) // Max 800px with 0.5 quality
+      
+      // Remove data:image/jpeg;base64, prefix to match old app format
+      const base64String = compressedImage.replace(/^data:image\/[a-z]+;base64,/, '')
       
       // Prepare request payload
       const requestPayload = {
@@ -98,17 +101,32 @@ function App() {
         phone: values.phone,
         email: values.email,
         gender: values.gender,
-        profileImage: compressedImage,
-        cardDesign: selectedCardUrl
+        profileImage: base64String,
+        cardImage: selectedCardUrl
       }
+      
+      console.log('Request payload:', {
+        ...requestPayload,
+        profileImage: base64String ? `${base64String.substring(0, 50)}...` : null,
+        cardImage: selectedCardUrl
+      })
+      
+      console.log('CardImage value:', selectedCardUrl)
+      console.log('CardImage type:', typeof selectedCardUrl)
+      console.log('CardImage length:', selectedCardUrl ? selectedCardUrl.length : 'null/undefined')
 
       // Send request
       const response = await fetch('https://alpha-api.mybogaloyalty.id/membership-card/create', {
         method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
         headers: {
-          'Content-Type': 'application/json',
+          'X-BOGAMBC-Key': 'ajCJotQ8Ug1USZS3KuoXbqaazY59CAvI',
+          'Content-Type': 'application/json; charset=utf-8',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify(requestPayload)
+        body: JSON.stringify(requestPayload),
+        signal: AbortSignal.timeout(30000) // 30 second timeout
       })
 
       const result: CreateMembershipResponse = await response.json()
@@ -158,8 +176,10 @@ function App() {
   }
 
   const handleCardSelectionNext = (selectedCard: any) => {
-    setSelectedCardUrl(selectedCard.image)
-    handleSubmit(selectedCard.image)
+    console.log('Selected card:', selectedCard)
+    console.log('Card image URL:', selectedCard.imageUrl)
+    setSelectedCardUrl(selectedCard.imageUrl)
+    handleSubmit(selectedCard.imageUrl)
   }
 
   const renderCurrentPage = () => {
