@@ -238,15 +238,15 @@ export function CardSelectionPage({ values, onNext }: Props) {
     <div className="card-selection-page">
       {/* Header */}
       <div className="px-4 py-4 flex justify-center items-center">
-        <h1 className="text-white text-2xl font-bold">YOUR CARDS</h1>
+        <h1 className="text-white text-2xl font-bold">CHOOSE YOUR CARD</h1>
       </div>
 
       {/* Choose Design Button */}
-      <div className="flex justify-center px-4 mb-6">
+      {/* <div className="flex justify-center px-4 mb-6">
         <button className="p-1 border-[1px] border-white rounded-lg text-white text-[14px]">
           Choose Your Design
         </button>
-      </div>
+      </div> */}
 
       {/* Card Preview Container - Show 3 Cards at a time */}
       <div className="px-2 sm:px-4 mb-2 sm:mb-4">

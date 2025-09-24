@@ -465,9 +465,44 @@ footer {
   }
 }
 
-/* Safari iPhone - Handle URL bar and footer */
+/* Safari iPhone - Handle URL bar and footer for all pages */
 @supports (-webkit-touch-callout: none) {
-  /* iPhone Safari specific fixes */
+  /* All pages - Safari iPhone specific fixes */
+  .card-selection-page,
+  .form-page,
+  .photo-upload-page,
+  .result-page,
+  .splash-screen {
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* All buttons - Fixed positioning */
+  .card-selection-page .submit-button,
+  .form-page .next-button,
+  .photo-upload-page button,
+  .result-page button {
+    position: fixed !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+  }
+  
+  /* All pages - Padding for fixed buttons */
+  .card-selection-page,
+  .form-page,
+  .photo-upload-page,
+  .result-page {
+    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
+  }
+}
+
+/* General mobile Safari fixes for all pages */
+@media screen and (max-width: 414px) {
+  /* Card Selection Page */
   .card-selection-page .submit-button {
     position: fixed !important;
     bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
@@ -482,16 +517,8 @@ footer {
     min-height: -webkit-fill-available !important;
   }
   
-  /* Ensure content is scrollable */
-  .card-selection-page {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-}
-
-/* General mobile Safari fixes */
-@media screen and (max-width: 414px) {
-  .card-selection-page .submit-button {
+  /* Form Page - Next Button */
+  .form-page .next-button {
     position: fixed !important;
     bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
     left: 50% !important;
@@ -499,8 +526,44 @@ footer {
     z-index: 9999 !important;
   }
   
-  .card-selection-page {
+  .form-page {
     padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+  }
+  
+  /* Photo Upload Page - Next Button */
+  .photo-upload-page button {
+    position: fixed !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+  }
+  
+  .photo-upload-page {
+    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+  }
+  
+  /* Result Page - Claim Voucher Button */
+  .result-page button {
+    position: fixed !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+  }
+  
+  .result-page {
+    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+  }
+  
+  /* Splash Screen */
+  .splash-screen {
     min-height: 100vh !important;
     min-height: -webkit-fill-available !important;
   }
