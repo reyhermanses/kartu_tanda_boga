@@ -443,6 +443,19 @@ footer {
   }
 }
 
+/* iOS Safari Viewport Handling - Modern Solution */
+/* Use 100dvh instead of 100vh for better Safari support */
+.card-selection-page,
+.form-page,
+.photo-upload-page,
+.result-page,
+.splash-screen {
+  min-height: 100dvh;
+  min-height: 100vh; /* Fallback for older browsers */
+  display: flex;
+  flex-direction: column;
+}
+
 /* Submit button styling */
 .submit-button {
   background: white !important;
@@ -450,123 +463,94 @@ footer {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* iPhone SE - Fixed bottom submit button */
-@media screen and (max-width: 375px) and (max-height: 667px) {
-  .card-selection-page .submit-button {
-    position: fixed !important;
-    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 9999 !important;
-  }
-  
-  .card-selection-page {
-    padding-bottom: max(80px, env(safe-area-inset-bottom) + 80px) !important;
-  }
-}
-
-/* Safari iPhone - Handle URL bar and footer for all pages */
-@supports (-webkit-touch-callout: none) {
-  /* All pages - Safari iPhone specific fixes */
-  .card-selection-page,
+/* iOS Safari - Better button positioning with 100dvh - iPhone only */
+@supports (-webkit-touch-callout: none) and (max-width: 414px) {
+  /* All pages with buttons - iPhone only */
   .form-page,
-  .photo-upload-page,
-  .result-page,
-  .splash-screen {
-    min-height: 100vh !important;
-    min-height: -webkit-fill-available !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  
-  /* All buttons - Fixed positioning */
-  .card-selection-page .submit-button,
-  .form-page .next-button,
-  .photo-upload-page button,
-  .result-page button {
-    position: fixed !important;
-    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 9999 !important;
-  }
-  
-  /* All pages - Padding for fixed buttons */
-  .card-selection-page,
-  .form-page,
-  .photo-upload-page,
   .result-page {
-    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
-  }
-}
-
-/* General mobile Safari fixes for all pages */
-@media screen and (max-width: 414px) {
-  /* Card Selection Page */
-  .card-selection-page .submit-button {
-    position: fixed !important;
-    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 9999 !important;
+    min-height: 100dvh;
+    min-height: 100vh; /* Fallback */
+    position: relative;
   }
   
+  /* CardSelectionPage has different structure - handle separately - iPhone only */
   .card-selection-page {
-    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
-    min-height: 100vh !important;
-    min-height: -webkit-fill-available !important;
+    min-height: 100dvh;
+    min-height: 100vh; /* Fallback */
+    display: flex;
+    flex-direction: column;
   }
   
-  /* Form Page - Next Button */
-  .form-page .next-button {
-    position: fixed !important;
-    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 9999 !important;
-  }
-  
-  .form-page {
-    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
-    min-height: 100vh !important;
-    min-height: -webkit-fill-available !important;
-  }
-  
-  /* Photo Upload Page - Next Button */
-  .photo-upload-page button {
-    position: fixed !important;
-    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 9999 !important;
-  }
-  
+  /* PhotoUploadPage has different structure - handle separately - iPhone only */
   .photo-upload-page {
-    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
-    min-height: 100vh !important;
-    min-height: -webkit-fill-available !important;
+    min-height: 100dvh;
+    min-height: 100vh; /* Fallback */
+    display: flex;
+    flex-direction: column;
   }
   
-  /* Result Page - Claim Voucher Button */
+  .photo-upload-page .flex-1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Button positioning - Use sticky instead of fixed for better Safari support - iPhone only */
+  .form-page .next-button,
   .result-page button {
-    position: fixed !important;
+    position: sticky !important;
     bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    z-index: 9999 !important;
+    z-index: 10 !important;
+    margin-top: auto !important;
   }
   
-  .result-page {
-    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
-    min-height: 100vh !important;
-    min-height: -webkit-fill-available !important;
+  /* CardSelectionPage button - keep original positioning - iPhone only */
+  .card-selection-page .submit-button {
+    position: relative !important;
+    transform: none !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin-top: auto !important;
   }
   
-  /* Splash Screen */
-  .splash-screen {
-    min-height: 100vh !important;
-    min-height: -webkit-fill-available !important;
+  /* PhotoUploadPage button - keep original positioning - iPhone only */
+  .photo-upload-page button {
+    position: relative !important;
+    transform: none !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin-top: auto !important;
+  }
+  
+  /* Ensure content area is scrollable - iPhone only */
+  .form-page > div:not(:last-child),
+  .result-page > div:not(:last-child) {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* CardSelectionPage content area - iPhone only */
+  .card-selection-page > div:not(:last-child) {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
+
+/* iPhone SE specific adjustments - iPhone only */
+@supports (-webkit-touch-callout: none) and (max-width: 375px) and (max-height: 667px) {
+  .card-selection-page .submit-button {
+    position: sticky !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+    margin-top: auto !important;
+  }
+}
+
 
 
