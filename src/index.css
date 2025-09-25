@@ -70,6 +70,38 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 }
 
+/* iPhone Safari specific fixes for CardSelectionPage */
+@supports (-webkit-touch-callout: none) {
+  .card-selection-page {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .card-selection-page > div:first-child {
+    flex-shrink: 0;
+  }
+  
+  .card-selection-page > div:nth-child(2) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+  }
+  
+  .card-selection-page > div:last-child {
+    flex-shrink: 0;
+  }
+}
+
 /* Specific fix for PhotoUploadPage - no scroll */
 .photo-upload-page {
   height: 100vh;

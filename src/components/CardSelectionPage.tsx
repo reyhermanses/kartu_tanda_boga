@@ -232,44 +232,22 @@ export function CardSelectionPage({ values, onNext }: Props) {
   }
 
   return (
-    <div className="card-selection-page" style={{
-      height: '100dvh',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden'
-    }}>
+    <div className="card-selection-page">
       {/* Header */}
-      <div className="px-4 py-4 flex justify-center items-center flex-shrink-0">
+      <div className="px-4 py-4 flex justify-center items-center">
         <h1 className="text-white text-2xl font-bold">CHOOSE YOUR CARD</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-2 sm:px-4 mb-2 sm:mb-4 flex-1 flex flex-col justify-center" style={{
-        minHeight: '0',
-        flex: '1 1 0%'
-      }}>
+      <div className="px-2 sm:px-4 mb-2 sm:mb-4">
         <div
           className="relative overflow-hidden"
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            overscrollBehavior: 'none',
-            position: 'relative',
-            top: '0',
-            left: '0',
-            right: '0',
-            bottom: '0'
-          }}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {/* 3 Visible Cards Container */}
-          <div className="space-y-4" style={{
-            position: 'relative',
-            top: '0',
-            transform: 'translateY(0)',
-            WebkitTransform: 'translateY(0)'
-          }}>
+          <div className="space-y-4">
             {(() => {
               console.log('=== VERTICAL CAROUSEL DEBUG ===')
               console.log('Total cards from backend:', cards.length)
@@ -465,7 +443,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center flex-shrink-0 pb-4">
+      <div className="flex justify-center">
         <button
           onClick={handleSubmit}
           className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
