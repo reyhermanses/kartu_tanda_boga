@@ -463,162 +463,92 @@ footer {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* iOS Safari - Comprehensive viewport handling - iPhone only */
+/* iOS Safari - Better button positioning with 100dvh - iPhone only */
 @supports (-webkit-touch-callout: none) and (max-width: 414px) {
-  /* Root container - use 100dvh for dynamic viewport */
+  /* All pages with buttons - iPhone only */
   .form-page,
-  .result-page,
-  .card-selection-page,
-  .photo-upload-page {
+  .result-page {
     min-height: 100dvh;
-    min-height: 100vh; /* Fallback for older browsers */
-    display: flex;
-    flex-direction: column;
+    min-height: 100vh; /* Fallback */
     position: relative;
   }
   
-  /* PhotoUploadPage specific structure */
+  /* CardSelectionPage has different structure - handle separately - iPhone only */
+  .card-selection-page {
+    min-height: 100dvh;
+    min-height: 100vh; /* Fallback */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* PhotoUploadPage has different structure - handle separately - iPhone only */
+  .photo-upload-page {
+    min-height: 100dvh;
+    min-height: 100vh; /* Fallback */
+    display: flex;
+    flex-direction: column;
+  }
+  
   .photo-upload-page .flex-1 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
   
-  /* Button positioning - Use fixed positioning with safe area support */
+  /* Button positioning - Use sticky instead of fixed for better Safari support - iPhone only */
   .form-page .next-button,
-  .result-page button,
-  .photo-upload-page button {
-    position: fixed !important;
+  .result-page button {
+    position: sticky !important;
     bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    z-index: 9999 !important;
-    width: 150px !important;
-    padding: 12px 24px !important;
-    margin: 0 !important;
+    z-index: 10 !important;
+    margin-top: auto !important;
   }
   
-  /* CardSelectionPage button - keep original positioning but add safe area */
+  /* CardSelectionPage button - keep original positioning - iPhone only */
   .card-selection-page .submit-button {
     position: relative !important;
     transform: none !important;
     left: auto !important;
     bottom: auto !important;
     margin-top: auto !important;
-    margin-bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
   }
   
-  /* Ensure content area is scrollable with proper padding */
+  /* PhotoUploadPage button - keep original positioning - iPhone only */
+  .photo-upload-page button {
+    position: relative !important;
+    transform: none !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin-top: auto !important;
+  }
+  
+  /* Ensure content area is scrollable - iPhone only */
   .form-page > div:not(:last-child),
-  .result-page > div:not(:last-child),
+  .result-page > div:not(:last-child) {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* CardSelectionPage content area - iPhone only */
   .card-selection-page > div:not(:last-child) {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: max(80px, env(safe-area-inset-bottom) + 80px) !important;
-  }
-  
-  /* PhotoUploadPage content padding */
-  .photo-upload-page .flex-1 {
-    padding-bottom: max(80px, env(safe-area-inset-bottom) + 80px) !important;
-  }
-  
-  /* PhotoUploadPage - Fix layout below preview image for iPhone */
-  .photo-upload-page .flex-1 > div:last-child {
-    /* Camera controls container */
-    padding: 16px 0 !important;
-    margin: 0 !important;
-  }
-  
-  .photo-upload-page .flex-1 > div:last-child > div {
-    /* Camera controls flex container */
-    gap: 16px !important;
-    padding: 0 12px !important;
-  }
-  
-  .photo-upload-page .flex-1 > div:last-child button {
-    /* Camera control buttons */
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 40px !important;
-    min-height: 40px !important;
-  }
-  
-  .photo-upload-page .flex-1 > div:last-child button:nth-child(3) {
-    /* Main shutter button */
-    width: 60px !important;
-    height: 60px !important;
-    min-width: 60px !important;
-    min-height: 60px !important;
-  }
-  
-  /* Additional Safari-specific fixes */
-  .form-page,
-  .result-page,
-  .card-selection-page,
-  .photo-upload-page {
-    /* Prevent Safari from hiding content behind URL bar */
-    -webkit-overflow-scrolling: touch;
-    /* Ensure proper viewport handling */
-    height: 100dvh;
-    height: 100vh; /* Fallback */
   }
 }
 
 /* iPhone SE specific adjustments - iPhone only */
 @supports (-webkit-touch-callout: none) and (max-width: 375px) and (max-height: 667px) {
-  /* iPhone SE - More aggressive safe area handling */
-  .form-page .next-button,
-  .result-page button,
-  .photo-upload-page button {
-    bottom: max(30px, env(safe-area-inset-bottom) + 30px) !important;
-    z-index: 9999 !important;
-  }
-  
   .card-selection-page .submit-button {
-    margin-bottom: max(30px, env(safe-area-inset-bottom) + 30px) !important;
-  }
-  
-  /* iPhone SE - Extra padding for content */
-  .form-page > div:not(:last-child),
-  .result-page > div:not(:last-child),
-  .card-selection-page > div:not(:last-child) {
-    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
-  }
-  
-  .photo-upload-page .flex-1 {
-    padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px) !important;
-  }
-  
-  /* iPhone SE - PhotoUploadPage layout fixes */
-  .photo-upload-page .flex-1 > div:last-child {
-    /* Camera controls container - iPhone SE */
-    padding: 12px 0 !important;
-    margin: 0 !important;
-  }
-  
-  .photo-upload-page .flex-1 > div:last-child > div {
-    /* Camera controls flex container - iPhone SE */
-    gap: 12px !important;
-    padding: 0 8px !important;
-  }
-  
-  .photo-upload-page .flex-1 > div:last-child button {
-    /* Camera control buttons - iPhone SE */
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-  }
-  
-  .photo-upload-page .flex-1 > div:last-child button:nth-child(3) {
-    /* Main shutter button - iPhone SE */
-    width: 56px !important;
-    height: 56px !important;
-    min-width: 56px !important;
-    min-height: 56px !important;
+    position: sticky !important;
+    bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+    margin-top: auto !important;
   }
 }
 
