@@ -60,6 +60,7 @@ input[type="date"] {
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
+<<<<<<< HEAD
   display: none !important;
 }
 
@@ -68,6 +69,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   input[type="date"]::-webkit-calendar-picker-indicator {
     display: none !important;
   }
+=======
+  filter: invert(1);
+>>>>>>> parent of 3b18d1d (fix date picker height on iPhone - prevent squashed appearance)
 }
 
 /* Specific fix for PhotoUploadPage - no scroll */

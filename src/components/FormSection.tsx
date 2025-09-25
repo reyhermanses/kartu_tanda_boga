@@ -98,9 +98,13 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                       style={{ 
                         colorScheme: 'dark',
                         color: 'white',
+<<<<<<< HEAD
                         paddingRight: '50px',
                         paddingBottom: '20px',
                         marginBottom: '8px'
+=======
+                        paddingRight: '50px'
+>>>>>>> parent of 3b18d1d (fix date picker height on iPhone - prevent squashed appearance)
                       }}
                       id="birthday-input"
                     />
