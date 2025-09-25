@@ -43,7 +43,6 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
         const data = await response.json()
         console.log('Cards API response:', data)
-        console.log('Cards count:', Array.isArray(data) ? data.length : 0)
 
         // Transform API response to our card format
         const transformedCards = Array.isArray(data) ? data.map((card: any, index: number) => ({
@@ -53,12 +52,11 @@ export function CardSelectionPage({ values, onNext }: Props) {
           tier: 'basic'
         })) : []
 
-        console.log('Transformed cards:', transformedCards)
         setCards(transformedCards)
       } catch (err) {
         console.error('Error loading cards:', err)
         setError('Failed to load cards. Please try again.')
-        // Fallback to default cards if API fails - 5 cards for proper carousel
+        // Fallback to default cards if API fails
         setCards([
           { id: 1, name: 'JAPANESE', imageUrl: '', tier: 'basic' },
           { id: 2, name: 'COLORFULL', imageUrl: '', tier: 'basic' },
@@ -185,7 +183,6 @@ export function CardSelectionPage({ values, onNext }: Props) {
     }
   }
 
-
   const currentCard = cards[currentCardIndex]
 
   console.log('Current card index:', currentCardIndex)
@@ -240,13 +237,6 @@ export function CardSelectionPage({ values, onNext }: Props) {
       <div className="px-4 py-4 flex justify-center items-center">
         <h1 className="text-white text-2xl font-bold">CHOOSE YOUR CARD</h1>
       </div>
-
-      {/* Choose Design Button */}
-      {/* <div className="flex justify-center px-4 mb-6">
-        <button className="p-1 border-[1px] border-white rounded-lg text-white text-[14px]">
-          Choose Your Design
-        </button>
-      </div> */}
 
       {/* Card Preview Container - Show 3 Cards at a time */}
       <div className="px-2 sm:px-4 mb-2 sm:mb-4">
@@ -345,40 +335,11 @@ export function CardSelectionPage({ values, onNext }: Props) {
                       backgroundRepeat: 'no-repeat'
                     }}
                   >
-                    {/* Colorful Abstract Background - only show if no image from API */}
-                    {
-                      // !card.imageUrl && (
-                      //   <>
-                      //     {/* Large Organic Blobs */}
-                      //     <div className="absolute top-0 left-0 w-32 h-32 bg-yellow-400 rounded-full opacity-80 transform -translate-x-8 -translate-y-8"></div>
-                      //     <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500 rounded-full opacity-70 transform translate-x-4 -translate-y-4"></div>
-                      //     <div className="absolute bottom-0 left-0 w-28 h-28 bg-red-500 rounded-full opacity-75 transform -translate-x-6 translate-y-6"></div>
-                      //     <div className="absolute bottom-0 right-0 w-20 h-20 bg-teal-400 rounded-full opacity-80 transform translate-x-2 translate-y-2"></div>
-
-                      //     {/* Wavy Lines */}
-                      //     <div className="absolute top-1/4 left-1/4 w-16 h-8 bg-purple-400 rounded-full opacity-60 transform rotate-45"></div>
-                      //     <div className="absolute top-3/4 right-1/4 w-12 h-6 bg-pink-400 rounded-full opacity-70 transform -rotate-12"></div>
-
-                      //     {/* Small Dots */}
-                      //     <div className="absolute top-8 left-16 w-3 h-3 bg-blue-500 rounded-full opacity-90"></div>
-                      //     <div className="absolute top-16 right-12 w-2 h-2 bg-teal-500 rounded-full opacity-80"></div>
-                      //     <div className="absolute bottom-16 left-20 w-4 h-4 bg-green-400 rounded-full opacity-75"></div>
-                      //     <div className="absolute bottom-8 right-16 w-3 h-3 bg-yellow-500 rounded-full opacity-85"></div>
-
-                      //     {/* Large White C/U Shapes */}
-                      //     <div className="absolute top-1/3 left-0 w-16 h-8 bg-white rounded-full opacity-60 transform -translate-x-4"></div>
-                      //     <div className="absolute bottom-1/3 right-0 w-12 h-6 bg-white rounded-full opacity-50 transform translate-x-2"></div>
-                      //   </>
-                      // )
-                    }
-
                     {/* KTB BOGA GROUP Logo - Top Left */}
                     {card.tier !== 'empty' && (
                       <div className="absolute top-4 left-4 text-white">
                         <div className="font-bold text-lg">KTB</div>
-                        {/* <div className="text-xs">KARTU TANDA</div> */}
                         <div className="text-sm font-semibold">BOGA GROUP</div>
-                        {/* <div className="bg-red-500 text-white text-xs px-2 py-1 rounded mt-1">EDITION</div> */}
                       </div>
                     )}
 
@@ -438,7 +399,6 @@ export function CardSelectionPage({ values, onNext }: Props) {
                           <span className="text-white font-medium text-[10px] sm:text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
                         </div>
                         <div className="text-yellow-200 text-sm space-y-1">
-                          {/* <div>{values.phone || '0877-9832-0931'}</div>  */}
                           <div>{values.email || 'valeriebahagia@gmail.com'}</div>
                         </div>
                       </div>
@@ -480,17 +440,6 @@ export function CardSelectionPage({ values, onNext }: Props) {
             </svg>
           </button>
         </div>
-
-        {/* Card Name and Counter */}
-        {/* <div className="text-center mt-4">
-          <span className="text-white font-semibold text-lg">{currentCard.name || 'CARD'}</span>
-          <div className="text-white/70 text-sm mt-1">
-            {currentCardIndex + 1} of {cards.length}
-          </div>
-          <div className="text-white/50 text-xs mt-1">
-            Showing 3 cards at a time
-          </div>
-        </div> */}
       </div>
 
       {/* Submit Button */}
