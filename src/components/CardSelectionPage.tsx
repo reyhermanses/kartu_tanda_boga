@@ -244,19 +244,32 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-2 sm:px-4 mb-2 sm:mb-4 flex-1 flex flex-col justify-center">
+      <div className="px-2 sm:px-4 mb-2 sm:mb-4 flex-1 flex flex-col justify-center" style={{
+        minHeight: '0',
+        flex: '1 1 0%'
+      }}>
         <div
           className="relative overflow-hidden"
           style={{
             WebkitOverflowScrolling: 'touch',
-            overscrollBehavior: 'none'
+            overscrollBehavior: 'none',
+            position: 'relative',
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0'
           }}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {/* 3 Visible Cards Container */}
-          <div className="space-y-4">
+          <div className="space-y-4" style={{
+            position: 'relative',
+            top: '0',
+            transform: 'translateY(0)',
+            WebkitTransform: 'translateY(0)'
+          }}>
             {(() => {
               console.log('=== VERTICAL CAROUSEL DEBUG ===')
               console.log('Total cards from backend:', cards.length)
