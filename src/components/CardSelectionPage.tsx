@@ -326,8 +326,8 @@ export function CardSelectionPage({ values, onNext }: Props) {
                 return (
                   card.tier !== 'empty' ? <div
                     key={card.id}
-                    className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[260px] sm:h-[280px] md:h-[310px]' : 'w-full h-32 sm:h-36 md:h-44'
-                      }`}
+                    className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[260px] sm:h-[280px] md:h-[310px]' : 'w-full h-32 sm:h-36 md:h-44 scale-75'
+                      } ${!isSelected ? 'blur-[2px]' : ''}`}
                     style={{
                       background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
                       backgroundSize: 'cover',
@@ -361,7 +361,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                     {/* Profile Picture */}
                     {card.tier !== 'empty' && (
                       <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[100px]' : 'top-[60px]'}`}>
-                        <div className={`rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200 ${isSelected ? 'w-24 h-24' : 'w-20 h-20'}`}>
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
                           {values.photoFile ? (
                             <img
                               src={URL.createObjectURL(values.photoFile)}
@@ -370,7 +370,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                             />
                           ) : (
                             <div className="w-full h-full bg-blue-200 flex items-center justify-center">
-                              <svg className={`text-blue-600 ${isSelected ? 'w-12 h-12' : 'w-10 h-10'}`} fill="currentColor" viewBox="0 0 20 20">
+                              <svg className="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                               </svg>
                             </div>
@@ -382,21 +382,21 @@ export function CardSelectionPage({ values, onNext }: Props) {
                     {/* User Info Card - Centered */}
                     {card.tier !== 'empty' && (
                       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
-                        <div className={`flex items-center justify-center mb-2 ${isSelected ? 'mb-2' : 'mb-1'}`}>
-                          <div className={`bg-white rounded-full flex items-center shadow-xl ${isSelected ? 'px-3 py-1' : 'px-2 py-1'}`}>
-                            <span className={`text-black font-bold mr-2 ${isSelected ? 'text-sm' : 'text-xs'}`}>{values.name || 'Valerie'}</span>
-                            <div className={`bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center ${isSelected ? 'w-5 h-5' : 'w-4 h-4'}`}>
-                              <svg className={`text-white ${isSelected ? 'w-3 h-3' : 'w-2 h-2'}`} fill="currentColor" viewBox="0 0 20 20">
+                        <div className={`flex items-center justify-center mb-2 ${isSelected ? 'mb-2' : 'mb-[-16px] scale-75'}`}>
+                          <div className="bg-white rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-xl">
+                            <span className="text-black font-bold text-xs sm:text-sm mr-1 sm:mr-2">{values.name || 'Valerie'}</span>
+                            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                              <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             </div>
                           </div>
                         </div>
                         <div className="flex flex-row items-center justify-center">
-                          <div className={`bg-black/60 rounded-full flex items-center shadow-lg ${isSelected ? 'px-3 py-1' : 'px-2 py-1'}`}>
-                            <span className={`text-white font-medium ${isSelected ? 'text-xs' : 'text-[10px]'}`} style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
+                          <div className="bg-black/60 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg">
+                            <span className="text-white font-medium text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
                           </div>
-                          <span className={`text-white font-medium ml-1 ${isSelected ? 'text-xs' : 'text-[10px]'}`} style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
+                          <span className="text-white font-medium text-[10px] sm:text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
                         </div>
                         <div className="text-yellow-200 text-sm space-y-1">
                           <div>{values.email || 'valeriebahagia@gmail.com'}</div>
