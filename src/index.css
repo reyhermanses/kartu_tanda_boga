@@ -14,12 +14,21 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling: touch;
+  /* iOS Safari viewport fixes */
+  height: 100vh;
+  height: 100dvh;
+  position: fixed;
+  width: 100%;
 }
 
 #root {
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for iOS */
   background: #dc2626;
   width: 100%;
+  /* iOS Safari fixes */
+  position: relative;
+  overflow: hidden;
 }
 
 /* Background pattern overlay */

@@ -232,16 +232,25 @@ export function CardSelectionPage({ values, onNext }: Props) {
   }
 
   return (
-    <div className="card-selection-page">
+    <div className="card-selection-page" style={{
+      height: '100dvh',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }}>
       {/* Header */}
-      <div className="px-4 py-4 flex justify-center items-center">
+      <div className="px-4 py-4 flex justify-center items-center flex-shrink-0">
         <h1 className="text-white text-2xl font-bold">CHOOSE YOUR CARD</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-2 sm:px-4 mb-2 sm:mb-4">
+      <div className="px-2 sm:px-4 mb-2 sm:mb-4 flex-1 flex flex-col justify-center">
         <div
           className="relative overflow-hidden"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'none'
+          }}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -443,11 +452,14 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center absolute bottom-24 sm:bottom-16 left-2 sm:left-4 right-2 sm:right-4">
+      <div className="flex justify-center flex-shrink-0 pb-4">
         <button
           onClick={handleSubmit}
-          className="p-2 bg-white w-[120px] sm:w-[140px] md:w-[150px] text-red-600 text-sm sm:text-base md:text-lg rounded-[20px] shadow-lg font-black"
-          style={{ fontFamily: 'Roboto', fontWeight: 900 }}
+          className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
+          style={{ 
+            fontFamily: 'Roboto', 
+            fontWeight: 900
+          }}
         >
           SUBMIT
         </button>
