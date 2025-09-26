@@ -443,7 +443,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center mt-[-60px] mb-4 relative z-50">
+      <div className="flex justify-center mt-[-75px] mb-4 relative z-50">
         <button
           onClick={handleSubmit}
           className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black relative z-50"
