@@ -68,6 +68,68 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   flex-direction: column;
 }
 
+/* iPhone Safari specific fixes for ResultPage CouponCarousel */
+@supports (-webkit-touch-callout: none) {
+  .result-page {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .result-page .flex-1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* CouponCarousel iPhone fixes */
+  .result-page .relative {
+    position: relative;
+  }
+  
+  .result-page .relative > div:first-child {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+    overflow: hidden;
+  }
+  
+  .result-page .relative > div:first-child > div {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+  }
+  
+  .result-page .relative > div:first-child > div > div {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+  }
+  
+  .result-page .relative > div:first-child > div > div > img {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+    object-fit: cover;
+  }
+  
+  /* Navigation buttons iPhone fixes */
+  .result-page button[class*="absolute"] {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    z-index: 20 !important;
+    touch-action: manipulation;
+  }
+}
+
 /* Specific fix for CardSelectionPage - no scroll */
 /* .card-selection-page {
   height: 100vh;

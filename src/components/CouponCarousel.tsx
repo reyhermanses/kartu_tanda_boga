@@ -126,6 +126,11 @@ export function CouponCarousel({ coupons }: Props) {
       <div 
         ref={containerRef}
         className="relative overflow-hidden rounded-lg border border-neutral-200 cursor-grab active:cursor-grabbing"
+        style={{
+          height: '200px',
+          minHeight: '200px',
+          maxHeight: '200px'
+        }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -135,8 +140,11 @@ export function CouponCarousel({ coupons }: Props) {
         onTouchEnd={handleTouchEnd}
       >
         <div 
-          className="flex h-48 transition-transform duration-300 ease-in-out"
+          className="flex transition-transform duration-300 ease-in-out"
           style={{ 
+            height: '200px',
+            minHeight: '200px',
+            maxHeight: '200px',
             transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`,
             transition: isDragging ? 'none' : 'transform 300ms ease-in-out'
           }}
@@ -146,7 +154,12 @@ export function CouponCarousel({ coupons }: Props) {
               <img 
                 src={group.image} 
                 alt={`Coupon ${index + 1}`} 
-                className="w-full h-48 object-cover pointer-events-none" 
+                className="w-full object-cover pointer-events-none" 
+                style={{
+                  height: '200px',
+                  minHeight: '200px',
+                  maxHeight: '200px'
+                }}
                 draggable={false}
               />
             </div>
@@ -158,13 +171,25 @@ export function CouponCarousel({ coupons }: Props) {
           <>
             <button
               onClick={prevSlide}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-colors z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-colors z-20"
+              style={{
+                width: '40px',
+                height: '40px',
+                minWidth: '40px',
+                minHeight: '40px'
+              }}
             >
               <ChevronLeft className="h-5 w-5 text-gray-700" />
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-colors z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-colors z-20"
+              style={{
+                width: '40px',
+                height: '40px',
+                minWidth: '40px',
+                minHeight: '40px'
+              }}
             >
               <ChevronRight className="h-5 w-5 text-gray-700" />
             </button>
