@@ -67,7 +67,7 @@ export function ResultPage({ created, values }: Props) {
   }
 
   return (
-    <div className="result-page">
+    <div className="">
       {/* Header */}
       {/* <div className="px-4 py-4 flex justify-between items-center">
         <button onClick={onBack} className="text-white">
