@@ -101,7 +101,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* Specific fix for ResultPage - no scroll */
-.result-page {
+/* .result-page {
   height: 100vh;
   overflow: hidden;
   position: fixed;
@@ -114,7 +114,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   flex-direction: column;
   max-width: 100vw;
   width: 100%;
-}
+} */
 
 
 /* Allow scroll for form pages when needed */
