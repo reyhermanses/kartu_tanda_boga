@@ -232,7 +232,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
   }
 
   return (
-    <div className="card-selection-page">
+    <div className="h-screen overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-red-600 flex flex-col">
       {/* Header */}
       <div className="px-4 py-4 flex justify-center items-center">
         <h1 className="text-white text-2xl font-bold">CHOOSE YOUR CARD</h1>
