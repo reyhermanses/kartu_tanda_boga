@@ -477,7 +477,7 @@ footer {
   
   /* CardSelectionPage has different structure - handle separately - iPhone only */
   .card-selection-page {
-    min-height: 100dvh;
+    /* min-height: 100dvh; */
     min-height: 100vh; /* Fallback */
     display: flex;
     flex-direction: column;
