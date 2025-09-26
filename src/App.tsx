@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { SplashScreen } from './components/SplashScreen'
+// import { SplashScreen } from './components/SplashScreen'
 import { FormSection } from './components/FormSection'
 import { PhotoUploadPage } from './components/PhotoUploadPage'
 import { CardSelectionPage } from './components/CardSelectionPage'
@@ -7,7 +7,7 @@ import { ResultPage } from './components/ResultPage'
 import { AlertModal } from './components/AlertModal'
 
 import type { FormValues, FormErrors } from './types'
-import { saveSession, loadSession, clearSession } from './utils/sessionStorage'
+import { clearSession } from './utils/sessionStorage'
 
 export interface CreateMembershipResponse {
   status: string
@@ -28,7 +28,7 @@ export interface CreateMembershipResponse {
 }
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(2) // Start directly at form page
   const [values, setValues] = useState<FormValues>({
     name: '',
     birthday: '',
@@ -52,35 +52,153 @@ function App() {
     }
   }
 
-  // Load session data on app mount
+  // Load session data on app mount - only once
   useEffect(() => {
-    const sessionData = loadSession()
-    if (sessionData) {
-      setCurrentPage(sessionData.currentPage)
-      setValues(sessionData.values)
-      setSelectedCardUrl(sessionData.selectedCardUrl)
-      if (sessionData.created) {
-        setCreated(sessionData.created)
+    let isLoaded = false
+    
+    const loadSession = () => {
+      if (isLoaded) return
+      isLoaded = true
+      
+      try {
+        const saved = sessionStorage.getItem('ktb_form_session')
+        console.log('Raw session data from storage:', saved)
+        
+        if (saved) {
+          const sessionData = JSON.parse(saved)
+          console.log('Parsed session data:', sessionData)
+          
+          if (sessionData.currentPage) {
+            console.log('Setting currentPage to:', sessionData.currentPage)
+            setCurrentPage(sessionData.currentPage)
+          }
+          if (sessionData.values) {
+            console.log('Setting values:', sessionData.values)
+            
+            // Convert base64 photoFile back to File if it exists
+            if (sessionData.values.photoFile && typeof sessionData.values.photoFile === 'string') {
+              const arr = sessionData.values.photoFile.split(',')
+              const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/jpeg'
+              const bstr = atob(arr[1])
+              let n = bstr.length
+              const u8arr = new Uint8Array(n)
+              while (n--) {
+                u8arr[n] = bstr.charCodeAt(n)
+              }
+              const file = new File([u8arr], 'photo.jpg', { type: mime })
+              sessionData.values.photoFile = file
+            }
+            
+            setValues(sessionData.values)
+          }
+          if (sessionData.selectedCardUrl) {
+            console.log('Setting selectedCardUrl:', sessionData.selectedCardUrl)
+            setSelectedCardUrl(sessionData.selectedCardUrl)
+          }
+          if (sessionData.created) {
+            console.log('Setting created:', sessionData.created)
+            setCreated(sessionData.created)
+          }
+        } else {
+          console.log('No session data found, starting fresh')
+        }
+      } catch (error) {
+        console.error('Failed to load session:', error)
       }
     }
+    
+    // Load immediately
+    loadSession()
   }, [])
 
-  // Auto save session data when values change
+  // Save session data with debouncing
   useEffect(() => {
-    const saveSessionData = async () => {
-      await saveSession({
-        currentPage,
-        values,
-        selectedCardUrl,
-        created
-      })
+    const saveCurrentPage = () => {
+      console.log('Saving currentPage:', currentPage)
+      try {
+        const saved = sessionStorage.getItem('ktb_form_session')
+        const sessionData = saved ? JSON.parse(saved) : {}
+        sessionData.currentPage = currentPage
+        sessionStorage.setItem('ktb_form_session', JSON.stringify(sessionData))
+        console.log('CurrentPage saved:', currentPage)
+      } catch (error) {
+        console.error('Failed to save currentPage:', error)
+      }
     }
     
-    // Only save if we're not on the first page (splash screen)
-    if (currentPage > 1) {
-      saveSessionData()
+    const timer = setTimeout(saveCurrentPage, 100)
+    return () => clearTimeout(timer)
+  }, [currentPage])
+
+  useEffect(() => {
+    const saveValues = () => {
+      console.log('Saving values:', values)
+      try {
+        const saved = sessionStorage.getItem('ktb_form_session')
+        const sessionData = saved ? JSON.parse(saved) : {}
+        
+        // Convert photoFile to base64 if it exists
+        if (values.photoFile && values.photoFile instanceof File) {
+          const reader = new FileReader()
+          reader.onload = () => {
+            const valuesWithBase64 = {
+              ...values,
+              photoFile: reader.result as string
+            }
+            sessionData.values = valuesWithBase64
+            sessionStorage.setItem('ktb_form_session', JSON.stringify(sessionData))
+            console.log('Values saved with base64 photo')
+          }
+          reader.readAsDataURL(values.photoFile)
+        } else {
+          sessionData.values = values
+          sessionStorage.setItem('ktb_form_session', JSON.stringify(sessionData))
+          console.log('Values saved successfully')
+        }
+      } catch (error) {
+        console.error('Failed to save values:', error)
+      }
     }
-  }, [currentPage, values, selectedCardUrl, created])
+    
+    const timer = setTimeout(saveValues, 100)
+    return () => clearTimeout(timer)
+  }, [values])
+
+  useEffect(() => {
+    const saveSelectedCardUrl = () => {
+      console.log('Saving selectedCardUrl:', selectedCardUrl)
+      try {
+        const saved = sessionStorage.getItem('ktb_form_session')
+        const sessionData = saved ? JSON.parse(saved) : {}
+        sessionData.selectedCardUrl = selectedCardUrl
+        sessionStorage.setItem('ktb_form_session', JSON.stringify(sessionData))
+        console.log('SelectedCardUrl saved:', selectedCardUrl)
+      } catch (error) {
+        console.error('Failed to save selectedCardUrl:', error)
+      }
+    }
+    
+    const timer = setTimeout(saveSelectedCardUrl, 100)
+    return () => clearTimeout(timer)
+  }, [selectedCardUrl])
+
+  useEffect(() => {
+    const saveCreated = () => {
+      console.log('Saving created:', created)
+      try {
+        const saved = sessionStorage.getItem('ktb_form_session')
+        const sessionData = saved ? JSON.parse(saved) : {}
+        sessionData.created = created
+        sessionStorage.setItem('ktb_form_session', JSON.stringify(sessionData))
+        console.log('Created saved:', created)
+      } catch (error) {
+        console.error('Failed to save created:', error)
+      }
+    }
+    
+    const timer = setTimeout(saveCreated, 100)
+    return () => clearTimeout(timer)
+  }, [created])
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -111,9 +229,10 @@ function App() {
       }
     }
     
-    if (!values.gender) {
-      newErrors.gender = 'Jenis kelamin harus dipilih'
-    }
+    // Gender validation removed temporarily
+    // if (!values.gender) {
+    //   newErrors.gender = 'Jenis kelamin harus dipilih'
+    // }
     
     if (!values.photoFile) {
       newErrors.photoFile = 'Foto profil harus diupload'
@@ -169,7 +288,7 @@ function App() {
         birthday: values.birthday,
         phone: values.phone,
         email: values.email,
-        gender: values.gender,
+        // gender: values.gender, // Temporarily removed
         profileImage: base64String,
         cardImage: selectedCardUrl
       }
@@ -230,9 +349,9 @@ function App() {
     }
   }
 
-  const handleNext = () => {
-    setCurrentPage(prev => prev + 1)
-  }
+  // const handleNext = () => {
+  //   setCurrentPage(prev => prev + 1)
+  // }
 
 
   const handleFormNext = () => {
@@ -257,8 +376,9 @@ function App() {
 
   const renderCurrentPage = () => {
     switch (currentPage) {
+      // case 1:
+      //   return <SplashScreen onNext={handleNext} />
       case 1:
-        return <SplashScreen onNext={handleNext} />
       case 2:
         return (
           <FormSection
@@ -304,7 +424,20 @@ function App() {
           />
         ) : null
       default:
-        return <SplashScreen onNext={handleNext} />
+        // return <SplashScreen onNext={handleNext} />
+        return (
+          <FormSection
+            values={values}
+            errors={errors}
+            onChange={updateValues}
+            onNext={handleFormNext}
+            onProfileUpload={() => setCurrentPage(3)}
+            onPhotoError={(error: string) => {
+              setAlertMessage(error)
+              setShowAlert(true)
+            }}
+          />
+        )
     }
   }
 

@@ -12,7 +12,7 @@ type Props = {
 }
 
 export function PhotoUploadPage({ values, onChange, onBack }: Props) {
-  const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [isCameraOpen, setIsCameraOpen] = useState(true)
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment')
   const [flashlightOn, setFlashlightOn] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -74,12 +74,24 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
     }
   }
 
-  // Stop camera
+  // Stop camera - immediate and aggressive
   const stopCamera = () => {
+    // Stop all tracks immediately
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current.getTracks().forEach(track => {
+        track.stop()
+        track.enabled = false
+      })
       streamRef.current = null
     }
+    
+    // Clear video source immediately
+    if (videoRef.current) {
+      videoRef.current.srcObject = null
+      videoRef.current.src = ''
+    }
+    
+    // Clear references immediately
     trackRef.current = null
     setFlashlightOn(false)
     setIsCameraOpen(false)
@@ -106,8 +118,9 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
         const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' })
         
         onChange({ photoFile: file })
-        // Stop camera after taking picture
+        // Stop camera immediately after taking picture
         stopCamera()
+        setIsCameraOpen(false)
       }
     }
   }
@@ -151,22 +164,43 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
     }
   }
 
-  // Auto-start camera when component mounts - DISABLED for mobile compatibility
+  // Auto-start camera when component mounts
   useEffect(() => {
-    // Don't auto-start camera to avoid permission/HTTPS issues on mobile
-    // Camera will start when user clicks the shutter button
+    // Start camera immediately when PhotoUploadPage opens
+    startCamera()
     return () => {
       stopCamera()
     }
   }, [facingMode]) // Add facingMode dependency
 
-  // This useEffect is now handled in the main useEffect above
+  // Stop camera when component unmounts (user leaves page)
+  useEffect(() => {
+    return () => {
+      // Immediate camera stop on unmount
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => {
+          track.stop()
+          track.enabled = false
+        })
+        streamRef.current = null
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null
+        videoRef.current.src = ''
+      }
+      trackRef.current = null
+    }
+  }, [])
 
   return (
     <div className="photo-upload-page">
       {/* Header */}
       <div className="px-2 sm:px-4 py-2 sm:py-4 flex justify-between items-center">
-        <button onClick={onBack} className="text-white">
+        <button onClick={() => { 
+          stopCamera(); 
+          setIsCameraOpen(false);
+          onBack(); 
+        }} className="text-white">
           <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -195,13 +229,14 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
                   className="w-full h-full object-cover rounded-xl"
                 />
               ) : (
-                // Live Camera Feed - Default when page loads or camera is open
+                // Live Camera Feed - Always show when no photo or camera is open
                 <video
                   ref={videoRef}
                   autoPlay
                   playsInline
                   muted
                   className="w-full h-full object-cover rounded-xl"
+                  style={{ transform: 'scaleX(-1)' }}
                 />
               )}
 

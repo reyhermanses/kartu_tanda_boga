@@ -46,14 +46,17 @@ export function ResultPage({ created, values }: Props) {
     return `${day} ${month} ${year}`
   }
 
-  // Create avatar URL from photo file
+  // Create avatar URL from photo file or fallback to created profile image
   useEffect(() => {
     if (values.photoFile) {
       const url = URL.createObjectURL(values.photoFile)
       setAvatarUrl(url)
       return () => URL.revokeObjectURL(url)
+    } else if (created?.profileImage) {
+      // Fallback to created profile image if photoFile is not available
+      setAvatarUrl(created.profileImage)
     }
-  }, [values.photoFile])
+  }, [values.photoFile, created?.profileImage])
 
   function handleClaimClick() {
     // Use smart deeplink that automatically handles device detection and store redirection
@@ -85,7 +88,7 @@ export function ResultPage({ created, values }: Props) {
           <div>
             <div className="text-xs text-neutral-300 mb-2">Your card</div>
             <div
-              className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[245px] sm:h-[280px] md:h-[310px]"
+              className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[230px] sm:h-[280px] md:h-[310px]"
               style={{
                 background: created?.cardImage ? `url(${created.cardImage})` : '#f3f4f6',
                 backgroundSize: 'cover',
@@ -94,13 +97,13 @@ export function ResultPage({ created, values }: Props) {
               }}
             >
               {/* KTB BOGA GROUP Logo - Top Left */}
-              <div className="absolute top-4 left-4 text-white">
+              {/* <div className="absolute top-4 left-4 text-white">
                 <div className="font-bold text-lg">KTB</div>
                 <div className="text-sm font-semibold">BOGA GROUP</div>
-              </div>
+              </div> */}
 
               {/* BOGA Logo - Top Right */}
-              <div className="absolute top-4 right-4 text-white">
+              {/* <div className="absolute top-4 right-4 text-white">
                 <div className="flex items-center">
                   <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-2">
                     <span className="text-black font-bold text-xs">G</span>
@@ -110,11 +113,11 @@ export function ResultPage({ created, values }: Props) {
                     <div className="text-xs">GROUP</div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Profile Picture */}
               <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-[100px]">
-                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
+                <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
@@ -132,7 +135,7 @@ export function ResultPage({ created, values }: Props) {
               </div>
 
               {/* User Info Card - Centered */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
                 <div className="flex items-center justify-center mb-2">
                   <div className="bg-white rounded-full px-3 py-1 flex items-center shadow-xl">
                     <span className="text-black font-bold text-sm mr-2">{created?.name || values.name}</span>

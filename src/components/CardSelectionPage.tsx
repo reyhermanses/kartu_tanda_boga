@@ -265,26 +265,34 @@ export function CardSelectionPage({ values, onNext }: Props) {
                   // Index 0: show [empty, 0, 1]
                   visibleCards = [
                     { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
-                    cards[0],
-                    cards[1]
+                    cards[0] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' }
                   ]
                 } else if (currentCardIndex === 1) {
                   // Index 1: show [0, 1, 2]
-                  visibleCards = [cards[0], cards[1], cards[2]]
+                  visibleCards = [
+                    cards[0] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[2] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' }
+                  ]
                 } else if (currentCardIndex === 2) {
                   // Index 2: show [1, 2, 3]
-                  visibleCards = [cards[1], cards[2], cards[3]]
+                  visibleCards = [
+                    cards[1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[2] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[3] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' }
+                  ]
                 } else if (currentCardIndex === 3) {
                   // Index 3: show [2, 3, empty]
                   visibleCards = [
-                    cards[2],
-                    cards[3],
+                    cards[2] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[3] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
                     { id: -2, name: 'EMPTY', imageUrl: '', tier: 'empty' }
                   ]
                 }
 
                 console.log(`Showing cards for index ${currentCardIndex}`)
-                console.log('Visible cards:', visibleCards.map(c => c.name))
+                console.log('Visible cards:', visibleCards.map(c => c?.name || 'undefined'))
                 console.log('Current card index:', currentCardIndex)
 
                 // Sliding window logic for 4 cards:
@@ -324,27 +332,29 @@ export function CardSelectionPage({ values, onNext }: Props) {
                 console.log(`Card ${visibleIndex}: ${card.name}, isSelected: ${isSelected}, currentCardIndex: ${currentCardIndex}`)
 
                 return (
-                  card.tier !== 'empty' ? <div
-                    key={card.id}
-                    className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[260px] sm:h-[280px] md:h-[310px]' : 'w-full h-32 sm:h-36 md:h-44 scale-75'
-                      } ${!isSelected ? 'blur-[2px]' : ''}`}
-                    style={{
-                      background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat'
-                    }}
-                  >
-                    {/* KTB BOGA GROUP Logo - Top Left */}
-                    {card.tier !== 'empty' && (
+                  card.tier !== 'empty' ?
+                    <div>
+                      <div
+                        key={card.id}
+                        className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[240px] sm:h-[280px] md:h-[310px]' : 'w-full h-32 sm:h-36 md:h-44 scale-75'
+                          } ${!isSelected ? 'blur-[2px]' : ''}`}
+                        style={{
+                          background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          backgroundRepeat: 'no-repeat'
+                        }}
+                      >
+                        {/* KTB BOGA GROUP Logo - Top Left */}
+                        {/* {card.tier !== 'empty' && (
                       <div className="absolute top-4 left-4 text-white">
                         <div className="font-bold text-lg">KTB</div>
                         <div className="text-sm font-semibold">BOGA GROUP</div>
                       </div>
-                    )}
+                    )} */}
 
-                    {/* BOGA Logo - Top Right */}
-                    {card.tier !== 'empty' && (
+                        {/* BOGA Logo - Top Right */}
+                        {/* {card.tier !== 'empty' && (
                       <div className="absolute top-4 right-4 text-white">
                         <div className="flex items-center">
                           <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-2">
@@ -356,58 +366,71 @@ export function CardSelectionPage({ values, onNext }: Props) {
                           </div>
                         </div>
                       </div>
-                    )}
+                    )} */}
 
-                    {/* Profile Picture */}
-                    {card.tier !== 'empty' && (
-                      <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[100px]' : 'top-[60px]'}`}>
-                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
-                          {values.photoFile ? (
-                            <img
-                              src={URL.createObjectURL(values.photoFile)}
-                              alt="Profile"
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-blue-200 flex items-center justify-center">
-                              <svg className="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* User Info Card - Centered */}
-                    {card.tier !== 'empty' && (
-                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
-                        <div className={`flex items-center justify-center mb-2 ${isSelected ? 'mb-2' : 'mb-[-16px] scale-75'}`}>
-                          <div className="bg-white rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-xl">
-                            <span className="text-black font-bold text-xs sm:text-sm mr-1 sm:mr-2">{values.name || 'Valerie'}</span>
-                            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                              <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
+                        {/* Profile Picture */}
+                        {card.tier !== 'empty' && (
+                          <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[100px]' : 'top-[60px]'}`}>
+                            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
+                              {values.photoFile ? (
+                                <img
+                                  src={URL.createObjectURL(values.photoFile)}
+                                  alt="Profile"
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-blue-200 flex items-center justify-center">
+                                  <svg className="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              )}
                             </div>
                           </div>
-                        </div>
-                        <div className="flex flex-row items-center justify-center">
-                          <div className="bg-black/60 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg">
-                            <span className="text-white font-medium text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
+                        )}
+
+                        {/* User Info Card - Centered */}
+                        {card.tier !== 'empty' && (
+                          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
+                            <div className={`flex items-center justify-center mb-2 ${isSelected ? 'mb-2' : 'mb-[-16px] scale-75'}`}>
+                              <div className="bg-white rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-xl">
+                                <span className="text-black font-bold text-xs sm:text-sm mr-1 sm:mr-2">{values.name || 'Valerie'}</span>
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                  <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-row items-center justify-center">
+                              <div className="bg-black/60 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg">
+                                <span className="text-white font-medium text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
+                              </div>
+                              <span className="text-white font-medium text-[10px] sm:text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
+                            </div>
+                            <div className="text-yellow-200 text-sm space-y-1">
+                              <div>{values.email || 'valeriebahagia@gmail.com'}</div>
+                            </div>
                           </div>
-                          <span className="text-white font-medium text-[10px] sm:text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
-                        </div>
-                        <div className="text-yellow-200 text-sm space-y-1">
-                          <div>{values.email || 'valeriebahagia@gmail.com'}</div>
-                        </div>
+                        )}
                       </div>
-                    )}
-                  </div> : <div className='flex text-white text-center h-32 justify-center items-center'>There no cards left</div>
+                       {isSelected && <div className='pt-2 text-white text-center uppercase tracking-widest font-semibold' style={{ letterSpacing: '0.4em' }}>{card.name}</div>}
+                    </div>
+                    :
+                    <div className='flex text-white text-center h-32 justify-center items-center'>There no cards left</div>
                 )
               })
             })()}
           </div>
+
+          {/* Card Title Display - Show title of the main/center card */}
+          {/* {cards.length > 0 && (
+            <div className="text-center mt-[-20px]">
+              <div className="text-white text-lg font-semibold">
+                {cards[currentCardIndex]?.name || 'Card Title'}
+              </div>
+            </div>
+          )} */}
 
           {/* Navigation Arrows - Horizontal */}
           <button
@@ -447,8 +470,8 @@ export function CardSelectionPage({ values, onNext }: Props) {
         <button
           onClick={handleSubmit}
           className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black relative z-50"
-          style={{ 
-            fontFamily: 'Roboto', 
+          style={{
+            fontFamily: 'Roboto',
             fontWeight: 900,
             zIndex: 50
           }}
