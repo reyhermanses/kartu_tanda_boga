@@ -15,14 +15,16 @@ type Props = {
 export function FormSection({ values, errors, onChange, onNext, onProfileUpload }: Props) {
   return (
     <div className="form-page iphone-se-form p-4 sm:p-6 relative overflow-hidden">
-      {/* Background Pattern */}
-      {/* <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100 opacity-30"></div> */}
-      {/* <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-4 left-4 w-16 h-16 bg-red-300 rounded-full blur-sm"></div>
-        <div className="absolute top-8 right-8 w-12 h-12 bg-red-400 rounded-full blur-sm"></div>
-        <div className="absolute bottom-8 left-8 w-20 h-20 bg-red-200 rounded-full blur-sm"></div>
-        <div className="absolute bottom-4 right-4 w-14 h-14 bg-red-300 rounded-full blur-sm"></div>
-      </div> */}
+      {/* Background Image - Bottom Full Height */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'bottom center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      ></div>
 
       <div className="relative z-10">
         {/* Profile Picture Section */}
@@ -71,15 +73,6 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
             onChange={(v) => onChange({ phone: v })}
             error={errors.phone}
           />
-          <InputField
-            label="Email"
-            type="email"
-            placeholder="Masukkan email"
-            required
-            value={values.email}
-            onChange={(v) => onChange({ email: v })}
-            error={errors.email}
-          />
           <div>
             <label className="block text-sm font-medium text-white mb-2">
               Tanggal Lahir <span className="text-red-300">*</span>
@@ -118,6 +111,15 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
               <p className="text-sm text-white mt-1">{errors.birthday}</p>
             )}
           </div>
+          <InputField
+            label="Email"
+            type="email"
+            placeholder="Masukkan email"
+            required
+            value={values.email}
+            onChange={(v) => onChange({ email: v })}
+            error={errors.email}
+          />
           {/* Tanggal Lahir dan Jenis Kelamin dalam Row */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {/* Tanggal Lahir */}

@@ -70,7 +70,17 @@ export function ResultPage({ created, values }: Props) {
   }
 
   return (
-    <div className="">
+    <div className="relative">
+      {/* Background Image - Bottom Full Height */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'bottom center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      ></div>
       {/* Header */}
       {/* <div className="px-4 py-4 flex justify-between items-center">
         <button onClick={onBack} className="text-white">
@@ -83,7 +93,7 @@ export function ResultPage({ created, values }: Props) {
       </div> */}
 
       {/* Main Content */}
-      <div className="flex-1 pb-4 flex items-center justify-center">
+      <div className="flex-1 pb-4 flex items-center justify-center relative z-10">
         <div className="w-full max-w-md p-4 space-y-4 rounded-xl">
           <div>
             <div className="text-xs text-neutral-300 mb-2">Your card</div>

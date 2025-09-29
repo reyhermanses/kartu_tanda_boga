@@ -232,14 +232,24 @@ export function CardSelectionPage({ values, onNext }: Props) {
   }
 
   return (
-    <div className="h-screen overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-red-600 flex flex-col">
+    <div className="h-screen overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-red-600 flex flex-col relative">
+      {/* Background Image - Bottom Full Height */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'bottom center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      ></div>
       {/* Header */}
-      <div className="px-4 py-4 flex justify-center items-center">
+      <div className="px-4 py-4 flex justify-center items-center relative z-10">
         <h1 className="text-white text-2xl font-bold">CHOOSE YOUR CARD</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-2 sm:px-4 mb-2 sm:mb-4">
+      <div className="px-2 sm:px-4 mb-2 sm:mb-4 relative z-10">
         <div
           className="relative overflow-hidden"
           onTouchStart={handleTouchStart}
@@ -466,7 +476,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center mt-[-75px] mb-4 relative z-50">
+      <div className="flex justify-center mt-[-75px] mb-4 relative z-20">
         <button
           onClick={handleSubmit}
           className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black relative z-50"

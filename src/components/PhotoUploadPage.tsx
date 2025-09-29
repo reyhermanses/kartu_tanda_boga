@@ -107,7 +107,10 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
       if (context) {
         canvas.width = video.videoWidth
         canvas.height = video.videoHeight
-        context.drawImage(video, 0, 0, canvas.width, canvas.height)
+        
+        // Flip the image horizontally to correct the mirror effect
+        context.scale(-1, 1)
+        context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
 
         // Convert canvas to base64 data URL (same format as old app)
         const dataUrl = canvas.toDataURL('image/jpeg', 0.8)
@@ -193,9 +196,19 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
   }, [])
 
   return (
-    <div className="photo-upload-page">
+    <div className="photo-upload-page relative">
+      {/* Background Image - Bottom Full Height */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'bottom center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      ></div>
       {/* Header */}
-      <div className="px-2 sm:px-4 py-2 sm:py-4 flex justify-between items-center">
+      <div className="px-2 sm:px-4 py-2 sm:py-4 flex justify-between items-center relative z-10">
         <button onClick={() => { 
           stopCamera(); 
           setIsCameraOpen(false);
@@ -215,7 +228,7 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
       </div>
 
       {/* Main Camera Interface */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative z-10">
         {/* Photo Display Area - Camera Preview */}
         <div className="relative mx-2 sm:mx-4 mt-2 sm:mt-4 mb-2 sm:mb-4">
           <div className="p-2 sm:p-4">
