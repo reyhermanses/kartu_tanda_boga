@@ -234,7 +234,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
   return (
     <div className="h-screen overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-red-600 flex flex-col relative">
       {/* Background Image - Bottom Full Height */}
-      <div 
+      <div
         className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: 'url(/bg.png)',
@@ -242,10 +242,12 @@ export function CardSelectionPage({ values, onNext }: Props) {
           backgroundPosition: 'bottom center',
           backgroundRepeat: 'no-repeat'
         }}
-      ></div>
+      >
+        
+      </div>
       {/* Header */}
       <div className="px-4 py-4 flex justify-center items-center relative z-10">
-        <h1 className="text-white text-2xl font-bold">CHOOSE YOUR CARD</h1>
+        <h1 className="text-white text-[18px] font-bold">CHOOSE YOUR CARD</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
@@ -346,8 +348,10 @@ export function CardSelectionPage({ values, onNext }: Props) {
                     <div>
                       <div
                         key={card.id}
-                        className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 ${isSelected ? 'w-full h-[240px] sm:h-[280px] md:h-[310px]' : 'w-full h-32 sm:h-36 md:h-44 scale-75'
-                          } ${!isSelected ? 'blur-[2px]' : ''}`}
+                        className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 
+                          ${isSelected
+                            ? 'w-full h-[200px] max-[375px]:h-[220px] max-[414px]:h-[240px] max-[390px]:h-[230px] max-[430px]:h-[250px]'
+                            : 'w-full h-24 max-[375px]:h-30 max-[414px]:h-34 max-[390px]:h-36 max-[430px]:h-48 scale-75'}`}
                         style={{
                           background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
                           backgroundSize: 'cover',
@@ -380,8 +384,20 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
                         {/* Profile Picture */}
                         {card.tier !== 'empty' && (
-                          <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${isSelected ? 'top-[100px]' : 'top-[60px]'}`}>
-                            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-blue-200">
+                          <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                          ${isSelected ? 'top-[100px] max-[375px]:top-[80px] max-[390px]:top-[80px] max-[414px]:top-[90px] max-[430px]:top-[100px]' : 'top-[60px] max-[375px]:top-[40px] max-[390px]:top-[40px] max-[414px]:top-[50px] max-[430px]:top-[60px]'}`}>
+                            <div className="
+                            w-24 h-24 
+                            max-[375px]:w-[80px] max-[375px]:h-[80px]
+                            max-[390px]:w-[80px] max-[390px]:h-[80px]
+                            max-[414px]:w-[90px] max-[414px]:h-[90px]
+                            max-[430px]:w-[100px] max-[430px]:h-[100px]
+                            rounded-full 
+                            overflow-hidden 
+                            border-4 
+                            border-white 
+                            shadow-lg 
+                            bg-blue-200">
                               {values.photoFile ? (
                                 <img
                                   src={URL.createObjectURL(values.photoFile)}
@@ -424,7 +440,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                           </div>
                         )}
                       </div>
-                       {isSelected && <div className='pt-2 text-white text-center uppercase tracking-widest font-semibold' style={{ letterSpacing: '0.4em' }}>{card.name}</div>}
+                      {isSelected && <div className='pt-2 text-white text-center uppercase tracking-widest font-semibold' style={{ letterSpacing: '0.4em' }}>{card.name}</div>}
                     </div>
                     :
                     <div className='flex text-white text-center h-32 justify-center items-center'>There no cards left</div>
@@ -453,7 +469,12 @@ export function CardSelectionPage({ values, onNext }: Props) {
             className="absolute top-16 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
             disabled={currentCardIndex <= 0}
           >
-            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 
+            max-[375px]:w-16 max-[375px]:h-16
+            max-[390px]:w-8 max-[390px]:h-8
+            max-[414px]:w-10 max-[414px]:h-10
+            max-[430px]:w-12 max-[430px]:h-12
+            text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 15l7-7 7 7" />
             </svg>
           </button>
@@ -468,7 +489,12 @@ export function CardSelectionPage({ values, onNext }: Props) {
             className="absolute bottom-16 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
             disabled={currentCardIndex >= cards.length - 1}
           >
-            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 
+            max-[375px]:w-16 max-[375px]:h-16
+            max-[390px]:w-8 max-[390px]:h-8
+            max-[414px]:w-10 max-[414px]:h-10
+            max-[430px]:w-12 max-[430px]:h-12
+            text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -476,7 +502,13 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center mt-[-75px] mb-4 relative z-20">
+      <div className="flex justify-center 
+      mt-[-75px]
+      max-[375px]:mt-[-60px]
+      max-[390px]:mt-[-60px]
+      max-[414px]:mt-[-75px]
+      max-[430px]:mt-[-60px]
+      mb-4 relative z-20">
         <button
           onClick={handleSubmit}
           className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black relative z-50"
