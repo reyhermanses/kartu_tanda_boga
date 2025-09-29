@@ -96,7 +96,7 @@ export function ResultPage({ created, values }: Props) {
       <div className="flex-1 pb-4 flex items-center justify-center relative z-10">
         <div className="w-full max-w-md p-4 space-y-4 rounded-xl">
           <div>
-            <div className="text-xs text-neutral-300 mb-2">Your card</div>
+            <div className="text-xs text-neutral-300 mb-2">Card Preview</div>
             <div
               className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[230px] sm:h-[280px] md:h-[310px]"
               style={{
