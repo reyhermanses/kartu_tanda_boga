@@ -232,7 +232,8 @@ export function CardSelectionPage({ values, onNext }: Props) {
   }
 
   return (
-    <div className="h-screen overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-red-600 flex flex-col relative">
+    // <div className="h-screen overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-red-600 flex flex-col relative">
+    <div className="fixed inset-0 h-[100dvh] bg-red-600 flex flex-col overflow-hidden relative">
       {/* Background Image - Bottom Full Height */}
       <div
         className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
@@ -243,7 +244,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        
+
       </div>
       {/* Header */}
       <div className="px-4 py-4 flex justify-center items-center relative z-10">
@@ -253,7 +254,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
       {/* Card Preview Container - Show 3 Cards at a time */}
       <div className="px-2 sm:px-4 mb-2 sm:mb-4 relative z-10">
         <div
-          className="relative overflow-hidden"
+          className="relative h-full"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -502,7 +503,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-center 
+      {/* <div className="flex justify-center 
       mt-[-75px]
       max-[375px]:mt-[-60px]
       max-[390px]:mt-[-60px]
@@ -520,7 +521,19 @@ export function CardSelectionPage({ values, onNext }: Props) {
         >
           SUBMIT
         </button>
-      </div>
+      </div> */}
+      <div
+  className="absolute bottom-2 left-0 right-0 z-20 flex justify-center pb-[20px]"
+  style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+>
+  <button
+    onClick={handleSubmit}
+    className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
+    style={{ fontFamily: 'Roboto', fontWeight: 900 }}
+  >
+    SUBMIT
+  </button>
+</div>
     </div>
   )
 }
