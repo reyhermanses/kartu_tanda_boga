@@ -232,8 +232,16 @@ export function CardSelectionPage({ values, onNext }: Props) {
   }
 
   return (
-    // <div className="h-screen overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-red-600 flex flex-col relative">
-    <div className="fixed inset-0 h-[100dvh] bg-red-600 flex flex-col overflow-hidden relative">
+    <div 
+      className="fixed inset-0 bg-red-600 flex flex-col"
+      style={{
+        height: '100dvh',
+        overflow: 'hidden',
+        touchAction: 'none',
+        overscrollBehavior: 'none',
+        WebkitOverflowScrolling: 'touch'
+      }}
+    >
       {/* Background Image - Bottom Full Height */}
       <div
         className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
@@ -252,15 +260,19 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-2 sm:px-4 mb-2 sm:mb-4 relative z-10">
+      <div className="px-2 sm:px-4 mb-2 sm:mb-4 relative z-10 flex-1 flex flex-col">
         <div
-          className="relative h-full"
+          className="relative flex-1 flex flex-col"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          style={{
+            touchAction: 'pan-y',
+            overscrollBehavior: 'none'
+          }}
         >
           {/* 3 Visible Cards Container */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1 flex flex-col justify-center">
             {(() => {
               console.log('=== VERTICAL CAROUSEL DEBUG ===')
               console.log('Total cards from backend:', cards.length)
@@ -523,9 +535,13 @@ export function CardSelectionPage({ values, onNext }: Props) {
         </button>
       </div> */}
       <div
-  className="absolute bottom-2 left-0 right-0 z-20 flex justify-center pb-[20px]"
-  style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
->
+        className="absolute bottom-2 left-0 right-0 z-20 flex justify-center pb-[20px]"
+        style={{ 
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          touchAction: 'none',
+          overscrollBehavior: 'none'
+        }}
+      >
   <button
     onClick={handleSubmit}
     className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
