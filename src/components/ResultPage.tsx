@@ -96,9 +96,9 @@ export function ResultPage({ created, values }: Props) {
       <div className="flex-1 pb-4 flex items-center justify-center relative z-10">
         <div className="w-full max-w-md p-4 space-y-4 rounded-xl">
           <div>
-            <div className="text-xs text-neutral-300 mb-2">Card Preview</div>
+            <div className="text-xs text-neutral-300 mb-2">Preview Card</div>
             <div
-              className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[230px] sm:h-[280px] md:h-[310px]"
+              className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[250px] max-[375px]:h-[210px] max-[440px]:h-[200px] max-[414px]:h-[230px] max-[390px]:h-[215px] max-[430px]:h-[240px]"
               style={{
                 background: created?.cardImage ? `url(${created.cardImage})` : '#f3f4f6',
                 backgroundSize: 'cover',
@@ -145,11 +145,11 @@ export function ResultPage({ created, values }: Props) {
               </div>
 
               {/* User Info Card - Centered */}
-              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <div className="bg-white rounded-full px-3 py-1 flex items-center shadow-xl">
+                  <div className="bg-white rounded-full px-3 max-[375px]:py-0 flex items-center shadow-xl">
                     <span className="text-black font-bold text-sm mr-2">{created?.name || values.name}</span>
-                    <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                    <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                       <svg className="w-3 h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
@@ -157,7 +157,7 @@ export function ResultPage({ created, values }: Props) {
                   </div>
                 </div>
                 <div className="flex flex-row items-center justify-center">
-                  <div className="bg-black/60 rounded-full px-3 py-1 flex items-center shadow-lg">
+                  <div className="bg-black/60 rounded-full max-[375px]:px-1 max-[375px]:py-1 flex items-center shadow-lg">
                     <span className="text-white font-medium text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
                   </div>
                   <span className="text-white font-medium text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
