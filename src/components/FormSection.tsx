@@ -87,7 +87,9 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                 style={{
                   colorScheme: 'dark',
                   color: 'white',
-                  paddingRight: '50px'
+                  paddingRight: '50px',
+                  paddingBottom: '20px',
+                  marginBottom: '8px'
                 }}
                 id="birthday-input"
               />
