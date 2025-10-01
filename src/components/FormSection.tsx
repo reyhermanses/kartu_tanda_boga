@@ -82,7 +82,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                 type="date"
                 value={values.birthday}
                 onChange={(e) => onChange({ birthday: e.target.value })}
-                className={`w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all text-base ${errors.birthday ? 'border-orange-500' : 'border-red-400'
+                className={`w-full rounded-[20px] border-2 bg-transparent text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all text-base ${errors.birthday ? 'border-orange-500' : 'border-red-400'
                   }`}
                 style={{
                   colorScheme: 'dark',
