@@ -364,7 +364,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                         className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 
                           ${isSelected
                             ? 'w-full h-[200px] max-[375px]:h-[220px] max-[393px]:h-[220px] max-[414px]:h-[240px] max-[390px]:h-[230px] max-[430px]:h-[250px]'
-                            : 'w-full h-24 max-[375px]:h-30 max-[414px]:h-34 max-[390px]:h-33 max-[393px]:h-36 max-[430px]:h-48 scale-75'}`}
+                            : 'w-full h-24 max-[375px]:h-24 max-[414px]:h-34 max-[390px]:h-33 max-[393px]:h-36 max-[430px]:h-48 scale-75'}`}
                         style={{
                           background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
                           backgroundSize: 'cover',
