@@ -73,45 +73,30 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
             onChange={(v) => onChange({ phone: v })}
             error={errors.phone}
           />
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Tanggal Lahir <span className="text-red-300">*</span>
-            </label>
-            <div className="relative">
-              <input
-                type="date"
-                value={values.birthday}
-                onChange={(e) => onChange({ birthday: e.target.value })}
-                className={`w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all ${errors.birthday ? 'border-orange-500' : 'border-red-400'
-                  }`}
-                style={{
-                  colorScheme: 'dark',
-                  color: 'white',
-                  paddingRight: '50px',
-                  paddingBottom: '20px',
-                  marginBottom: '8px'
-                }}
-                id="birthday-input"
-              />
-              {/* Custom Calendar Icon - Clickable */}
-              <button
-                type="button"
-                onClick={() => {
-                  const input = document.getElementById('birthday-input') as HTMLInputElement;
-                  if (input) {
-                    input.showPicker();
-                  }
-                }}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-auto cursor-pointer"
-              >
-                <svg className="w-5 h-5 text-white hover:text-red-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </button>
-            </div>
-            {errors.birthday && (
-              <p className="text-sm text-white mt-1">{errors.birthday}</p>
-            )}
+          <div className="relative">
+            <InputField
+              label="Tanggal Lahir"
+              type="date"
+              required
+              value={values.birthday}
+              onChange={(v) => onChange({ birthday: v })}
+              error={errors.birthday}
+            />
+            {/* Custom Calendar Icon - Clickable */}
+            <button
+              type="button"
+              onClick={() => {
+                const input = document.querySelector('input[type="date"]') as HTMLInputElement;
+                if (input) {
+                  input.showPicker();
+                }
+              }}
+              className="absolute right-4 top-8 pointer-events-auto cursor-pointer z-10"
+            >
+              <svg className="w-5 h-5 text-white hover:text-red-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </button>
           </div>
           <InputField
             label="Email"
