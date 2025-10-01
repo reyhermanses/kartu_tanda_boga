@@ -73,16 +73,16 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
             onChange={(v) => onChange({ phone: v })}
             error={errors.phone}
           />
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
+          <label className="block">
+            <span className="mb-2 block text-sm text-white font-medium">
               Tanggal Lahir <span className="text-red-300">*</span>
-            </label>
+            </span>
             <div className="relative">
               <input
                 type="date"
                 value={values.birthday}
                 onChange={(e) => onChange({ birthday: e.target.value })}
-                className={`w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all ${errors.birthday ? 'border-orange-500' : 'border-red-400'
+                className={`w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all text-base ${errors.birthday ? 'border-orange-500' : 'border-red-400'
                   }`}
                 style={{
                   colorScheme: 'dark',
@@ -110,9 +110,11 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
               </button>
             </div>
             {errors.birthday && (
-              <p className="text-sm text-white mt-1">{errors.birthday}</p>
+              <span className="mt-1 block text-xs text-white">
+                {errors.birthday}
+              </span>
             )}
-          </div>
+          </label>
           <InputField
             label="Email"
             type="email"
