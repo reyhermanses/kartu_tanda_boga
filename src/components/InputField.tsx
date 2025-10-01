@@ -21,7 +21,7 @@ export function InputField({ label, type = 'text', placeholder, value, onChange,
 
   return (
     <label className="block">
-      <span className="mb-1 sm:mb-2 block text-xs sm:text-sm text-white font-medium">
+      <span className="mb-2 block text-sm text-white font-medium">
         {label} {required && <span className="text-red-300">*</span>}
       </span>
       <input
@@ -32,17 +32,17 @@ export function InputField({ label, type = 'text', placeholder, value, onChange,
         required={required}
         aria-invalid={!!error}
         aria-describedby={error ? `${label}-error` : undefined}
-        className={`w-full rounded-[15px] sm:rounded-[20px] border-2 bg-transparent px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all text-sm sm:text-base ${
+        className={`w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all ${
           error ? 'border-orange-500' : 'border-red-400'
-        }`}
+        } ${isDateInput ? 'text-base' : ''}`}
         style={isDateInput ? { 
           colorScheme: 'dark',
           color: 'white',
-          paddingBottom: '15px',
-          marginBottom: '5px'
+          paddingBottom: '20px',
+          marginBottom: '8px'
         } : {
-          paddingBottom: '15px',
-          marginBottom: '5px'
+          paddingBottom: '20px',
+          marginBottom: '8px'
         }}
         {...dateInputProps}
       />

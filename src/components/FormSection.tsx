@@ -14,7 +14,7 @@ type Props = {
 
 export function FormSection({ values, errors, onChange, onNext, onProfileUpload }: Props) {
   return (
-    <div className="form-page iphone-se-form p-2 sm:p-4 md:p-6 relative overflow-hidden min-h-screen">
+    <div className="form-page iphone-se-form p-4 sm:p-6 relative overflow-hidden">
       {/* Background Image - Bottom Full Height */}
       <div 
         className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
@@ -26,11 +26,11 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
         }}
       ></div>
 
-      <div className="relative z-10 max-w-md mx-auto">
+      <div className="relative z-10">
         {/* Profile Picture Section */}
-        <div className="text-center mb-3 sm:mb-4">
+        <div className="text-center mb-4 sm:mb-6">
           <div className="relative inline-block">
-            <div className="w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px] bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-1">
+            <div className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
               {values.photoFile ? (
                 <img
                   src={URL.createObjectURL(values.photoFile)}
@@ -38,24 +38,24 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <svg className="w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[140px] md:h-[140px] text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-[110px] h-[110px] sm:w-[140px] sm:h-[140px] text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                 </svg>
               )}
             </div>
             <button
               onClick={onProfileUpload}
-              className="text-white text-xs sm:text-sm font-medium hover:text-red-300 transition-colors"
+              className="text-white text-sm font-medium hover:text-red-300 transition-colors"
             >
               Ubah Profile
             </button>
             {errors.photoFile && (
-              <p className="text-xs sm:text-sm text-white mt-1">{errors.photoFile}</p>
+              <p className="text-sm text-white mt-2">{errors.photoFile}</p>
             )}
           </div>
         </div>
 
-        <section className="space-y-2 sm:space-y-3 md:space-y-4">
+        <section className="space-y-3 sm:space-y-4">
           <InputField
             label="Nama Lengkap"
             placeholder="Masukkan nama lengkap"
@@ -74,7 +74,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
             error={errors.phone}
           />
           <label className="block">
-            <span className="mb-1 sm:mb-2 block text-xs sm:text-sm text-white font-medium">
+            <span className="mb-2 block text-sm text-white font-medium">
               Tanggal Lahir <span className="text-red-300">*</span>
             </span>
             <div className="relative">
@@ -82,14 +82,14 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                 type="date"
                 value={values.birthday}
                 onChange={(e) => onChange({ birthday: e.target.value })}
-                className={`w-full rounded-[15px] sm:rounded-[20px] border-2 bg-transparent px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all text-sm sm:text-base ${errors.birthday ? 'border-orange-500' : 'border-red-400'
+                className={`w-full rounded-[20px] border-2 bg-transparent px-3 py-3 sm:px-4 sm:py-5 text-white placeholder-white/70 outline-none focus:border-white focus:ring-1 focus:ring-white/50 focus:bg-transparent hover:bg-transparent transition-all text-base ${errors.birthday ? 'border-orange-500' : 'border-red-400'
                   }`}
                 style={{
                   colorScheme: 'dark',
                   color: 'white',
-                  paddingRight: '40px',
-                  paddingBottom: '15px',
-                  marginBottom: '5px'
+                  paddingRight: '50px',
+                  paddingBottom: '12px',
+                  marginBottom: '4px'
                 }}
                 id="birthday-input"
               />
@@ -102,9 +102,9 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                     input.showPicker();
                   }
                 }}
-                className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 pointer-events-auto cursor-pointer"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-auto cursor-pointer"
               >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white hover:text-red-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-white hover:text-red-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </button>
@@ -212,11 +212,11 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
         </section>
 
         {/* Next Button */}
-        <div className="flex justify-center pt-3 sm:pt-4 md:pt-6 px-2 sm:px-4 pb-2 sm:pb-4">
+        <div className="flex justify-center pt-4 sm:pt-6 md:pt-10 px-3 sm:px-6 pb-3 sm:pb-6">
           <button
             type="button"
             onClick={onNext}
-            className="w-[120px] sm:w-[150px] py-2 sm:py-3 md:py-4 rounded-[15px] sm:rounded-[20px] font-bold text-xs sm:text-sm md:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
+            className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
           >
             Next
           </button>
