@@ -371,7 +371,7 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
             max-[375px]:w-[120px]
           `}
             >
-              Next
+              Simpan
             </button>
           </div>
         }

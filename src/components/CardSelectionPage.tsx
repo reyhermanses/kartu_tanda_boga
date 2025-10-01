@@ -256,7 +256,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div>
       {/* Header */}
       <div className="px-4 py-4 flex justify-center items-center relative z-10">
-        <h1 className="text-white text-[18px] font-bold">CHOOSE YOUR CARD</h1>
+        <h1 className="text-white text-[18px] font-bold">Pilih Kartu Membership Kamu</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
@@ -456,7 +456,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                       {isSelected && <div className='pt-2 text-white text-center uppercase tracking-widest font-semibold' style={{ letterSpacing: '0.4em' }}>{card.name}</div>}
                     </div>
                     :
-                    <div className='flex text-white text-center h-32 justify-center items-center'>There no cards left</div>
+                    <div className='flex text-white text-center h-32 justify-center items-center'>Tidak ada kartu tersedia</div>
                 )
               })
             })()}
@@ -547,7 +547,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
     className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
     style={{ fontFamily: 'Roboto', fontWeight: 900 }}
   >
-    SUBMIT
+    Simpan
   </button>
 </div>
     </div>

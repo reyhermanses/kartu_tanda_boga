@@ -190,7 +190,7 @@ export function CouponCarousel({ coupons }: Props) {
       {/* Coupon names below the carousel */}
       <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="text-sm text-neutral-500 text-center mb-2">
-          Congratulations you just received these promos:
+        Selamat kamu baru saja mendapatkan promo berikut:
         </div>
         <div className="space-y-1">
           {currentGroup.names.map((name, index) => (

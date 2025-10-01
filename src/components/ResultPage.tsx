@@ -96,7 +96,7 @@ export function ResultPage({ created, values }: Props) {
       <div className="flex-1 pb-4 flex items-center justify-center relative z-10">
         <div className="w-full max-w-md p-4 space-y-4 rounded-xl">
           <div>
-            <div className="text-xs text-neutral-300 mb-2">Preview Card</div>
+            <div className="text-xs text-neutral-300 mb-2">Tampilan Kartu</div>
             <div
               className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[250px] max-[375px]:h-[210px] max-[440px]:h-[200px] max-[414px]:h-[230px] max-[390px]:h-[215px] max-[430px]:h-[240px]"
               style={{
@@ -171,7 +171,7 @@ export function ResultPage({ created, values }: Props) {
           
           {created?.isEligibleForCoupon && created.coupons && created.coupons.length > 0 && (
             <div className="border-t border-neutral-200 pt-4">
-              <div className="text-xs text-neutral-300 mb-2">Special offers</div>
+              <div className="text-xs text-neutral-300 mb-2">Penawaran Khusus</div>
               <CouponCarousel coupons={created.coupons.map((coupon, index) => ({
                 id: index + 1,
                 name: coupon.name,
@@ -187,7 +187,7 @@ export function ResultPage({ created, values }: Props) {
               onClick={handleClaimClick}
               className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
             >
-              Claim Voucher
+              Claim
             </button>
           </div>
         </div>
