@@ -108,9 +108,16 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
         canvas.width = video.videoWidth
         canvas.height = video.videoHeight
 
-        // Flip the image horizontally to correct the mirror effect
-        context.scale(-1, 1)
-        context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
+        // Only flip for front camera (selfie) to correct mirror effect
+        // Back camera doesn't need flipping
+        if (facingMode === 'user') {
+          // Front camera: flip horizontally to correct mirror effect
+          context.scale(-1, 1)
+          context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
+        } else {
+          // Back camera: no flipping needed
+          context.drawImage(video, 0, 0, canvas.width, canvas.height)
+        }
 
         // Convert canvas to base64 data URL (same format as old app)
         const dataUrl = canvas.toDataURL('image/jpeg', 0.8)
@@ -257,7 +264,7 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
                   playsInline
                   muted
                   className="w-full h-full object-cover rounded-inherit"
-                  style={{ transform: 'scaleX(-1)' }}
+                  style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
                 />
               )}
 
