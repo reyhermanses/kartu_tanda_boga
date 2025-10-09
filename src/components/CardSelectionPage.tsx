@@ -255,12 +255,12 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
       </div>
       {/* Header */}
-      <div className="px-4 py-4 flex justify-center max-[375px]:top-14 max-[414px]:top-14 max-[430px]:top-14 items-center relative z-10">
+      <div className="px-4 py-4 flex justify-center top-0 items-center relative z-10">
         <h1 className="text-white text-[22px] font-bold">Pilih Kartu Membership Kamu</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-4 sm:px-4 top-[-40px] mb-2 sm:mb-4 relative z-10 flex-1 flex flex-col">
+      <div className="px-4 sm:px-4 top-[-100px] mb-2 sm:mb-4 relative z-10 flex-1 flex flex-col">
         <div
           className="absolute top-20 left-0 right-0 flex flex-col"
           onTouchStart={handleTouchStart}
