@@ -255,14 +255,14 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
       </div>
       {/* Header */}
-      <div className="px-4 py-4 flex justify-center items-center relative z-10">
-        <h1 className="text-white text-[18px] font-bold">Pilih Kartu Membership Kamu</h1>
+      <div className="px-4 py-4 flex justify-center max-[375px]:top-14 max-[414px]:top-14 max-[430px]:top-14 items-center relative z-10">
+        <h1 className="text-white text-[22px] font-bold">Pilih Kartu Membership Kamu</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
-      <div className="px-2 sm:px-4 mb-2 sm:mb-4 relative z-10 flex-1 flex flex-col">
+      <div className="px-4 sm:px-4 top-[-40px] mb-2 sm:mb-4 relative z-10 flex-1 flex flex-col">
         <div
-          className="relative flex-1 flex flex-col"
+          className="absolute top-20 left-0 right-0 flex flex-col"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -272,7 +272,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
           }}
         >
           {/* 3 Visible Cards Container */}
-          <div className="space-y-4 flex-1 flex flex-col justify-center">
+          <div className="space-y-4 flex flex-col p-2">
             {(() => {
               console.log('=== VERTICAL CAROUSEL DEBUG ===')
               console.log('Total cards from backend:', cards.length)

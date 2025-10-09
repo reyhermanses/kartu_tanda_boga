@@ -110,7 +110,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   min-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #dc2626;
+  background: transparent;
 }
 
 /* iPhone SE specific scroll for ResultPage */

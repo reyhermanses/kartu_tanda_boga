@@ -43,6 +43,7 @@ function App() {
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isValidatingEmail, setIsValidatingEmail] = useState(false)
 
   const updateValues = (newValues: Partial<FormValues>) => {
     setValues(prev => ({ ...prev, ...newValues }))
@@ -51,6 +52,59 @@ function App() {
       setErrors({})
     }
   }
+
+  // Email validation with API
+  const validateEmailWithAPI = async (email: string, phone: string) => {
+    if (!email || !phone) return
+
+    setIsValidatingEmail(true)
+    try {
+      const response = await fetch('https://alpha-api.mybogaloyalty.id/membership-card/check-email', {
+        method: 'POST',
+        headers: {
+          'X-BOGAMBC-Key': 'ajCJotQ8Ug1USZS3KuoXbqaazY59CAvI',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          phone: `0${phone}` // Add 0 prefix to phone
+        })
+      })
+
+      const result = await response.text()
+      const isEmailAvailable = result === 'true'
+
+      if (!isEmailAvailable) {
+        setErrors(prev => ({
+          ...prev,
+          email: 'Email sudah digunakan'
+        }))
+      } else {
+        setErrors(prev => {
+          const newErrors = { ...prev }
+          delete newErrors.email
+          return newErrors
+        })
+      }
+    } catch (error) {
+      console.error('Email validation error:', error)
+      // Don't show error for network issues, let user continue
+    } finally {
+      setIsValidatingEmail(false)
+    }
+  }
+
+  // Debounced email validation
+  useEffect(() => {
+    if (!values.email || !values.phone) return
+
+    const timer = setTimeout(() => {
+      validateEmailWithAPI(values.email, values.phone)
+    }, 1000) // 1 second debounce
+
+    return () => clearTimeout(timer)
+  }, [values.email, values.phone])
 
   // Load session data on app mount - only once
   useEffect(() => {
@@ -209,8 +263,12 @@ function App() {
     
     if (!values.phone.trim()) {
       newErrors.phone = 'Nomor telepon harus diisi'
-    } else if (!/^[0-9+\-\s()]+$/.test(values.phone)) {
+    } else if (!/^[0-9]+$/.test(values.phone)) {
       newErrors.phone = 'Format nomor telepon tidak valid'
+    } else if (values.phone.length < 10 || values.phone.length > 13) {
+      newErrors.phone = 'Nomor telepon harus 10-13 digit'
+    } else if (!values.phone.startsWith('8')) {
+      newErrors.phone = 'Nomor telepon harus dimulai dengan 8'
     }
     
     if (!values.email.trim()) {
@@ -226,6 +284,18 @@ function App() {
       const today = new Date()
       if (birthDate >= today) {
         newErrors.birthday = 'Tanggal lahir harus di masa lalu'
+      } else {
+        // Calculate age
+        const age = today.getFullYear() - birthDate.getFullYear()
+        const monthDiff = today.getMonth() - birthDate.getMonth()
+        const dayDiff = today.getDate() - birthDate.getDate()
+        
+        // Adjust age if birthday hasn't occurred this year
+        const actualAge = (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) ? age - 1 : age
+        
+        if (actualAge < 13) {
+          newErrors.birthday = 'Umur minimal 13 tahun'
+        }
       }
     }
     
@@ -234,12 +304,21 @@ function App() {
     //   newErrors.gender = 'Jenis kelamin harus dipilih'
     // }
     
-    if (!values.photoFile) {
-      newErrors.photoFile = 'Foto profil harus diupload'
+    // Photo validation moved to PhotoUploadPage
+    // if (!values.photoFile) {
+    //   newErrors.photoFile = 'Foto profil harus diupload'
+    // }
+    
+    // Check if there are existing errors (like email already used from API)
+    const finalErrors = { ...newErrors, ...errors }
+    
+    // Block submit if email validation is still in progress
+    if (isValidatingEmail) {
+      return false
     }
     
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    setErrors(finalErrors)
+    return Object.keys(finalErrors).length === 0
   }
 
   const compressImage = (file: File, maxWidth: number = 800, quality: number = 0.5): Promise<string> => {
@@ -286,7 +365,8 @@ function App() {
       const requestPayload = {
         name: values.name,
         birthday: values.birthday,
-        phone: values.phone,
+        // phone: `+62${values.phone}`,
+        phone: `0${values.phone}`,
         email: values.email,
         // gender: values.gender, // Temporarily removed
         profileImage: base64String,
@@ -356,7 +436,7 @@ function App() {
 
   const handleFormNext = () => {
     if (validateForm()) {
-      setCurrentPage(4) // Card selection page
+      setCurrentPage(3) // Photo upload page
     } else {
       setAlertMessage('Mohon lengkapi semua field yang wajib diisi')
       setShowAlert(true)
@@ -365,6 +445,10 @@ function App() {
 
   const handlePhotoBack = () => {
     setCurrentPage(2) // Form section
+  }
+
+  const handlePhotoNext = () => {
+    setCurrentPage(4) // Card selection page
   }
 
   const handleCardSelectionNext = (selectedCard: any) => {
@@ -386,11 +470,11 @@ function App() {
             errors={errors}
             onChange={updateValues}
             onNext={handleFormNext}
-            onProfileUpload={() => setCurrentPage(3)}
             onPhotoError={(error: string) => {
               setAlertMessage(error)
               setShowAlert(true)
             }}
+            isValidatingEmail={isValidatingEmail}
           />
         )
       case 3:
@@ -400,6 +484,7 @@ function App() {
             errors={errors}
             onChange={updateValues}
             onBack={handlePhotoBack}
+            onNext={handlePhotoNext}
             onPhotoError={(error: string) => {
               setAlertMessage(error)
               setShowAlert(true)
@@ -431,11 +516,11 @@ function App() {
             errors={errors}
             onChange={updateValues}
             onNext={handleFormNext}
-            onProfileUpload={() => setCurrentPage(3)}
             onPhotoError={(error: string) => {
               setAlertMessage(error)
               setShowAlert(true)
             }}
+            isValidatingEmail={isValidatingEmail}
           />
         )
     }

@@ -8,52 +8,28 @@ type Props = {
   errors: FormErrors
   onChange: (next: Partial<FormValues>) => void
   onNext: () => void
-  onProfileUpload?: () => void
   onPhotoError?: (message: string) => void
+  isValidatingEmail?: boolean
 }
 
-export function FormSection({ values, errors, onChange, onNext, onProfileUpload }: Props) {
+export function FormSection({ values, errors, onChange, onNext, isValidatingEmail }: Props) {
   return (
-    <div className="form-page iphone-se-form p-4 sm:p-6 relative overflow-hidden">
-      {/* Background Image - Bottom Full Height */}
+    <div className="form-page p-4 sm:p-6 relative overflow-hidden min-h-screen">
+      {/* Background Image - Full Viewport Height */}
       <div 
-        className="absolute bottom-0 left-0 right-0 top-0 bg-cover bg-center bg-no-repeat"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: 'url(/bg.png)',
           backgroundSize: 'cover',
-          backgroundPosition: 'bottom center',
-          backgroundRepeat: 'no-repeat'
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          zIndex: 1,
+          width: '100vw',
+          height: '100vh'
         }}
       ></div>
 
-      <div className="relative z-10">
-        {/* Profile Picture Section */}
-        <div className="text-center mb-4 sm:mb-6">
-          <div className="relative inline-block">
-            <div className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
-              {values.photoFile ? (
-                <img
-                  src={URL.createObjectURL(values.photoFile)}
-                  alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              ) : (
-                <svg className="w-[110px] h-[110px] sm:w-[140px] sm:h-[140px] text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
-              )}
-            </div>
-            <button
-              onClick={onProfileUpload}
-              className="text-white text-sm font-medium hover:text-red-300 transition-colors"
-            >
-              Ubah Profile
-            </button>
-            {errors.photoFile && (
-              <p className="text-sm text-white mt-2">{errors.photoFile}</p>
-            )}
-          </div>
-        </div>
+      <div className="relative z-20">
 
         <section className="space-y-3 sm:space-y-4">
           <InputField
@@ -64,15 +40,38 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
             onChange={(v) => onChange({ name: v })}
             error={errors.name}
           />
-          <InputField
-            label="Nomor Telepon"
-            type="tel"
-            placeholder="Masukkan nomor telepon"
-            required
-            value={values.phone}
-            onChange={(v) => onChange({ phone: v })}
-            error={errors.phone}
-          />
+          <label className="block">
+            <span className="mb-2 block text-sm text-white font-medium">
+              Nomor Telepon <span className="text-red-300">*</span>
+            </span>
+            <div className="flex items-center rounded-[20px] border-2 bg-transparent overflow-hidden" style={{ borderColor: errors.phone ? '#f97316' : '#f87171' }}>
+              <div className="px-4 py-3 sm:py-5 text-white/70 text-base bg-transparent border-r border-white/20 flex items-center">
+                +62
+              </div>
+              <input
+                type="tel"
+                placeholder="8xxxx"
+                value={values.phone}
+                onChange={(e) => onChange({ phone: e.target.value })}
+                className="flex-1 text-white placeholder-white/70 outline-none bg-transparent focus:outline-none border-none"
+                style={{
+                  // colorScheme: 'dark',
+                  // color: 'white',
+                  // lineHeight: '20px',
+                  // fontSize: '16px',
+                  // fontFamily: 'inherit',
+                  // paddingTop: '10px',
+                  // paddingBottom: '16px',
+                  transform: 'translateY(4px)'
+                }}
+              />
+            </div>
+            {errors.phone && (
+              <span className="mt-1 block text-xs text-white">
+                {errors.phone}
+              </span>
+            )}
+          </label>
           <label className="block">
             <span className="mb-2 block text-sm text-white font-medium">
               Tanggal Lahir <span className="text-red-300">*</span>
@@ -88,7 +87,7 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
                   colorScheme: 'dark',
                   color: 'white',
                   paddingRight: '50px',
-                  paddingBottom: '12px',
+                  paddingBottom: '10px',
                   marginBottom: '4px'
                 }}
                 id="birthday-input"
@@ -115,15 +114,22 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
               </span>
             )}
           </label>
-          <InputField
-            label="Email"
-            type="email"
-            placeholder="Masukkan email"
-            required
-            value={values.email}
-            onChange={(v) => onChange({ email: v })}
-            error={errors.email}
-          />
+          <div className="relative">
+            <InputField
+              label="Email"
+              type="email"
+              placeholder="Masukkan email"
+              required
+              value={values.email}
+              onChange={(v) => onChange({ email: v })}
+              error={errors.email}
+            />
+            {isValidatingEmail && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+          </div>
           {/* Tanggal Lahir dan Jenis Kelamin dalam Row */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {/* Tanggal Lahir */}
@@ -216,9 +222,14 @@ export function FormSection({ values, errors, onChange, onNext, onProfileUpload 
           <button
             type="button"
             onClick={onNext}
-            className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
+            disabled={!!errors.email || isValidatingEmail}
+            className={`w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all ${
+              errors.email || isValidatingEmail
+                ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                : 'bg-white text-red-600 hover:bg-gray-100'
+            }`}
           >
-            Lanjut
+            {isValidatingEmail ? 'Validating...' : 'Lanjut'}
           </button>
         </div>
       </div>

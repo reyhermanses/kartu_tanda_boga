@@ -187,7 +187,7 @@ export function ResultPage({ created, values }: Props) {
               onClick={handleClaimClick}
               className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
             >
-              Claim
+              Ambil Sekarang
             </button>
           </div>
         </div>

@@ -8,10 +8,11 @@ type Props = {
   errors: FormErrors
   onChange: (next: Partial<FormValues>) => void
   onBack: () => void
+  onNext: () => void
   onPhotoError?: (message: string) => void
 }
 
-export function PhotoUploadPage({ values, onChange, onBack }: Props) {
+export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
   const [isCameraOpen, setIsCameraOpen] = useState(true)
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment')
   const [flashlightOn, setFlashlightOn] = useState(false)
@@ -360,28 +361,31 @@ export function PhotoUploadPage({ values, onChange, onBack }: Props) {
           </div>
         </div>
 
-        {/* Next */}
-        {values.photoFile &&
-          <div className="flex justify-center pt-4 sm:pt-6 md:pt-10 px-3 sm:px-6 pb-3 sm:pb-6">
-            <button
-              onClick={() => {
-                if (isCameraOpen) stopCamera()
-                onBack()
-              }}
-              disabled={!values.photoFile}
-              className={`
-            w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all
-            ${values.photoFile
-                  ? 'bg-white text-red-600 hover:bg-gray-100'
-                  : 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                }
-            max-[375px]:w-[120px]
-          `}
-            >
-              Simpan
-            </button>
-          </div>
-        }
+        {/* Next Button - Always visible with validation */}
+        <div className="flex justify-center pt-4 sm:pt-6 md:pt-10 px-3 sm:px-6 pb-3 sm:pb-6">
+          <button
+            onClick={() => {
+              if (isCameraOpen) stopCamera()
+              // Validate photo before proceeding
+              if (!values.photoFile) {
+                alert('Mohon ambil foto terlebih dahulu')
+                return
+              }
+              onNext()
+            }}
+            disabled={!values.photoFile}
+            className={`
+              w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all
+              ${values.photoFile
+                    ? 'bg-white text-red-600 hover:bg-gray-100'
+                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                  }
+              max-[375px]:w-[120px]
+            `}
+          >
+            Lanjut
+          </button>
+        </div>
       </div>
 
       <Footer />
