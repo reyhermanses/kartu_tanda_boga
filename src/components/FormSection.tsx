@@ -9,10 +9,9 @@ type Props = {
   onChange: (next: Partial<FormValues>) => void
   onNext: () => void
   onPhotoError?: (message: string) => void
-  isValidatingEmail?: boolean
 }
 
-export function FormSection({ values, errors, onChange, onNext, isValidatingEmail }: Props) {
+export function FormSection({ values, errors, onChange, onNext }: Props) {
   return (
     <div className="form-page p-4 sm:p-6 relative overflow-hidden min-h-screen">
       {/* Background Image - Full Viewport Height */}
@@ -114,29 +113,15 @@ export function FormSection({ values, errors, onChange, onNext, isValidatingEmai
               </span>
             )}
           </label>
-          <div className="relative">
-            <InputField
-              label="Email"
-              type="email"
-              placeholder="Masukkan email"
-              required
-              value={values.email}
-              onChange={(v) => onChange({ email: v })}
-              error={errors.email}
-            />
-            {isValidatingEmail && (
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            )}
-            {values.email && !isValidatingEmail && !errors.email && (
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-            )}
-          </div>
+          <InputField
+            label="Email"
+            type="email"
+            placeholder="Masukkan email"
+            required
+            value={values.email}
+            onChange={(v) => onChange({ email: v })}
+            error={errors.email}
+          />
           {/* Tanggal Lahir dan Jenis Kelamin dalam Row */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {/* Tanggal Lahir */}
@@ -229,14 +214,9 @@ export function FormSection({ values, errors, onChange, onNext, isValidatingEmai
           <button
             type="button"
             onClick={onNext}
-            disabled={!!errors.email || isValidatingEmail}
-            className={`w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all ${
-              errors.email || isValidatingEmail
-                ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                : 'bg-white text-red-600 hover:bg-gray-100'
-            }`}
+            className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100"
           >
-            {isValidatingEmail ? 'Validating...' : 'Lanjut'}
+            Lanjut
           </button>
         </div>
       </div>

@@ -43,7 +43,6 @@ function App() {
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isValidatingEmail, setIsValidatingEmail] = useState(false)
 
   const updateValues = (newValues: Partial<FormValues>) => {
     setValues(prev => ({ ...prev, ...newValues }))
@@ -53,9 +52,9 @@ function App() {
     }
   }
 
-  // Email validation with API
-  const validateEmailWithAPI = async (email: string, phone: string) => {
-    if (!email || !phone) return
+  // Email validation with API - only called on submit
+  const validateEmailWithAPI = async (email: string, phone: string): Promise<boolean> => {
+    if (!email || !phone) return false
 
     // Basic email format validation first
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -64,10 +63,9 @@ function App() {
         ...prev,
         email: 'Format email tidak valid'
       }))
-      return
+      return false
     }
 
-    setIsValidatingEmail(true)
     try {
       const response = await fetch('https://alpha-api.mybogaloyalty.id/membership-card/check-email', {
         method: 'POST',
@@ -90,47 +88,21 @@ function App() {
           ...prev,
           email: 'Email sudah digunakan'
         }))
+        return false
       } else {
         setErrors(prev => {
           const newErrors = { ...prev }
           delete newErrors.email
           return newErrors
         })
+        return true
       }
     } catch (error) {
       console.error('Email validation error:', error)
       // Don't show error for network issues, let user continue
-    } finally {
-      setIsValidatingEmail(false)
+      return true
     }
   }
-
-  // Enhanced debounced email validation for mobile Safari
-  useEffect(() => {
-    if (!values.email || !values.phone) {
-      // Clear email validation state if either field is empty
-      setIsValidatingEmail(false)
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors.email
-        return newErrors
-      })
-      return
-    }
-
-    // Clear any existing email errors when user starts typing
-    setErrors(prev => {
-      const newErrors = { ...prev }
-      delete newErrors.email
-      return newErrors
-    })
-
-    const timer = setTimeout(() => {
-      validateEmailWithAPI(values.email, values.phone)
-    }, 1500) // Increased debounce time for mobile Safari
-
-    return () => clearTimeout(timer)
-  }, [values.email, values.phone])
 
   // Load session data on app mount - only once
   useEffect(() => {
@@ -280,7 +252,7 @@ function App() {
     return () => clearTimeout(timer)
   }, [created])
 
-  const validateForm = (): boolean => {
+  const validateForm = async (): Promise<boolean> => {
     const newErrors: FormErrors = {}
     
     if (!values.name.trim()) {
@@ -335,16 +307,19 @@ function App() {
     //   newErrors.photoFile = 'Foto profil harus diupload'
     // }
     
-    // Check if there are existing errors (like email already used from API)
-    const finalErrors = { ...newErrors, ...errors }
+    // Set basic validation errors first
+    setErrors(newErrors)
     
-    // Block submit if email validation is still in progress
-    if (isValidatingEmail) {
+    // If there are basic validation errors, don't proceed
+    if (Object.keys(newErrors).length > 0) {
       return false
     }
     
-    setErrors(finalErrors)
-    return Object.keys(finalErrors).length === 0
+    // Now validate email with API
+    const isEmailValid = await validateEmailWithAPI(values.email, values.phone)
+    
+    // Return final validation result
+    return isEmailValid
   }
 
   const compressImage = (file: File, maxWidth: number = 800, quality: number = 0.5): Promise<string> => {
@@ -374,7 +349,7 @@ function App() {
     
     try {
       // Validate form
-      if (!validateForm()) {
+      if (!(await validateForm())) {
         setAlertMessage('Mohon lengkapi semua field yang wajib diisi')
         setShowAlert(true)
         setIsSubmitting(false)
@@ -460,8 +435,8 @@ function App() {
   // }
 
 
-  const handleFormNext = () => {
-    if (validateForm()) {
+  const handleFormNext = async () => {
+    if (await validateForm()) {
       setCurrentPage(3) // Photo upload page
     } else {
       setAlertMessage('Mohon lengkapi semua field yang wajib diisi')
@@ -500,7 +475,6 @@ function App() {
               setAlertMessage(error)
               setShowAlert(true)
             }}
-            isValidatingEmail={isValidatingEmail}
           />
         )
       case 3:
@@ -546,7 +520,6 @@ function App() {
               setAlertMessage(error)
               setShowAlert(true)
             }}
-            isValidatingEmail={isValidatingEmail}
           />
         )
     }

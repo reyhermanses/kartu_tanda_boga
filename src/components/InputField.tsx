@@ -40,18 +40,6 @@ export function InputField({ label, type = 'text', placeholder, value, onChange,
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onBlur={(e) => {
-          // Trigger validation on blur for mobile Safari
-          if (isEmailInput && e.target.value) {
-            onChange(e.target.value)
-          }
-        }}
-        onInput={(e) => {
-          // Use onInput for better mobile Safari support
-          if (isEmailInput) {
-            onChange((e.target as HTMLInputElement).value)
-          }
-        }}
         required={required}
         aria-invalid={!!error}
         aria-describedby={error ? `${label}-error` : undefined}
