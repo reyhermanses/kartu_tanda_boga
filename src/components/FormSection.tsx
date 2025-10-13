@@ -107,6 +107,7 @@ export function FormSection({ values, errors, onChange, onNext }: Props) {
                 </svg>
               </button>
             </div>
+            <div className='flex text-[12px] bg-yellow-300 italic border border-orange-400 text-gray-600 rounded-[5px] p-3 justify-center'>Isi sesuai kartu identitas ya, banyak kejutan pas ulang tahun kamu!</div>
             {errors.birthday && (
               <span className="mt-1 block text-xs text-white">
                 {errors.birthday}
