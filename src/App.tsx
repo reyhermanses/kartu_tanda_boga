@@ -57,6 +57,16 @@ function App() {
   const validateEmailWithAPI = async (email: string, phone: string) => {
     if (!email || !phone) return
 
+    // Basic email format validation first
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setErrors(prev => ({
+        ...prev,
+        email: 'Format email tidak valid'
+      }))
+      return
+    }
+
     setIsValidatingEmail(true)
     try {
       const response = await fetch('https://alpha-api.mybogaloyalty.id/membership-card/check-email', {
@@ -67,7 +77,7 @@ function App() {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          email: email,
+          email: email.trim().toLowerCase(), // Normalize email
           phone: `0${phone}` // Add 0 prefix to phone
         })
       })
@@ -95,13 +105,29 @@ function App() {
     }
   }
 
-  // Debounced email validation
+  // Enhanced debounced email validation for mobile Safari
   useEffect(() => {
-    if (!values.email || !values.phone) return
+    if (!values.email || !values.phone) {
+      // Clear email validation state if either field is empty
+      setIsValidatingEmail(false)
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors.email
+        return newErrors
+      })
+      return
+    }
+
+    // Clear any existing email errors when user starts typing
+    setErrors(prev => {
+      const newErrors = { ...prev }
+      delete newErrors.email
+      return newErrors
+    })
 
     const timer = setTimeout(() => {
       validateEmailWithAPI(values.email, values.phone)
-    }, 1000) // 1 second debounce
+    }, 1500) // Increased debounce time for mobile Safari
 
     return () => clearTimeout(timer)
   }, [values.email, values.phone])

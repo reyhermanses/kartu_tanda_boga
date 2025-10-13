@@ -125,8 +125,15 @@ export function FormSection({ values, errors, onChange, onNext, isValidatingEmai
               error={errors.email}
             />
             {isValidatingEmail && (
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+            {values.email && !isValidatingEmail && !errors.email && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
               </div>
             )}
           </div>

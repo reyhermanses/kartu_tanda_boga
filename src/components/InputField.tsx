@@ -11,12 +11,23 @@ type Props = {
 export function InputField({ label, type = 'text', placeholder, value, onChange, error, required }: Props) {
   // Safari iPhone date input support
   const isDateInput = type === 'date'
+  const isEmailInput = type === 'email'
+  
   const dateInputProps = isDateInput ? {
     min: '1900-01-01',
     max: new Date().toISOString().split('T')[0], // Today's date
     pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}',
     inputMode: 'numeric' as const,
     autoComplete: 'bday' as const,
+  } : {}
+
+  // Enhanced email input props for mobile Safari
+  const emailInputProps = isEmailInput ? {
+    inputMode: 'email' as const,
+    autoComplete: 'email' as const,
+    autoCapitalize: 'none' as const,
+    autoCorrect: 'off' as const,
+    spellCheck: false as const,
   } : {}
 
   return (
@@ -29,6 +40,18 @@ export function InputField({ label, type = 'text', placeholder, value, onChange,
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={(e) => {
+          // Trigger validation on blur for mobile Safari
+          if (isEmailInput && e.target.value) {
+            onChange(e.target.value)
+          }
+        }}
+        onInput={(e) => {
+          // Use onInput for better mobile Safari support
+          if (isEmailInput) {
+            onChange((e.target as HTMLInputElement).value)
+          }
+        }}
         required={required}
         aria-invalid={!!error}
         aria-describedby={error ? `${label}-error` : undefined}
@@ -45,6 +68,7 @@ export function InputField({ label, type = 'text', placeholder, value, onChange,
           marginBottom: '8px'
         }}
         {...dateInputProps}
+        {...emailInputProps}
       />
       {error && (
         <span id={`${label}-error`} className="mt-1 block text-xs text-white">
