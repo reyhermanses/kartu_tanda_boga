@@ -29,6 +29,14 @@ export function FormSection({ values, errors, onChange, onNext }: Props) {
       ></div>
 
       <div className="relative z-20">
+        {/* Header Image */}
+        <div className="flex justify-center mb-6 sm:mb-8">
+          <img 
+            src="/header.jpg" 
+            alt="BOGA APP Header" 
+            className="w-[290px] h-auto rounded-lg shadow-lg"
+          />
+        </div>
 
         <section className="space-y-3 sm:space-y-4">
           <InputField
