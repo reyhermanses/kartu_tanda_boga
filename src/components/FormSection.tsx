@@ -32,7 +32,7 @@ export function FormSection({ values, errors, onChange, onNext }: Props) {
         {/* Header Image */}
         <div className="flex justify-center mb-6 sm:mb-8">
           <img 
-            src="/header.jpg" 
+            src="/header.png" 
             alt="BOGA APP Header" 
             className="w-[290px] h-auto rounded-lg shadow-lg"
           />
