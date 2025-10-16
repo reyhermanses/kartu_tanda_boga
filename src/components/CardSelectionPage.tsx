@@ -232,7 +232,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
   }
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-red-600 flex flex-col"
       style={{
         height: '100dvh',
@@ -364,7 +364,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                         className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 
                           ${isSelected
                             ? 'w-full h-[200px] max-[375px]:h-[220px] max-[393px]:h-[220px] max-[414px]:h-[240px] max-[390px]:h-[230px] max-[430px]:h-[250px]'
-                            : 'w-full h-24 max-[375px]:h-24 max-[414px]:h-34 max-[390px]:h-33 max-[393px]:h-36 max-[430px]:h-48 scale-75'}`}
+                            : 'w-full h-24 max-[375px]:h-24 max-[414px]:h-34 max-[390px]:h-33 max-[393px]:h-36 max-[430px]:h-48 scale-75 blur-[4px]'}`}
                         style={{
                           background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
                           backgroundSize: 'cover',
@@ -397,14 +397,14 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
                         {/* Profile Picture */}
                         {card.tier !== 'empty' && (
-                          <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                          <div className={`absolute right-4 max-[375px]:right-7 max-[390px]:right-4 -translate-y-1/2 
                           ${isSelected ? 'top-[100px] max-[375px]:top-[80px] max-[390px]:top-[80px] max-[414px]:top-[90px] max-[430px]:top-[100px]' : 'top-[60px] max-[375px]:top-[40px] max-[390px]:top-[40px] max-[414px]:top-[50px] max-[430px]:top-[60px]'}`}>
                             <div className="
                             w-24 h-24 
-                            max-[375px]:w-[80px] max-[375px]:h-[80px]
+                            max-[375px]:w-[70px] max-[375px]:h-[70px]
                             max-[390px]:w-[80px] max-[390px]:h-[80px]
                             max-[414px]:w-[90px] max-[414px]:h-[90px]
-                            max-[430px]:w-[100px] max-[430px]:h-[100px]
+                            max-[430px]:w-[90px] max-[430px]:h-[90px]
                             rounded-full 
                             overflow-hidden 
                             border-4 
@@ -428,12 +428,12 @@ export function CardSelectionPage({ values, onNext }: Props) {
                           </div>
                         )}
 
-                        {/* User Info Card - Centered */}
+                        {/* User Info Card - Right Position with Centered Content */}
                         {card.tier !== 'empty' && (
-                          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
-                            <div className={`flex items-center justify-center mb-2 ${isSelected ? 'mb-2' : 'mb-[-16px] scale-75'}`}>
+                          <div className="absolute bottom-2 right-6 text-center">
+                            <div className={`flex items-center justify-end mb-2 ${isSelected ? 'mb-1' : 'mb-[-16px] scale-75'}`}>
                               <div className="bg-white rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-xl">
-                                <span className="text-black font-bold text-xs sm:text-sm mr-1 sm:mr-2">{values.name || 'Valerie'}</span>
+                                <span className="text-black font-extrabold text-xs sm:text-sm mr-1 sm:mr-2">{values.name || 'Valerie'}</span>
                                 <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                                   <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white-500" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -441,14 +441,14 @@ export function CardSelectionPage({ values, onNext }: Props) {
                                 </div>
                               </div>
                             </div>
-                            <div className="flex flex-row items-center justify-center">
-                              <div className="bg-black/60 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg">
-                                <span className="text-white font-medium text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
+                            <div className="flex flex-col items-end justify-center w-fit">
+                              <div className="bg-blue-400 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg w-fit">
+                                <span className="text-white font-extrabold text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
                               </div>
-                              <span className="text-white font-medium text-[10px] sm:text-xs ml-1" style={{ fontFamily: 'Roboto' }}>{values.phone || '0877-9832-0931'}</span>
-                            </div>
-                            <div className="text-yellow-200 text-sm space-y-1">
-                              <div>{values.email || 'valeriebahagia@gmail.com'}</div>
+                              <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs w-fit" style={{ fontFamily: 'Roboto' }}>{values.phone ? '0' + values.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') : '0877-9832-0931'}</div>
+                              <div className="text-blue-800 font-extrabold text-[13px] w-fit">
+                                <div>{values.email || 'valeriebahagia@gmail.com'}</div>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -479,7 +479,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
               console.log('Disabled:', currentCardIndex <= 0)
               prevCard()
             }}
-            className="absolute top-16 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
+            className="absolute top-16 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
             disabled={currentCardIndex <= 0}
           >
             <svg className="w-6 h-6 
@@ -499,7 +499,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
               console.log('Disabled:', currentCardIndex >= cards.length - 1)
               nextCard()
             }}
-            className="absolute bottom-16 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-all"
+            className="absolute bottom-16 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
             disabled={currentCardIndex >= cards.length - 1}
           >
             <svg className="w-6 h-6 
@@ -536,20 +536,20 @@ export function CardSelectionPage({ values, onNext }: Props) {
       </div> */}
       <div
         className="absolute bottom-2 left-0 right-0 z-20 flex justify-center pb-[20px]"
-        style={{ 
+        style={{
           paddingBottom: 'env(safe-area-inset-bottom)',
           touchAction: 'none',
           overscrollBehavior: 'none'
         }}
       >
-  <button
-    onClick={handleSubmit}
-    className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
-    style={{ fontFamily: 'Roboto', fontWeight: 900 }}
-  >
-    Simpan
-  </button>
-</div>
+        <button
+          onClick={handleSubmit}
+          className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
+          style={{ fontFamily: 'Roboto', fontWeight: 900 }}
+        >
+          Simpan
+        </button>
+      </div>
     </div>
   )
 }
