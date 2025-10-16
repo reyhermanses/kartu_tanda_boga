@@ -21,6 +21,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
 
 
   // Load cards from backend
@@ -225,6 +226,8 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
   const handleSubmit = async () => {
     if (cards.length > 0) {
+      setIsProcessing(true)
+      
       // Submit the current card based on currentCardIndex
       let selectedCardIndex = currentCardIndex
       let selectedCard = cards[selectedCardIndex]
@@ -266,6 +269,8 @@ export function CardSelectionPage({ values, onNext }: Props) {
           // Pass the original card data
           onNext(selectedCard)
     }
+    
+    setIsProcessing(false)
   }
 
   const currentCard = cards[currentCardIndex]
@@ -629,10 +634,11 @@ export function CardSelectionPage({ values, onNext }: Props) {
       >
         <button
           onClick={handleSubmit}
-          className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black"
+          disabled={isProcessing}
+          className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black disabled:opacity-50"
           style={{ fontFamily: 'Roboto', fontWeight: 900 }}
         >
-          Simpan
+          {isProcessing ? 'Proses pembuatan card' : 'Simpan'}
         </button>
       </div>
     </div>
