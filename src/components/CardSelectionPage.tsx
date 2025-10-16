@@ -22,6 +22,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
+
   // Load cards from backend
   useEffect(() => {
     const loadCards = async () => {
@@ -162,7 +163,67 @@ export function CardSelectionPage({ values, onNext }: Props) {
     }
   }
 
-  const handleSubmit = () => {
+  // Convert image to base64 blob
+  async function convertImageToBlob(url: string): Promise<string> {
+    try {
+      console.log('Converting image to blob:', url)
+      
+      // For blob URLs (profile images), use FileReader directly
+      if (url.startsWith('blob:')) {
+        console.log('Converting blob URL directly')
+        const response = await fetch(url)
+        const blob = await response.blob()
+        console.log('Blob size:', blob.size)
+        
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => {
+            const base64 = reader.result as string
+            console.log('Blob URL converted to base64, length:', base64.length)
+            resolve(base64)
+          }
+          reader.onerror = () => reject(new Error('Failed to convert blob to base64'))
+          reader.readAsDataURL(blob)
+        })
+      }
+      
+      // For external URLs (card images), try proxy first, then fallback
+      console.log('Converting external URL with proxy method')
+      try {
+        // Try with CORS proxy
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+        console.log('Trying proxy URL:', proxyUrl)
+        
+        const response = await fetch(proxyUrl)
+        if (!response.ok) {
+          throw new Error(`Proxy request failed: ${response.status}`)
+        }
+        
+        const blob = await response.blob()
+        console.log('Proxy blob size:', blob.size)
+        
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => {
+            const base64 = reader.result as string
+            console.log('External URL converted to base64 via proxy, length:', base64.length)
+            resolve(base64)
+          }
+          reader.onerror = () => reject(new Error('Failed to convert proxy blob to base64'))
+          reader.readAsDataURL(blob)
+        })
+      } catch (proxyError) {
+        console.log('Proxy method failed, storing URL instead:', proxyError)
+        // Fallback: just store the URL, let CardDownloader handle it
+        throw new Error('Proxy conversion failed, will use URL fallback')
+      }
+    } catch (error) {
+      console.log('Conversion failed:', error)
+      throw error
+    }
+  }
+
+  const handleSubmit = async () => {
     if (cards.length > 0) {
       // Submit the current card based on currentCardIndex
       let selectedCardIndex = currentCardIndex
@@ -170,7 +231,40 @@ export function CardSelectionPage({ values, onNext }: Props) {
       console.log('Submitting card:', selectedCardIndex, selectedCard?.name)
       console.log('Selected card object:', selectedCard)
       console.log('Selected card image URL:', selectedCard?.imageUrl)
-      onNext(selectedCard)
+      
+          // Convert card image to blob and store
+          if (selectedCard.imageUrl) {
+            try {
+              console.log('Converting card image to blob:', selectedCard.imageUrl)
+              const cardBlob = await convertImageToBlob(selectedCard.imageUrl)
+              if (cardBlob) {
+                sessionStorage.setItem('selectedCardBlob', cardBlob)
+                console.log('Card blob saved to sessionStorage, length:', cardBlob.length)
+              }
+            } catch (error) {
+              console.log('Failed to convert card image to blob, storing URL instead:', error)
+              // Fallback: store URL for CardDownloader to handle
+              sessionStorage.setItem('selectedCardUrl', selectedCard.imageUrl)
+              console.log('Card URL saved to sessionStorage as fallback')
+            }
+          }
+          
+          // Convert profile image to blob and store
+          if (values.photoFile) {
+            try {
+              console.log('Converting profile image to blob')
+              const profileBlob = await convertImageToBlob(URL.createObjectURL(values.photoFile))
+              if (profileBlob) {
+                sessionStorage.setItem('selectedProfileBlob', profileBlob)
+                console.log('Profile blob saved to sessionStorage, length:', profileBlob.length)
+              }
+            } catch (error) {
+              console.log('Failed to convert profile image to blob:', error)
+            }
+          }
+          
+          // Pass the original card data
+          onNext(selectedCard)
     }
   }
 

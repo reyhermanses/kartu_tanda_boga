@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import html2canvas from 'html2canvas'
 
 type CardData = {
   name: string
@@ -18,271 +19,264 @@ type Props = {
 export function CardDownloader({ cardData, selectedCardUrl, onDownload }: Props) {
   const [isDownloading, setIsDownloading] = useState(false)
 
-  // Format birthday function
-  function formatBirthday(dateString: string): string {
-    const date = new Date(dateString)
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-    const day = date.getDate()
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
-    return `${day} ${month} ${year}`
-  }
 
-  // Load image with CORS handling
-  async function loadImage(url: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const img = new Image()
-      img.crossOrigin = 'anonymous'
-      img.onload = () => resolve(img)
-      img.onerror = () => {
-        console.log('Failed to load image:', url)
-        reject(new Error('Failed to load image'))
-      }
-      img.src = url
-    })
-  }
-
-  // Draw rounded rectangle
-  function drawRoundedRect(
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    radius: number,
-    fillColor?: string | CanvasGradient,
-    strokeColor?: string
-  ) {
-    ctx.beginPath()
-    ctx.moveTo(x + radius, y)
-    ctx.lineTo(x + width - radius, y)
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
-    ctx.lineTo(x + width, y + height - radius)
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
-    ctx.lineTo(x + radius, y + height)
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
-    ctx.lineTo(x, y + radius)
-    ctx.quadraticCurveTo(x, y, x + radius, y)
-    ctx.closePath()
-
-    if (fillColor) {
-      ctx.fillStyle = fillColor
-      ctx.fill()
-    }
-    if (strokeColor) {
-      ctx.strokeStyle = strokeColor
-      ctx.stroke()
-    }
-  }
-
-  // Draw shadow
-  function drawShadow(
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    radius: number,
-    shadowColor: string = 'rgba(0, 0, 0, 0.1)',
-    blur: number = 10
-  ) {
-    ctx.save()
-    ctx.shadowColor = shadowColor
-    ctx.shadowBlur = blur
-    ctx.shadowOffsetX = 0
-    ctx.shadowOffsetY = 5
-    drawRoundedRect(ctx, x, y, width, height, radius, shadowColor)
-    ctx.restore()
-  }
-
-  // Main download function
-  async function handleDownload() {
+  const handleDownload = async () => {
+    if (isDownloading) return
+    
+    setIsDownloading(true)
+    
     try {
-      setIsDownloading(true)
-      console.log('=== CARD DOWNLOADER - CANVAS API NATIVE ===')
-
-      // Create canvas
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      if (!ctx) throw new Error('Failed to get canvas context')
-
-      // Set canvas size
-      canvas.width = 400
-      canvas.height = 250
-
-      // Set background
-      ctx.fillStyle = '#f3f4f6'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      // Try to load background image
-      let backgroundImage: HTMLImageElement | null = null
-      try {
-        if (selectedCardUrl) {
-          console.log('Loading background image:', selectedCardUrl)
-          backgroundImage = await loadImage(selectedCardUrl)
-        } else if (cardData.cardImage) {
-          console.log('Loading card image:', cardData.cardImage)
-          backgroundImage = await loadImage(cardData.cardImage)
-        }
-      } catch (error) {
-        console.log('Background image failed to load, using gradient fallback')
-      }
-
-      // Draw background
-      if (backgroundImage) {
-        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
-      } else {
-        // Draw gradient background as fallback
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
-        gradient.addColorStop(0, '#667eea')
-        gradient.addColorStop(1, '#764ba2')
-        ctx.fillStyle = gradient
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-      }
-
-      // Draw profile picture
-      let profileImage: HTMLImageElement | null = null
-      try {
-        if (cardData.profileImage) {
-          console.log('Loading profile image:', cardData.profileImage)
-          profileImage = await loadImage(cardData.profileImage)
-        }
-      } catch (error) {
-        console.log('Profile image failed to load, using default')
-      }
-
-      // Profile picture position and size
-      const profileSize = 96
-      const profileX = canvas.width - profileSize - 12
-      const profileY = 75 - profileSize / 2
-
-      // Draw profile picture shadow
-      drawShadow(ctx, profileX, profileY, profileSize, profileSize, profileSize / 2)
-
-      // Draw profile picture background
-      ctx.fillStyle = '#dbeafe'
-      drawRoundedRect(ctx, profileX, profileY, profileSize, profileSize, profileSize / 2, '#dbeafe')
-
-      // Draw profile picture
-      if (profileImage) {
-        ctx.save()
-        ctx.beginPath()
-        ctx.arc(profileX + profileSize / 2, profileY + profileSize / 2, profileSize / 2, 0, Math.PI * 2)
-        ctx.clip()
-        ctx.drawImage(profileImage, profileX, profileY, profileSize, profileSize)
-        ctx.restore()
-      } else {
-        // Draw default profile icon
-        ctx.fillStyle = '#3b82f6'
-        ctx.font = '48px Arial'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillText('👤', profileX + profileSize / 2, profileY + profileSize / 2)
-      }
-
-      // Draw profile picture border
-      ctx.strokeStyle = 'white'
-      ctx.lineWidth = 4
-      drawRoundedRect(ctx, profileX, profileY, profileSize, profileSize, profileSize / 2, undefined, 'white')
-
-      // User info position
-      const infoX = canvas.width - 24
-      const infoY = canvas.height - 16
-      let currentY = infoY
-
-      // Draw name with checkmark
-      const nameText = cardData.name || 'Member'
-      ctx.font = 'bold 12px Roboto, sans-serif'
-      ctx.textAlign = 'right'
-      ctx.textBaseline = 'middle'
+      console.log('Starting card download...')
+      console.log('Card data received:', cardData)
+      console.log('Selected card URL:', selectedCardUrl)
       
-      const nameWidth = ctx.measureText(nameText).width
-      const nameHeight = 20
-      const nameX = infoX - nameWidth - 20
-      currentY -= nameHeight + 8
-
-      // Draw name background with shadow
-      drawShadow(ctx, nameX - 12, currentY - nameHeight / 2, nameWidth + 24, nameHeight, 20, 'rgba(0, 0, 0, 0.25)', 25)
-      drawRoundedRect(ctx, nameX - 12, currentY - nameHeight / 2, nameWidth + 24, nameHeight, 20, 'white')
-
-      // Draw name text
-      ctx.fillStyle = 'black'
-      ctx.fillText(nameText, nameX, currentY)
-
-      // Draw checkmark
-      const checkmarkX = nameX + nameWidth + 8
-      const checkmarkSize = 16
-      const checkmarkY = currentY - checkmarkSize / 2
-
-      // Draw checkmark background
-      const checkmarkGradient = ctx.createLinearGradient(checkmarkX, checkmarkY, checkmarkX + checkmarkSize, checkmarkY + checkmarkSize)
-      checkmarkGradient.addColorStop(0, '#3b82f6')
-      checkmarkGradient.addColorStop(1, '#2563eb')
-      drawRoundedRect(ctx, checkmarkX, checkmarkY, checkmarkSize, checkmarkSize, checkmarkSize / 2, checkmarkGradient)
-
-      // Draw checkmark icon
-      ctx.fillStyle = 'white'
-      ctx.font = 'bold 8px Arial'
-      ctx.textAlign = 'center'
-      ctx.fillText('✓', checkmarkX + checkmarkSize / 2, checkmarkY + checkmarkSize / 2 + 3)
-
-      // Draw birthday
-      const birthdayText = cardData.birthday ? formatBirthday(cardData.birthday) : '13 SEP 1989'
-      ctx.font = 'bold 10px Roboto, sans-serif'
-      ctx.textAlign = 'right'
-      ctx.textBaseline = 'middle'
+      // Get blobs from sessionStorage (pre-converted in CardSelectionPage)
+      const savedCardBlob = sessionStorage.getItem('selectedCardBlob')
+      const savedProfileBlob = sessionStorage.getItem('selectedProfileBlob')
+      const savedCardUrl = sessionStorage.getItem('selectedCardUrl') // Fallback URL
+      console.log('Saved card blob:', savedCardBlob ? 'exists' : 'null')
+      console.log('Saved profile blob:', savedProfileBlob ? 'exists' : 'null')
+      console.log('Saved card URL (fallback):', savedCardUrl)
       
-      const birthdayWidth = ctx.measureText(birthdayText).width
-      const birthdayHeight = 16
-      currentY -= birthdayHeight + 4
-
-      // Draw birthday background with shadow
-      drawShadow(ctx, infoX - birthdayWidth - 24, currentY - birthdayHeight / 2, birthdayWidth + 24, birthdayHeight, 20, 'rgba(0, 0, 0, 0.1)', 10)
-      drawRoundedRect(ctx, infoX - birthdayWidth - 24, currentY - birthdayHeight / 2, birthdayWidth + 24, birthdayHeight, 20, '#60a5fa')
-
-      // Draw birthday text
-      ctx.fillStyle = 'white'
-      ctx.fillText(birthdayText, infoX - 12, currentY)
-
-      // Draw phone
-      const phoneText = cardData.phone ? '0' + cardData.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') : '0877-9832-0931'
-      ctx.font = 'bold 12px Roboto, sans-serif'
-      ctx.textAlign = 'right'
-      ctx.fillStyle = '#1e40af'
-      currentY -= 20
-      ctx.fillText(phoneText, infoX, currentY)
-
-      // Draw email
-      const emailText = cardData.email || 'valeriebahagia@gmail.com'
-      ctx.font = 'bold 12px Roboto, sans-serif'
-      ctx.textAlign = 'right'
-      ctx.fillStyle = '#1e40af'
-      currentY -= 16
-      ctx.fillText(emailText, infoX, currentY)
-
-      // Convert canvas to blob and download
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob)
-          const link = document.createElement('a')
-          link.href = url
-          link.download = `kartu-tanda-boga-${cardData.name || 'member'}.png`
-          
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-          
-          URL.revokeObjectURL(url)
-          
-          console.log('Download completed successfully')
-          onDownload?.()
-        } else {
-          throw new Error('Failed to create blob from canvas')
+      // Create a temporary div with the card design
+      const tempCard = document.createElement('div')
+      tempCard.style.cssText = `
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        width: 400px;
+        height: 250px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        z-index: 9999;
+      `
+      
+      // Add background image as img element (better for html2canvas)
+      if (savedCardBlob) {
+        const backgroundImg = document.createElement('img')
+        backgroundImg.src = savedCardBlob
+        backgroundImg.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 16px;
+        `
+        tempCard.appendChild(backgroundImg)
+        console.log('Background image added as img element (from blob)')
+      } else if (savedCardUrl) {
+        const backgroundImg = document.createElement('img')
+        backgroundImg.src = savedCardUrl
+        backgroundImg.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 16px;
+        `
+        tempCard.appendChild(backgroundImg)
+        console.log('Background image added as img element (from URL fallback)')
+      } else {
+        console.log('No saved card blob or URL, using gradient background')
+      }
+      
+      console.log('Saved card blob length:', savedCardBlob ? savedCardBlob.length : 'null')
+      
+      // Add profile picture (matching ResultPage design)
+      const profileContainer = document.createElement('div')
+      profileContainer.style.cssText = `
+        position: absolute;
+        right: 0;
+        top: 125px;
+        transform: translateY(-50%);
+      `
+      
+      const profileImg = document.createElement('div')
+      profileImg.style.cssText = `
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid white;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        background: #dbeafe;
+      `
+      
+      if (savedProfileBlob) {
+        const img = document.createElement('img')
+        img.src = savedProfileBlob
+        img.style.cssText = `
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        `
+        profileImg.appendChild(img)
+      } else {
+        // Default avatar with icon
+        profileImg.innerHTML = `
+          <div style="width: 100%; height: 100%; background: #dbeafe; display: flex; align-items: center; justify-content: center;">
+            <svg style="width: 48px; height: 48px; color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        `
+      }
+      
+      profileContainer.appendChild(profileImg)
+      tempCard.appendChild(profileContainer)
+      
+      // Add user info card (matching ResultPage design)
+      const infoContainer = document.createElement('div')
+      infoContainer.style.cssText = `
+        position: absolute;
+        bottom: 7px;
+        right: 4px;
+        text-align: center;
+        transform: scale(0.75);
+      `
+      
+      // Name with checkmark
+      const nameContainer = document.createElement('div')
+      nameContainer.style.cssText = `
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 8px;
+      `
+      
+      const nameCard = document.createElement('div')
+      nameCard.style.cssText = `
+        background: white;
+        border-radius: 9999px;
+        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      `
+      
+      const nameText = document.createElement('span')
+      nameText.textContent = cardData.name || 'No Name'
+      console.log('Name text:', cardData.name)
+      nameText.style.cssText = `
+        color: black;
+        font-weight: 800;
+        font-size: 12px;
+        margin-right: 8px;
+        font-family: Roboto;
+      `
+      
+      const checkmark = document.createElement('div')
+      checkmark.style.cssText = `
+        width: 20px;
+        height: 20px;
+        background: linear-gradient(to right, #3b82f6, #2563eb);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `
+      checkmark.innerHTML = `
+        <svg style="width: 12px; height: 12px; color: white;" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+      `
+      
+      nameCard.appendChild(nameText)
+      nameCard.appendChild(checkmark)
+      nameContainer.appendChild(nameCard)
+      
+      // Phone and email
+      const contactContainer = document.createElement('div')
+      contactContainer.style.cssText = `
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+      `
+      
+      const phoneEl = document.createElement('div')
+      const formattedPhone = cardData.phone ? '0' + cardData.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3') : 'No Phone'
+      phoneEl.textContent = formattedPhone
+      console.log('Phone text:', cardData.phone, 'Formatted:', formattedPhone)
+      phoneEl.style.cssText = `
+        color: #1e40af;
+        font-weight: 800;
+        font-size: 14px;
+        font-family: Roboto;
+        margin-bottom: 2px;
+      `
+      
+      const emailEl = document.createElement('div')
+      emailEl.textContent = cardData.email || 'No Email'
+      console.log('Email text:', cardData.email)
+      emailEl.style.cssText = `
+        color: #1e40af;
+        font-weight: 800;
+        font-size: 12px;
+        font-family: Roboto;
+      `
+      
+      contactContainer.appendChild(phoneEl)
+      contactContainer.appendChild(emailEl)
+      
+      infoContainer.appendChild(nameContainer)
+      infoContainer.appendChild(contactContainer)
+      tempCard.appendChild(infoContainer)
+      document.body.appendChild(tempCard)
+      
+      // Wait for images to load
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      try {
+        // Capture with html2canvas (no CORS needed since we use blobs)
+        const canvas = await html2canvas(tempCard, {
+          width: 400,
+          height: 250,
+          scale: 2,
+          useCORS: false,
+          allowTaint: true,
+          backgroundColor: null,
+          logging: false
+        })
+        
+        // Clean up
+        document.body.removeChild(tempCard)
+        
+        // Convert to blob and download
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `kartu-tanda-boga-${cardData.name.replace(/\s+/g, '-').toLowerCase()}.png`
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+            URL.revokeObjectURL(url)
+            console.log('Download completed successfully')
+            onDownload?.()
+          } else {
+            throw new Error('Failed to create blob from canvas')
+          }
+        }, 'image/png')
+      
+      } catch (html2canvasError) {
+        console.error('html2canvas error:', html2canvasError)
+        // Clean up temp card if it still exists
+        if (document.body.contains(tempCard)) {
+          document.body.removeChild(tempCard)
         }
-      }, 'image/png', 1.0)
-
+        throw new Error(`Failed to capture card: ${(html2canvasError as Error).message}`)
+      }
+      
     } catch (error) {
-      console.error('Error downloading card:', error)
+      console.error('Download error:', error)
       alert(`Gagal mengunduh kartu: ${(error as Error).message}. Silakan coba lagi.`)
     } finally {
       setIsDownloading(false)
@@ -293,9 +287,16 @@ export function CardDownloader({ cardData, selectedCardUrl, onDownload }: Props)
     <button
       onClick={handleDownload}
       disabled={isDownloading}
-      className="w-[150px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 w-[200px]"
     >
-      {isDownloading ? 'Mengunduh...' : 'Unduh Kartu'}
+      {isDownloading ? (
+        <>
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          Mengunduh...
+        </>
+      ) : (
+        'Unduh Kartu'
+      )}
     </button>
   )
 }
