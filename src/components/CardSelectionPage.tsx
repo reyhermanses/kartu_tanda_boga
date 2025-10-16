@@ -404,7 +404,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                             max-[375px]:w-[70px] max-[375px]:h-[70px]
                             max-[390px]:w-[80px] max-[390px]:h-[80px]
                             max-[414px]:w-[90px] max-[414px]:h-[90px]
-                            max-[430px]:w-[90px] max-[430px]:h-[90px]
+                            max-[430px]:w-[80px] max-[430px]:h-[80px]
                             rounded-full 
                             overflow-hidden 
                             border-4 
@@ -430,7 +430,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
                         {/* User Info Card - Right Position with Centered Content */}
                         {card.tier !== 'empty' && (
-                          <div className="absolute bottom-2 right-6 text-center">
+                          <div className="absolute bottom-6 right-6 text-center">
                             <div className={`flex items-center justify-end mb-2 ${isSelected ? 'mb-1' : 'mb-[-16px] scale-75'}`}>
                               <div className="bg-white rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-xl">
                                 <span className="text-black font-extrabold text-xs sm:text-sm mr-1 sm:mr-2">{values.name || 'Valerie'}</span>
@@ -442,10 +442,10 @@ export function CardSelectionPage({ values, onNext }: Props) {
                               </div>
                             </div>
                             <div className="flex flex-col items-end justify-center w-fit">
-                              <div className="bg-blue-400 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg w-fit">
+                              {/* <div className="bg-blue-400 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg w-fit">
                                 <span className="text-white font-extrabold text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
-                              </div>
-                              <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs w-fit" style={{ fontFamily: 'Roboto' }}>{values.phone ? '0' + values.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') : '0877-9832-0931'}</div>
+                              </div> */}
+                              <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs w-fit" style={{ fontFamily: 'Roboto' }}>{values.phone ? '0' + values.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3') : '0877-9832-0931'}</div>
                               <div className="text-blue-800 font-extrabold text-[13px] w-fit">
                                 <div>{values.email || 'valeriebahagia@gmail.com'}</div>
                               </div>
