@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { CouponCarousel } from './CouponCarousel'
 import { Footer } from './Footer'
 import { CardDownloader } from './CardDownloader'
-import html2canvas from 'html2canvas'
 
 type CreateMembershipResponse = {
   status: string
@@ -39,15 +38,6 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
 
-  // Format birthday function (same as CardSelectionPage)
-  function formatBirthday(dateString: string): string {
-    const date = new Date(dateString)
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-    const day = date.getDate()
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
-    return `${day} ${month} ${year}`
-  }
 
   // Create avatar URL from photo file or fallback to created profile image
   useEffect(() => {
@@ -72,60 +62,6 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
     window.open(DEEPLINK_URL, '_blank')
   }
 
-  async function handleDownloadCard() {
-    try {
-      console.log('=== DOWNLOAD CARD - DIRECT DOM CAPTURE ===')
-      
-      // Use the existing card element that's already rendered and working
-      if (!cardRef.current) {
-        throw new Error('Card element not found')
-      }
-
-      console.log('Capturing existing card element directly...')
-      
-      // Capture the existing card element directly with allowTaint
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: '#ffffff',
-        scale: 2,
-        useCORS: false,
-        allowTaint: true,
-        logging: false,
-        width: 400,
-        height: 250,
-        foreignObjectRendering: false
-      })
-
-      console.log('Card captured successfully')
-
-      // Convert canvas to dataURL first to avoid tainted canvas issues
-      const dataURL = canvas.toDataURL('image/png', 1.0)
-      console.log('DataURL created successfully')
-
-      // Convert dataURL to blob
-      const response = await fetch(dataURL)
-      const blob = await response.blob()
-      console.log('Blob created from dataURL, size:', blob.size)
-
-      // Create download link
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `kartu-tanda-boga-${values.name || 'member'}.png`
-      
-      // Trigger download
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-      // Clean up
-      URL.revokeObjectURL(url)
-      
-      console.log('Download completed successfully')
-    } catch (error) {
-      console.error('Error downloading card:', error)
-      alert(`Gagal mengunduh kartu: ${(error as Error).message}. Silakan coba lagi.`)
-    }
-  }
 
   return (
     <div className="relative">

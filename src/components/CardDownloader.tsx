@@ -50,7 +50,7 @@ export function CardDownloader({ cardData, selectedCardUrl, onDownload }: Props)
     width: number,
     height: number,
     radius: number,
-    fillColor?: string,
+    fillColor?: string | CanvasGradient,
     strokeColor?: string
   ) {
     ctx.beginPath()
