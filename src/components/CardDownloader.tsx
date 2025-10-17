@@ -287,11 +287,11 @@ export function CardDownloader({ cardData, selectedCardUrl, onDownload }: Props)
     <button
       onClick={handleDownload}
       disabled={isDownloading}
-      className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 w-[200px]"
+      className="w-[200px] py-3 sm:py-4 rounded-[20px] font-bold text-sm sm:text-lg transition-all bg-white text-red-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
     >
       {isDownloading ? (
         <>
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
           Mengunduh...
         </>
       ) : (

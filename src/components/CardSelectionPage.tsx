@@ -275,15 +275,15 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
   const currentCard = cards[currentCardIndex]
 
-  console.log('Current card index:', currentCardIndex)
-  console.log('Total cards:', cards.length)
-  console.log('Current card:', currentCard)
+  // console.log('Current card index:', currentCardIndex)
+  // console.log('Total cards:', cards.length)
+  // console.log('Current card:', currentCard)
 
   // Debug useEffect to track currentCardIndex changes
   useEffect(() => {
-    console.log('=== CURRENT CARD INDEX CHANGED ===')
-    console.log('New index:', currentCardIndex)
-    console.log('Cards length:', cards.length)
+    // console.log('=== CURRENT CARD INDEX CHANGED ===')
+    // console.log('New index:', currentCardIndex)
+    // console.log('Cards length:', cards.length)
   }, [currentCardIndex, cards.length])
 
   if (loading) {
@@ -364,10 +364,10 @@ export function CardSelectionPage({ values, onNext }: Props) {
           {/* 3 Visible Cards Container */}
           <div className="space-y-4 flex flex-col p-2">
             {(() => {
-              console.log('=== VERTICAL CAROUSEL DEBUG ===')
-              console.log('Total cards from backend:', cards.length)
-              console.log('Current index:', currentCardIndex)
-              console.log('Cards data:', cards.map(c => ({ name: c.name, id: c.id })))
+              // console.log('=== VERTICAL CAROUSEL DEBUG ===')
+              // console.log('Total cards from backend:', cards.length)
+              // console.log('Current index:', currentCardIndex)
+              // console.log('Cards data:', cards.map(c => ({ name: c.name, id: c.id })))
 
               // Show 3 cards around the current index
               let visibleCards: CardDesign[] = []
@@ -406,9 +406,9 @@ export function CardSelectionPage({ values, onNext }: Props) {
                   ]
                 }
 
-                console.log(`Showing cards for index ${currentCardIndex}`)
-                console.log('Visible cards:', visibleCards.map(c => c?.name || 'undefined'))
-                console.log('Current card index:', currentCardIndex)
+                // console.log(`Showing cards for index ${currentCardIndex}`)
+                // console.log('Visible cards:', visibleCards.map(c => c?.name || 'undefined'))
+                // console.log('Current card index:', currentCardIndex)
 
                 // Sliding window logic for 4 cards:
                 // Index 0: show [empty,0,1] → Card 0 (index 1) expanded
@@ -421,7 +421,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                 while (visibleCards.length < 3) {
                   visibleCards.push(cards[0]) // Duplicate first card
                 }
-                console.log(`Duplicated cards to make 3: ${visibleCards.length}`)
+                // console.log(`Duplicated cards to make 3: ${visibleCards.length}`)
               } else {
                 // Fallback if no cards
                 visibleCards = [
@@ -429,10 +429,10 @@ export function CardSelectionPage({ values, onNext }: Props) {
                   { id: 2, name: 'CARD 2', imageUrl: '', tier: 'basic' },
                   { id: 3, name: 'CARD 3', imageUrl: '', tier: 'basic' }
                 ]
-                console.log('Using fallback cards:', visibleCards.length)
+                // console.log('Using fallback cards:', visibleCards.length)
               }
 
-              console.log('Final visible cards count:', visibleCards.length)
+              // console.log('Final visible cards count:', visibleCards.length)
 
               return visibleCards.map((card, visibleIndex) => {
                 // Calculate which card is selected - ALWAYS select middle card (index 1)
@@ -444,7 +444,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
                   // For less than 3 cards, the current card is selected
                   isSelected = visibleIndex === currentCardIndex
                 }
-                console.log(`Card ${visibleIndex}: ${card.name}, isSelected: ${isSelected}, currentCardIndex: ${currentCardIndex}`)
+                // console.log(`Card ${visibleIndex}: ${card.name}, isSelected: ${isSelected}, currentCardIndex: ${currentCardIndex}`)
 
                 return (
                   card.tier !== 'empty' ?
@@ -564,9 +564,9 @@ export function CardSelectionPage({ values, onNext }: Props) {
           {/* Navigation Arrows - Horizontal */}
           <button
             onClick={() => {
-              console.log('=== PREV BUTTON CLICKED ===')
-              console.log('Current index:', currentCardIndex)
-              console.log('Disabled:', currentCardIndex <= 0)
+              // console.log('=== PREV BUTTON CLICKED ===')
+              // console.log('Current index:', currentCardIndex)
+              // console.log('Disabled:', currentCardIndex <= 0)
               prevCard()
             }}
             className="absolute top-16 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
@@ -584,9 +584,9 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
           <button
             onClick={() => {
-              console.log('=== NEXT BUTTON CLICKED ===')
-              console.log('Current index:', currentCardIndex)
-              console.log('Disabled:', currentCardIndex >= cards.length - 1)
+              // console.log('=== NEXT BUTTON CLICKED ===')
+              // console.log('Current index:', currentCardIndex)
+              // console.log('Disabled:', currentCardIndex >= cards.length - 1)
               nextCard()
             }}
             className="absolute bottom-16 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
@@ -638,7 +638,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
           className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black disabled:opacity-50"
           style={{ fontFamily: 'Roboto', fontWeight: 900 }}
         >
-          {isProcessing ? 'Proses pembuatan card' : 'Simpan'}
+          {isProcessing ? 'Kartu Tersimpan' : 'Simpan'}
         </button>
       </div>
     </div>

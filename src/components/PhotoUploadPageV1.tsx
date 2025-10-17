@@ -21,13 +21,7 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
   const streamRef = useRef<MediaStream | null>(null)
   const trackRef = useRef<MediaStreamTrack | null>(null)
 
-  // Detect if running on Android Chrome/Beaver Web
-  const isAndroidChrome = () => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    return /android/.test(userAgent) && (/chrome/.test(userAgent) || /beaver/.test(userAgent))
-  }
-
-  // Start camera with fallback mechanism for Android Chrome/Beaver Web
+  // Start camera
   const startCamera = async () => {
     try {
       // Check if getUserMedia is supported
@@ -36,81 +30,14 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
         return
       }
 
-      let stream: MediaStream | null = null
-      let constraints: MediaStreamConstraints
-
-      // For Android Chrome/Beaver Web, use more specific constraints
-      if (isAndroidChrome()) {
-        if (facingMode === 'user') {
-          // Try multiple constraint variations for front camera on Android Chrome
-          const frontCameraConstraints = [
-            // Try exact facingMode first
-            {
-              video: {
-                facingMode: { exact: 'user' },
-                width: { ideal: 1280 },
-                height: { ideal: 960 }
-              },
-              audio: false
-            },
-            // Fallback to ideal facingMode
-            {
-              video: {
-                facingMode: 'user',
-                width: { ideal: 1280 },
-                height: { ideal: 960 }
-              },
-              audio: false
-            },
-            // Fallback to deviceId if available
-            {
-              video: {
-                facingMode: 'user',
-                width: { ideal: 1280 },
-                height: { ideal: 960 }
-              },
-              audio: false
-            }
-          ]
-
-          // Try each constraint until one works
-          for (const constraint of frontCameraConstraints) {
-            try {
-              stream = await navigator.mediaDevices.getUserMedia(constraint)
-              break
-            } catch (err) {
-              console.log('Front camera constraint failed, trying next...', err)
-              continue
-            }
-          }
-        } else {
-          // Back camera for Android Chrome
-          constraints = {
-            video: {
-              facingMode: { exact: 'environment' },
-              width: { ideal: 1280 },
-              height: { ideal: 960 }
-            },
-            audio: false
-          }
-          stream = await navigator.mediaDevices.getUserMedia(constraints)
-        }
-      } else {
-        // Standard constraints for other browsers
-        constraints = {
-          video: {
-            facingMode: facingMode,
-            width: { ideal: 1280 },
-            height: { ideal: 960 }
-          },
-          audio: false
-        }
-        stream = await navigator.mediaDevices.getUserMedia(constraints)
-      }
-
-      if (!stream) {
-        throw new Error('Failed to get camera stream')
-      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: facingMode,
+          width: { ideal: 1280 },
+          height: { ideal: 960 }
+        },
+        audio: false
+      })
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream
@@ -133,23 +60,12 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
       }
     } catch (error) {
       console.error('Error accessing camera:', error)
-      
       // More specific error messages
       if (error instanceof Error) {
         if (error.name === 'NotAllowedError') {
           alert('Izin camera ditolak. Silakan berikan izin camera dan refresh halaman.')
         } else if (error.name === 'NotFoundError') {
           alert('Camera tidak ditemukan pada perangkat ini.')
-        } else if (error.name === 'OverconstrainedError') {
-          // Try fallback to back camera if front camera fails
-          if (facingMode === 'user') {
-            console.log('Front camera failed, trying back camera as fallback')
-            setFacingMode('environment')
-            setTimeout(() => startCamera(), 100)
-            return
-          } else {
-            alert('Camera tidak dapat diakses dengan pengaturan saat ini.')
-          }
         } else {
           alert('Tidak dapat mengakses camera. Pastikan perangkat mendukung camera.')
         }
@@ -220,31 +136,18 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
     }
   }
 
-  // Flip camera with better error handling for Android Chrome/Beaver Web
-  const flipCamera = async () => {
-    try {
-      // Clear photo preview when flipping camera
-      if (values.photoFile) {
-        onChange({ photoFile: null })
-      }
-
-      // Stop current camera first
-      stopCamera()
-
-      // Wait a bit for camera to fully stop
-      await new Promise(resolve => setTimeout(resolve, 200))
-
-      // Change facing mode
-      const newFacingMode = facingMode === 'user' ? 'environment' : 'user'
-      setFacingMode(newFacingMode)
-
-      // Start camera with new facing mode
-      await startCamera()
-    } catch (error) {
-      console.error('Error flipping camera:', error)
-      // If flip fails, try to restart with current facing mode
-      setTimeout(() => startCamera(), 500)
+  // Flip camera
+  const flipCamera = () => {
+    // Clear photo preview when flipping camera
+    if (values.photoFile) {
+      onChange({ photoFile: null })
     }
+
+    // Change facing mode
+    setFacingMode(prev => prev === 'user' ? 'environment' : 'user')
+
+    // Start camera with new facing mode
+    startCamera()
   }
 
   // Toggle flashlight
@@ -275,18 +178,7 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
   // Auto-start camera when component mounts
   useEffect(() => {
     // Start camera immediately when PhotoUploadPage opens
-    const initCamera = async () => {
-      try {
-        await startCamera()
-      } catch (error) {
-        console.error('Failed to initialize camera:', error)
-        // If initial camera start fails, try again after a delay
-        setTimeout(() => startCamera(), 1000)
-      }
-    }
-    
-    initCamera()
-    
+    startCamera()
     return () => {
       stopCamera()
     }
@@ -438,10 +330,7 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
             {/* Flip */}
             <button
               onClick={flipCamera}
-              disabled={!isCameraOpen}
-              className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center ${
-                !isCameraOpen ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className="w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center"
             >
               <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
