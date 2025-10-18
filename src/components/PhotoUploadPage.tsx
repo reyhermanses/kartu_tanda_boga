@@ -27,6 +27,40 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
     return /android/.test(userAgent) && (/chrome/.test(userAgent) || /beaver/.test(userAgent))
   }
 
+  // Detect Samsung devices (especially Fold series)
+  const isSamsungDevice = () => {
+    const userAgent = navigator.userAgent.toLowerCase()
+    return /samsung/.test(userAgent) || /sm-/.test(userAgent) || /galaxy/.test(userAgent)
+  }
+
+  // Detect if it's a foldable device
+  const isFoldableDevice = () => {
+    const userAgent = navigator.userAgent.toLowerCase()
+    return /fold/.test(userAgent) || /flip/.test(userAgent) || /z fold/.test(userAgent) || /z flip/.test(userAgent)
+  }
+
+  // Request camera permission explicitly for Samsung devices
+  const requestCameraPermission = async () => {
+    if (isSamsungDevice()) {
+      try {
+        // For Samsung devices, try to get permission first
+        const devices = await navigator.mediaDevices.enumerateDevices()
+        console.log('Available devices:', devices)
+        
+        // Check if camera devices are available
+        const videoDevices = devices.filter(device => device.kind === 'videoinput')
+        console.log('Video devices found:', videoDevices)
+        
+        if (videoDevices.length === 0) {
+          throw new Error('No camera devices found')
+        }
+      } catch (error) {
+        console.log('Permission check failed:', error)
+        // Continue anyway, let getUserMedia handle the permission
+      }
+    }
+  }
+
   // Start camera with fallback mechanism for Android Chrome/Beaver Web
   const startCamera = async () => {
     try {
@@ -36,11 +70,106 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
         return
       }
 
+      // Request permission for Samsung devices
+      await requestCameraPermission()
+
       let stream: MediaStream | null = null
       let constraints: MediaStreamConstraints
 
-      // For Android Chrome/Beaver Web, use more specific constraints
-      if (isAndroidChrome()) {
+      // Special handling for Samsung Fold 5 and other Samsung devices
+      if (isSamsungDevice() && isAndroidChrome()) {
+        console.log('Samsung device detected, using special constraints')
+        if (isFoldableDevice()) {
+          console.log('Foldable device detected (Samsung Fold/Flip)')
+        }
+        
+        if (facingMode === 'user') {
+          // Samsung Fold 5 front camera constraints
+          const samsungFrontConstraints = [
+            // Try with exact facingMode and lower resolution for Samsung
+            {
+              video: {
+                facingMode: { exact: 'user' },
+                width: { ideal: 640, max: 1280 },
+                height: { ideal: 480, max: 960 }
+              },
+              audio: false
+            },
+            // Fallback with ideal facingMode
+            {
+              video: {
+                facingMode: 'user',
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+              },
+              audio: false
+            },
+            // Minimal constraints for Samsung
+            {
+              video: {
+                facingMode: 'user'
+              },
+              audio: false
+            },
+            // Last resort - no facingMode specified
+            {
+              video: true,
+              audio: false
+            }
+          ]
+
+          // Try each constraint until one works
+          for (const constraint of samsungFrontConstraints) {
+            try {
+              console.log('Trying Samsung front camera constraint:', constraint)
+              stream = await navigator.mediaDevices.getUserMedia(constraint)
+              break
+            } catch (err) {
+              console.log('Samsung front camera constraint failed:', err)
+              continue
+            }
+          }
+        } else {
+          // Samsung Fold 5 back camera constraints
+          const samsungBackConstraints = [
+            {
+              video: {
+                facingMode: { exact: 'environment' },
+                width: { ideal: 1280 },
+                height: { ideal: 960 }
+              },
+              audio: false
+            },
+            {
+              video: {
+                facingMode: 'environment',
+                width: { ideal: 1280 },
+                height: { ideal: 960 }
+              },
+              audio: false
+            },
+            {
+              video: {
+                facingMode: 'environment'
+              },
+              audio: false
+            }
+          ]
+
+          for (const constraint of samsungBackConstraints) {
+            try {
+              console.log('Trying Samsung back camera constraint:', constraint)
+              stream = await navigator.mediaDevices.getUserMedia(constraint)
+              break
+            } catch (err) {
+              console.log('Samsung back camera constraint failed:', err)
+              continue
+            }
+          }
+        }
+      }
+      // For other Android Chrome/Beaver Web, use more specific constraints
+      else if (isAndroidChrome()) {
         if (facingMode === 'user') {
           // Try multiple constraint variations for front camera on Android Chrome
           const frontCameraConstraints = [
@@ -137,9 +266,17 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
       // More specific error messages
       if (error instanceof Error) {
         if (error.name === 'NotAllowedError') {
-          alert('Izin camera ditolak. Silakan berikan izin camera dan refresh halaman.')
+          if (isSamsungDevice()) {
+            alert('Izin camera ditolak. Untuk Samsung Fold 5, pastikan:\n1. Berikan izin camera di Chrome\n2. Buka Chrome Settings > Site Settings > Camera\n3. Refresh halaman dan coba lagi')
+          } else {
+            alert('Izin camera ditolak. Silakan berikan izin camera dan refresh halaman.')
+          }
         } else if (error.name === 'NotFoundError') {
-          alert('Camera tidak ditemukan pada perangkat ini.')
+          if (isSamsungDevice()) {
+            alert('Camera tidak ditemukan. Samsung Fold 5 memiliki multiple cameras. Pastikan:\n1. Camera tidak digunakan aplikasi lain\n2. Restart Chrome\n3. Coba buka aplikasi camera Samsung terlebih dahulu')
+          } else {
+            alert('Camera tidak ditemukan pada perangkat ini.')
+          }
         } else if (error.name === 'OverconstrainedError') {
           // Try fallback to back camera if front camera fails
           if (facingMode === 'user') {
@@ -149,6 +286,12 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
             return
           } else {
             alert('Camera tidak dapat diakses dengan pengaturan saat ini.')
+          }
+        } else if (error.name === 'NotReadableError') {
+          if (isSamsungDevice()) {
+            alert('Camera sedang digunakan aplikasi lain. Tutup semua aplikasi yang menggunakan camera dan coba lagi.')
+          } else {
+            alert('Camera sedang digunakan aplikasi lain.')
           }
         } else {
           alert('Tidak dapat mengakses camera. Pastikan perangkat mendukung camera.')
@@ -281,7 +424,16 @@ export function PhotoUploadPage({ values, onChange, onBack, onNext }: Props) {
       } catch (error) {
         console.error('Failed to initialize camera:', error)
         // If initial camera start fails, try again after a delay
-        setTimeout(() => startCamera(), 1000)
+        // For Samsung devices, try multiple times with longer delays
+        const retryDelay = isSamsungDevice() ? 2000 : 1000
+        const maxRetries = isSamsungDevice() ? 3 : 1
+        
+        for (let i = 0; i < maxRetries; i++) {
+          setTimeout(() => {
+            console.log(`Retry ${i + 1} for camera initialization`)
+            startCamera()
+          }, retryDelay * (i + 1))
+        }
       }
     }
     
