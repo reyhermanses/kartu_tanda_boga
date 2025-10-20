@@ -93,7 +93,7 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
             <div className="text-xs text-neutral-300 mb-2">Tampilan Kartu</div>
             <div
               ref={cardRef}
-              className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[250px] 
+              className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[210px]
               max-[375px]:h-[200px] 
               max-[440px]:h-[200px] 
               max-[414px]:h-[220px] 
@@ -127,13 +127,14 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
               </div> */}
 
               {/* Profile Picture */}
-              <div className="absolute right-0 max-[375px]:right-0 max-[390px]:right-0 -translate-y-1/2 top-[75px]
+              <div className="absolute right-3 max-[375px]:right-0 max-[390px]:right-0 -translate-y-1/2 top-[75px]
               max-[375px]:top-[90px]
               max-[390px]:top-[90px]
               max-[414px]:top-[100px]
               max-[430px]:top-[110px]
               ">
-                <div className="w-24 h-24 
+                <div className="w-24 h-24
+                w-[80px] h-[80px] 
                 max-[375px]:w-[100px] max-[375px]:h-[100px]
                 max-[390px]:w-[80px] max-[390px]:h-[80px]
                 max-[414px]:w-[90px] max-[414px]:h-[90px]

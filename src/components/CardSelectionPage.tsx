@@ -323,7 +323,7 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
   return (
     <div
-      className="fixed inset-0 bg-red-600 flex flex-col"
+      className="relative bg-red-600 flex flex-col"
       style={{
         height: '100dvh',
         overflow: 'hidden',
@@ -487,10 +487,11 @@ export function CardSelectionPage({ values, onNext }: Props) {
 
                         {/* Profile Picture */}
                         {card.tier !== 'empty' && (
-                          <div className={`absolute right-4 max-[375px]:right-7 max-[390px]:right-4 -translate-y-1/2 
+                          <div className={`absolute right-4 top-[60px] max-[375px]:right-7 max-[390px]:right-4 -translate-y-1/2 
                           ${isSelected ? 'top-[100px] max-[375px]:top-[80px] max-[390px]:top-[80px] max-[414px]:top-[90px] max-[430px]:top-[100px]' : 'top-[60px] max-[375px]:top-[40px] max-[390px]:top-[40px] max-[414px]:top-[50px] max-[430px]:top-[60px]'}`}>
                             <div className="
                             w-24 h-24 
+                            w-[70px] h-[70px]
                             max-[375px]:w-[70px] max-[375px]:h-[70px]
                             max-[390px]:w-[80px] max-[390px]:h-[80px]
                             max-[414px]:w-[90px] max-[414px]:h-[90px]
@@ -635,10 +636,17 @@ export function CardSelectionPage({ values, onNext }: Props) {
         <button
           onClick={handleSubmit}
           disabled={isProcessing}
-          className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black disabled:opacity-50"
+          className="submit-button p-3 w-[150px] text-red-600 text-lg rounded-[20px] font-black disabled:opacity-50 flex items-center justify-center gap-2"
           style={{ fontFamily: 'Roboto', fontWeight: 900 }}
         >
-          {isProcessing ? 'Kartu Tersimpan' : 'Simpan'}
+          {isProcessing ? (
+            <>
+              <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm">Kartu Tersimpan</span>
+            </>
+          ) : (
+            'Simpan'
+          )}
         </button>
       </div>
     </div>

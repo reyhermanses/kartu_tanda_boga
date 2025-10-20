@@ -267,8 +267,8 @@ function App() {
       newErrors.phone = 'Nomor telepon harus diisi'
       errorList.push('Nomor telepon harus diisi')
     } else if (!/^[0-9]+$/.test(values.phone)) {
-      newErrors.phone = 'Format nomor telepon tidak valid, contoh : 081234567890'
-      errorList.push('Format nomor telepon tidak valid (hanya angka)')
+      newErrors.phone = 'Format nomor telepon tidak valid, contoh : 81234567890'
+      errorList.push('Format nomor telepon dimulai dengan angka 0')
     } else if (values.phone.length < 10 || values.phone.length > 13) {
       newErrors.phone = 'Nomor telepon harus 10-13 digit'
       errorList.push('Nomor telepon harus 10-13 digit')
@@ -551,16 +551,18 @@ function App() {
   }
 
   return (
-    <>
-      {renderCurrentPage()}
-      <AlertModal
-        isOpen={showAlert}
-        title="Error"
-        message={alertMessage}
-        errorList={errorList}
-        onClose={() => setShowAlert(false)}
-      />
-    </>
+    <div className="min-h-screen w-full bg-red-600 flex justify-center">
+      <div className="w-[390px] max-w-[390px] min-h-screen bg-red-600">
+        {renderCurrentPage()}
+        <AlertModal
+          isOpen={showAlert}
+          title="Error"
+          message={alertMessage}
+          errorList={errorList}
+          onClose={() => setShowAlert(false)}
+        />
+      </div>
+    </div>
   )
 }
 

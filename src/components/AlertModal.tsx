@@ -9,7 +9,7 @@ type Props = {
   isSuccess?: boolean
 }
 
-export function AlertModal({ isOpen, onClose, title, message, errorList, isSuccess = false }: Props) {
+export function AlertModal({ isOpen, onClose, message, errorList, isSuccess = false }: Props) {
   if (!isOpen) return null
 
   const iconColor = isSuccess ? 'text-green-600' : 'text-red-600'
@@ -36,7 +36,7 @@ export function AlertModal({ isOpen, onClose, title, message, errorList, isSucce
                 <AlertCircle className={`w-5 h-5 ${iconColor}`} />
               )}
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <h3 className="text-[17px] font-semibold text-gray-900">Cek kembali data kamu</h3>
           </div>
           <button
             onClick={onClose}
