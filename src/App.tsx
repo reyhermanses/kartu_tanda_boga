@@ -42,13 +42,15 @@ function App() {
   const [selectedCardUrl, setSelectedCardUrl] = useState('')
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [errorList, setErrorList] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const updateValues = (newValues: Partial<FormValues>) => {
     setValues(prev => ({ ...prev, ...newValues }))
     // Clear errors when user starts typing
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length > 0 || errorList.length > 0) {
       setErrors({})
+      setErrorList([])
     }
   }
 
@@ -252,36 +254,46 @@ function App() {
     return () => clearTimeout(timer)
   }, [created])
 
-  const validateForm = async (): Promise<boolean> => {
+  const validateForm = async (): Promise<{ isValid: boolean; errorList: string[] }> => {
     const newErrors: FormErrors = {}
+    const errorList: string[] = []
     
     if (!values.name.trim()) {
       newErrors.name = 'Nama lengkap harus diisi'
+      errorList.push('Nama lengkap harus diisi')
     }
     
     if (!values.phone.trim()) {
       newErrors.phone = 'Nomor telepon harus diisi'
+      errorList.push('Nomor telepon harus diisi')
     } else if (!/^[0-9]+$/.test(values.phone)) {
-      newErrors.phone = 'Format nomor telepon tidak valid'
+      newErrors.phone = 'Format nomor telepon tidak valid, contoh : 081234567890'
+      errorList.push('Format nomor telepon tidak valid (hanya angka)')
     } else if (values.phone.length < 10 || values.phone.length > 13) {
       newErrors.phone = 'Nomor telepon harus 10-13 digit'
+      errorList.push('Nomor telepon harus 10-13 digit')
     } else if (!values.phone.startsWith('8')) {
       newErrors.phone = 'Nomor telepon harus dimulai dengan 8'
+      errorList.push('Nomor telepon harus dimulai dengan 8')
     }
     
     if (!values.email.trim()) {
       newErrors.email = 'Email harus diisi'
+      errorList.push('Email harus diisi')
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
       newErrors.email = 'Format email tidak valid'
+      errorList.push('Format email tidak valid')
     }
     
     if (!values.birthday) {
       newErrors.birthday = 'Tanggal lahir harus diisi'
+      errorList.push('Tanggal lahir harus diisi')
     } else {
       const birthDate = new Date(values.birthday)
       const today = new Date()
       if (birthDate >= today) {
         newErrors.birthday = 'Tanggal lahir harus di masa lalu'
+        errorList.push('Tanggal lahir harus di masa lalu')
       } else {
         // Calculate age
         const age = today.getFullYear() - birthDate.getFullYear()
@@ -293,33 +305,40 @@ function App() {
         
         if (actualAge < 13) {
           newErrors.birthday = 'Umur minimal 13 tahun'
+          errorList.push('Umur minimal 13 tahun')
         }
       }
     }
+    
+    // Photo validation moved to PhotoUploadPage
+    // if (!values.photoFile) {
+    //   newErrors.photoFile = 'Foto profil harus diupload'
+    //   errorList.push('Foto profil harus diupload')
+    // }
     
     // Gender validation removed temporarily
     // if (!values.gender) {
     //   newErrors.gender = 'Jenis kelamin harus dipilih'
     // }
     
-    // Photo validation moved to PhotoUploadPage
-    // if (!values.photoFile) {
-    //   newErrors.photoFile = 'Foto profil harus diupload'
-    // }
-    
     // Set basic validation errors first
     setErrors(newErrors)
     
-    // If there are basic validation errors, don't proceed
+    // If there are basic validation errors, return immediately
     if (Object.keys(newErrors).length > 0) {
-      return false
+      return { isValid: false, errorList }
     }
     
-    // Now validate email with API
+    // Now validate email with API only if basic validation passed
     const isEmailValid = await validateEmailWithAPI(values.email, values.phone)
     
+    if (!isEmailValid) {
+      errorList.push('Email sudah terdaftar atau tidak valid')
+      return { isValid: false, errorList }
+    }
+    
     // Return final validation result
-    return isEmailValid
+    return { isValid: true, errorList: [] }
   }
 
   const compressImage = (file: File, maxWidth: number = 800, quality: number = 0.5): Promise<string> => {
@@ -349,8 +368,11 @@ function App() {
     
     try {
       // Validate form
-      if (!(await validateForm())) {
-        setAlertMessage('Mohon lengkapi semua field yang wajib diisi')
+      const validationResult = await validateForm()
+      
+      if (!validationResult.isValid) {
+        setAlertMessage('Mohon perbaiki field yang tidak valid')
+        setErrorList(validationResult.errorList)
         setShowAlert(true)
         setIsSubmitting(false)
         return
@@ -436,13 +458,16 @@ function App() {
 
 
   const handleFormNext = async () => {
-    if (await validateForm()) {
+    const validationResult = await validateForm()
+    if (validationResult.isValid) {
       setCurrentPage(3) // Photo upload page
     } else {
-      setAlertMessage('Mohon lengkapi semua field yang wajib diisi')
+      setAlertMessage('Mohon perbaiki field yang tidak valid')
+      setErrorList(validationResult.errorList)
       setShowAlert(true)
     }
   }
+
 
   const handlePhotoBack = () => {
     setCurrentPage(2) // Form section
@@ -532,6 +557,7 @@ function App() {
         isOpen={showAlert}
         title="Error"
         message={alertMessage}
+        errorList={errorList}
         onClose={() => setShowAlert(false)}
       />
     </>
