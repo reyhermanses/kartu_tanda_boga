@@ -53,10 +53,10 @@ export function CouponCarousel({ coupons }: Props) {
   const handleMouseUp = () => {
     if (!isDragging) return
     setIsDragging(false)
-    
+
     const diff = currentX - startX
     const threshold = 50
-    
+
     if (Math.abs(diff) > threshold) {
       if (diff > 0) {
         prevSlide()
@@ -64,7 +64,7 @@ export function CouponCarousel({ coupons }: Props) {
         nextSlide()
       }
     }
-    
+
     setDragOffset(0)
   }
 
@@ -85,10 +85,10 @@ export function CouponCarousel({ coupons }: Props) {
   const handleTouchEnd = () => {
     if (!isDragging) return
     setIsDragging(false)
-    
+
     const diff = currentX - startX
     const threshold = 50
-    
+
     if (Math.abs(diff) > threshold) {
       if (diff > 0) {
         prevSlide()
@@ -96,7 +96,7 @@ export function CouponCarousel({ coupons }: Props) {
         nextSlide()
       }
     }
-    
+
     setDragOffset(0)
   }
 
@@ -105,11 +105,11 @@ export function CouponCarousel({ coupons }: Props) {
     const handleDragStart = (e: DragEvent) => {
       e.preventDefault()
     }
-    
+
     if (containerRef.current) {
       containerRef.current.addEventListener('dragstart', handleDragStart)
     }
-    
+
     return () => {
       if (containerRef.current) {
         containerRef.current.removeEventListener('dragstart', handleDragStart)
@@ -123,7 +123,7 @@ export function CouponCarousel({ coupons }: Props) {
 
   return (
     <div className="relative">
-      <div 
+      <div
         ref={containerRef}
         className="relative overflow-hidden rounded-lg border border-neutral-200 cursor-grab active:cursor-grabbing"
         onMouseDown={handleMouseDown}
@@ -134,25 +134,25 @@ export function CouponCarousel({ coupons }: Props) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div 
+        <div
           className="flex transition-transform duration-300 ease-in-out"
-          style={{ 
+          style={{
             transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`,
             transition: isDragging ? 'none' : 'transform 300ms ease-in-out'
           }}
         >
           {groupedCoupons.map((group, index) => (
             <div key={index} className="w-full flex-shrink-0 select-none">
-              <img 
-                src={group.image} 
-                alt={`Coupon ${index + 1}`} 
-                className="w-full object-cover pointer-events-none" 
+              <img
+                src={group.image}
+                alt={`Coupon ${index + 1}`}
+                className="w-full object-cover pointer-events-none"
                 draggable={false}
               />
             </div>
           ))}
         </div>
-        
+
         {/* Navigation arrows - positioned in the middle of the image area */}
         {groupedCoupons.length > 1 && (
           <>
@@ -171,7 +171,7 @@ export function CouponCarousel({ coupons }: Props) {
           </>
         )}
       </div>
-      
+
       {/* Dots indicator */}
       {groupedCoupons.length > 1 && (
         <div className="flex justify-center mt-2 space-x-1">
@@ -179,9 +179,8 @@ export function CouponCarousel({ coupons }: Props) {
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-yellow-600' : 'bg-gray-300'
-              }`}
+              className={`w-2 h-2 rounded-full transition-colors ${index === currentIndex ? 'bg-yellow-600' : 'bg-gray-300'
+                }`}
             />
           ))}
         </div>
@@ -190,7 +189,7 @@ export function CouponCarousel({ coupons }: Props) {
       {/* Coupon names below the carousel */}
       <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="text-sm text-neutral-500 text-center mb-2">
-        Selamat kamu baru saja mendapatkan promo berikut:
+          Nikmati Aneka Voucher Penuh Kejutan
         </div>
         <div className="space-y-1">
           {currentGroup.names.map((name, index) => (

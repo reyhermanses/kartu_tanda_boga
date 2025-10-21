@@ -78,7 +78,7 @@ function App() {
         },
         body: JSON.stringify({
           email: email.trim().toLowerCase(), // Normalize email
-          phone: `0${phone}` // Add 0 prefix to phone
+          phone: phone // Use phone as is (already has 0 prefix)
         })
       })
 
@@ -266,15 +266,15 @@ function App() {
     if (!values.phone.trim()) {
       newErrors.phone = 'Nomor telepon harus diisi'
       errorList.push('Nomor telepon harus diisi')
+    } else if (!values.phone.startsWith('0')) {
+      newErrors.phone = 'Nomor telepon harus dimulai dengan 0'
+      errorList.push('Nomor telepon harus dimulai dengan 0')
     } else if (!/^[0-9]+$/.test(values.phone)) {
-      newErrors.phone = 'Format nomor telepon tidak valid, contoh : 81234567890'
-      errorList.push('Format nomor telepon dimulai dengan angka 0')
+      newErrors.phone = 'Nomor telepon hanya boleh berisi angka'
+      errorList.push('Nomor telepon hanya boleh berisi angka')
     } else if (values.phone.length < 10 || values.phone.length > 13) {
       newErrors.phone = 'Nomor telepon harus 10-13 digit'
       errorList.push('Nomor telepon harus 10-13 digit')
-    } else if (!values.phone.startsWith('8')) {
-      newErrors.phone = 'Nomor telepon harus dimulai dengan 8'
-      errorList.push('Nomor telepon harus dimulai dengan 8')
     }
     
     if (!values.email.trim()) {
@@ -389,7 +389,7 @@ function App() {
         name: values.name,
         birthday: values.birthday,
         // phone: `+62${values.phone}`,
-        phone: `0${values.phone}`,
+        phone: `${values.phone}`,
         email: values.email,
         // gender: values.gender, // Temporarily removed
         profileImage: base64String,
@@ -470,6 +470,7 @@ function App() {
 
 
   const handlePhotoBack = () => {
+    console.log('handlePhotoBack called, setting currentPage to 2')
     setCurrentPage(2) // Form section
   }
 
@@ -521,7 +522,10 @@ function App() {
           <CardSelectionPage
             values={values}
             onNext={handleCardSelectionNext}
-            onBack={() => setCurrentPage(2)}
+            onBack={() => {
+              console.log('CardSelectionPage onBack called, setting currentPage to 3')
+              setCurrentPage(3)
+            }}
           />
         )
       case 5:

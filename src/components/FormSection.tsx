@@ -47,38 +47,15 @@ export function FormSection({ values, errors, onChange, onNext }: Props) {
             onChange={(v) => onChange({ name: v })}
             error={errors.name}
           />
-          <label className="block">
-            <span className="mb-2 block text-sm text-white font-medium">
-              Nomor Telepon <span className="text-red-300">*</span>
-            </span>
-            <div className="flex items-center rounded-[20px] border-2 bg-transparent overflow-hidden" style={{ borderColor: errors.phone ? '#f97316' : '#f87171' }}>
-              <div className="px-4 py-3 sm:py-5 text-white/70 text-base bg-transparent border-r border-white/20 flex items-center">
-                +62
-              </div>
-              <input
-                type="tel"
-                placeholder="8xxxx"
-                value={values.phone}
-                onChange={(e) => onChange({ phone: e.target.value })}
-                className="flex-1 text-white placeholder-white/70 outline-none bg-transparent focus:outline-none border-none"
-                style={{
-                  // colorScheme: 'dark',
-                  // color: 'white',
-                  // lineHeight: '20px',
-                  // fontSize: '16px',
-                  // fontFamily: 'inherit',
-                  // paddingTop: '10px',
-                  // paddingBottom: '16px',
-                  transform: 'translateY(4px)'
-                }}
-              />
-            </div>
-            {errors.phone && (
-              <span className="mt-1 block text-xs text-white">
-                {errors.phone}
-              </span>
-            )}
-          </label>
+          <InputField
+            label="Nomor Telepon"
+            placeholder="08xxxx"
+            required
+            type="tel"
+            value={values.phone}
+            onChange={(v) => onChange({ phone: v })}
+            error={errors.phone}
+          />
           <label className="block">
             <span className="mb-2 block text-sm text-white font-medium">
               Tanggal Lahir <span className="text-red-300">*</span>

@@ -54,7 +54,7 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
   function handleClaimClick() {
     // Use smart deeplink that automatically handles device detection and store redirection
     const DEEPLINK_URL = 'https://bogaapp.boga.id'
- 
+
     // Open deeplink - this will automatically:
     // - Open Boga App if installed
     // - Redirect to appropriate store (Play Store for Android, App Store for iOS) if not installed
@@ -96,9 +96,9 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
               className="rounded-2xl relative overflow-hidden shadow-2xl w-full h-[210px]
               max-[375px]:h-[200px] 
               max-[440px]:h-[200px] 
-              max-[414px]:h-[220px] 
+              max-[414px]:h-[210px] 
               max-[390px]:h-[205px] 
-              max-[430px]:h-[230px]
+              max-[430px]:h-[210px]
               "
               style={{
                 background: created?.cardImage ? `url(${created.cardImage})` : '#f3f4f6',
@@ -127,11 +127,11 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
               </div> */}
 
               {/* Profile Picture */}
-              <div className="absolute right-3 max-[375px]:right-0 max-[390px]:right-0 -translate-y-1/2 top-[75px]
+              <div className="absolute right-3 max-[375px]:right-0 max-[390px]:right-0 max-[414px]:right-1 max-[430px]:right-1 -translate-y-1/2 top-[75px]
               max-[375px]:top-[90px]
               max-[390px]:top-[90px]
-              max-[414px]:top-[100px]
-              max-[430px]:top-[110px]
+              max-[414px]:top-[90px]
+              max-[430px]:top-[90px]
               ">
                 <div className="w-24 h-24
                 w-[80px] h-[80px] 
@@ -177,7 +177,7 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
                     <span className="text-white font-extrabold text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
                   </div> */}
                   <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>
-                    {values.phone ? '0' + values.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3') : '0877-9832-0931'}
+                    {values.phone ? values.phone.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '0877-9832-0931'}
                   </div>
                   <div className="text-blue-800 font-extrabold text-[12px]">
                     {values.email || 'valeriebahagia@gmail.com'}
@@ -186,6 +186,14 @@ export function ResultPage({ created, values, selectedCardUrl }: Props) {
               </div>
             </div>
           </div>
+
+          {created.coupons.length === 0 && (
+            <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="text-sm text-neutral-500 text-center mb-2">
+                Hai, nomer ini sudah terdaftar!
+              </div>
+            </div>
+          )}
 
           {created?.isEligibleForCoupon && created.coupons && created.coupons.length > 0 && (
             <div className="border-t border-neutral-200 pt-4">

@@ -14,7 +14,7 @@ type Props = {
   onBack: () => void
 }
 
-export function CardSelectionPage({ values, onNext, onBack }: Props) {
+export function CardSelectionPage({ values, onBack }: Props) {
   const [currentCardIndex, setCurrentCardIndex] = useState(1) // Start with second card (index 1)
   const [cards, setCards] = useState<CardDesign[]>([])
   const [loading, setLoading] = useState(true)
@@ -164,8 +164,8 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
     }
   }
 
-  // Convert image to base64
-  async function convertImageToBase64(url: string): Promise<string> {
+  // Convert image to base64 blob
+  async function convertImageToBlob(url: string): Promise<string> {
     try {
       console.log('Converting image to blob:', url)
       
@@ -235,13 +235,12 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
       console.log('Submitting card:', selectedCardIndex, selectedCard?.name)
       console.log('Selected card object:', selectedCard)
       console.log('Selected card image URL:', selectedCard?.imageUrl)
-      console.log(typeof selectedCard?.imageUrl)
       
           // Convert card image to blob and store
-          if (selectedCard.imageUrl) {
+          if (selectedCard?.imageUrl) {
             try {
-          console.log('Converting card image to base64:', selectedCard.imageUrl)
-          const cardBlob = await convertImageToBase64(selectedCard.imageUrl)
+              console.log('Converting card image to blob:', selectedCard.imageUrl)
+              const cardBlob = await convertImageToBlob(selectedCard.imageUrl)
               if (cardBlob) {
                 sessionStorage.setItem('selectedCardBlob', cardBlob)
                 console.log('Card blob saved to sessionStorage, length:', cardBlob.length)
@@ -257,8 +256,8 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
           // Convert profile image to blob and store
           if (values.photoFile) {
             try {
-          console.log('Converting profile image to base64')
-          const profileBlob = await convertImageToBase64(URL.createObjectURL(values.photoFile))
+              console.log('Converting profile image to blob')
+              const profileBlob = await convertImageToBlob(URL.createObjectURL(values.photoFile))
               if (profileBlob) {
                 sessionStorage.setItem('selectedProfileBlob', profileBlob)
                 console.log('Profile blob saved to sessionStorage, length:', profileBlob.length)
@@ -269,7 +268,7 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
           }
           
           // Pass the original card data
-          onNext(selectedCard)
+          // onNext(selectedCard)
     }
     
     setIsProcessing(false)
@@ -546,7 +545,7 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
                               {/* <div className="bg-blue-400 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg w-fit">
                                 <span className="text-white font-extrabold text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
                               </div> */}
-                              <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs w-fit" style={{ fontFamily: 'Roboto' }}>{values.phone ? values.phone.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '0877-9832-0931'}</div>
+                              <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs w-fit" style={{ fontFamily: 'Roboto' }}>{values.phone ? '0' + values.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3') : '0877-9832-0931'}</div>
                               <div className="text-blue-800 font-extrabold text-[13px] w-fit">
                                 <div>{values.email || 'valeriebahagia@gmail.com'}</div>
                               </div>

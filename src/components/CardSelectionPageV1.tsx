@@ -14,7 +14,7 @@ type Props = {
   onBack: () => void
 }
 
-export function CardSelectionPage({ values, onNext, onBack }: Props) {
+export function CardSelectionPage({ values, onNext }: Props) {
   const [currentCardIndex, setCurrentCardIndex] = useState(1) // Start with second card (index 1)
   const [cards, setCards] = useState<CardDesign[]>([])
   const [loading, setLoading] = useState(true)
@@ -164,8 +164,8 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
     }
   }
 
-  // Convert image to base64
-  async function convertImageToBase64(url: string): Promise<string> {
+  // Convert image to base64 blob
+  async function convertImageToBlob(url: string): Promise<string> {
     try {
       console.log('Converting image to blob:', url)
       
@@ -173,7 +173,6 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
       if (url.startsWith('blob:')) {
         console.log('Converting blob URL directly')
         const response = await fetch(url)
-        console.log('Response img to blob:', response)
         const blob = await response.blob()
         console.log('Blob size:', blob.size)
         
@@ -235,13 +234,12 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
       console.log('Submitting card:', selectedCardIndex, selectedCard?.name)
       console.log('Selected card object:', selectedCard)
       console.log('Selected card image URL:', selectedCard?.imageUrl)
-      console.log(typeof selectedCard?.imageUrl)
       
           // Convert card image to blob and store
           if (selectedCard.imageUrl) {
             try {
-          console.log('Converting card image to base64:', selectedCard.imageUrl)
-          const cardBlob = await convertImageToBase64(selectedCard.imageUrl)
+              console.log('Converting card image to blob:', selectedCard.imageUrl)
+              const cardBlob = await convertImageToBlob(selectedCard.imageUrl)
               if (cardBlob) {
                 sessionStorage.setItem('selectedCardBlob', cardBlob)
                 console.log('Card blob saved to sessionStorage, length:', cardBlob.length)
@@ -257,8 +255,8 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
           // Convert profile image to blob and store
           if (values.photoFile) {
             try {
-          console.log('Converting profile image to base64')
-          const profileBlob = await convertImageToBase64(URL.createObjectURL(values.photoFile))
+              console.log('Converting profile image to blob')
+              const profileBlob = await convertImageToBlob(URL.createObjectURL(values.photoFile))
               if (profileBlob) {
                 sessionStorage.setItem('selectedProfileBlob', profileBlob)
                 console.log('Profile blob saved to sessionStorage, length:', profileBlob.length)
@@ -347,21 +345,8 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
 
       </div>
       {/* Header */}
-      <div className="px-2 sm:px-4 py-2 sm:py-4 flex justify-between items-center relative z-50">
-        <button 
-          onClick={() => {
-            console.log('Back button clicked in CardSelectionPage')
-            onBack()
-          }} 
-          className="text-white cursor-pointer p-2 rounded-full hover:bg-white/10 transition-colors"
-          style={{ pointerEvents: 'auto' }}
-        >
-          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 className="text-white text-sm sm:text-lg font-bold">Pilih Kartu Membership Kamu</h1>
-        <div></div>
+      <div className="px-4 py-4 flex justify-center top-0 items-center relative z-10">
+        <h1 className="text-white text-[22px] font-bold">Pilih Kartu Membership Kamu</h1>
       </div>
 
       {/* Card Preview Container - Show 3 Cards at a time */}
@@ -388,30 +373,36 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
               let visibleCards: CardDesign[] = []
 
               if (cards.length >= 3) {
-                // Dynamic logic for any number of cards
+                // Create visible cards with empty placeholders
                 visibleCards = []
 
                 if (currentCardIndex === 0) {
-                  // First card: show [empty, 0, 1]
+                  // Index 0: show [empty, 0, 1]
                   visibleCards = [
                     { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
                     cards[0] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
                     cards[1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' }
                   ]
-                } else if (currentCardIndex === cards.length - 1) {
-                  // Last card: show [n-2, n-1, empty]
-                  const lastIndex = cards.length - 1
+                } else if (currentCardIndex === 1) {
+                  // Index 1: show [0, 1, 2]
                   visibleCards = [
-                    cards[lastIndex - 1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
-                    cards[lastIndex] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
-                    { id: -2, name: 'EMPTY', imageUrl: '', tier: 'empty' }
+                    cards[0] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[2] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' }
                   ]
-                } else {
-                  // Middle cards: show [n-1, n, n+1]
+                } else if (currentCardIndex === 2) {
+                  // Index 2: show [1, 2, 3]
                   visibleCards = [
-                    cards[currentCardIndex - 1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
-                    cards[currentCardIndex] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
-                    cards[currentCardIndex + 1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' }
+                    cards[1] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[2] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[3] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' }
+                  ]
+                } else if (currentCardIndex === 3) {
+                  // Index 3: show [2, 3, empty]
+                  visibleCards = [
+                    cards[2] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    cards[3] || { id: -1, name: 'EMPTY', imageUrl: '', tier: 'empty' },
+                    { id: -2, name: 'EMPTY', imageUrl: '', tier: 'empty' }
                   ]
                 }
 
@@ -419,12 +410,11 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
                 // console.log('Visible cards:', visibleCards.map(c => c?.name || 'undefined'))
                 // console.log('Current card index:', currentCardIndex)
 
-                // Dynamic sliding window logic:
+                // Sliding window logic for 4 cards:
                 // Index 0: show [empty,0,1] → Card 0 (index 1) expanded
                 // Index 1: show [0,1,2] → Card 1 (index 1) expanded  
                 // Index 2: show [1,2,3] → Card 2 (index 1) expanded
-                // Index n: show [n-1,n,n+1] → Card n (index 1) expanded
-                // Index last: show [n-2,n-1,empty] → Card last (index 1) expanded
+                // Index 3: show [2,3,empty] → Card 3 (index 1) expanded
               } else if (cards.length > 0) {
                 // For 1-2 cards, duplicate to make 3
                 visibleCards = [...cards]
@@ -463,7 +453,7 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
                         key={card.id}
                         className={`rounded-2xl relative overflow-hidden shadow-2xl transition-all duration-300 
                           ${isSelected
-                            ? 'w-full h-[200px] max-[375px]:h-[220px] max-[393px]:h-[220px] max-[414px]:h-[230px] max-[390px]:h-[230px] max-[430px]:h-[230px]'
+                            ? 'w-full h-[200px] max-[375px]:h-[220px] max-[393px]:h-[220px] max-[414px]:h-[240px] max-[390px]:h-[230px] max-[430px]:h-[250px]'
                             : 'w-full h-24 max-[375px]:h-24 max-[414px]:h-34 max-[390px]:h-33 max-[393px]:h-36 max-[430px]:h-48 scale-75 blur-[4px]'}`}
                         style={{
                           background: card.tier === 'empty' ? 'transparent' : (card.imageUrl ? `url(${card.imageUrl})` : '#f3f4f6'),
@@ -498,7 +488,7 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
                         {/* Profile Picture */}
                         {card.tier !== 'empty' && (
                           <div className={`absolute right-4 top-[60px] max-[375px]:right-7 max-[390px]:right-4 -translate-y-1/2 
-                          ${isSelected ? 'top-[100px] max-[375px]:top-[90px] max-[390px]:top-[90px] max-[414px]:top-[90px] max-[430px]:top-[90px]' : 'top-[60px] max-[375px]:top-[40px] max-[390px]:top-[40px] max-[414px]:top-[50px] max-[430px]:top-[60px]'}`}>
+                          ${isSelected ? 'top-[100px] max-[375px]:top-[80px] max-[390px]:top-[80px] max-[414px]:top-[90px] max-[430px]:top-[100px]' : 'top-[60px] max-[375px]:top-[40px] max-[390px]:top-[40px] max-[414px]:top-[50px] max-[430px]:top-[60px]'}`}>
                             <div className="
                             w-24 h-24 
                             w-[70px] h-[70px]
@@ -546,7 +536,7 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
                               {/* <div className="bg-blue-400 rounded-full px-2 py-1 sm:px-3 sm:py-1 flex items-center shadow-lg w-fit">
                                 <span className="text-white font-extrabold text-[10px] sm:text-xs" style={{ fontFamily: 'Roboto' }}>{values.birthday ? formatBirthday(values.birthday) : '13 SEP 1989'}</span>
                               </div> */}
-                              <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs w-fit" style={{ fontFamily: 'Roboto' }}>{values.phone ? values.phone.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '0877-9832-0931'}</div>
+                              <div className="text-blue-800 font-extrabold text-[14px] sm:text-xs w-fit" style={{ fontFamily: 'Roboto' }}>{values.phone ? '0' + values.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3') : '0877-9832-0931'}</div>
                               <div className="text-blue-800 font-extrabold text-[13px] w-fit">
                                 <div>{values.email || 'valeriebahagia@gmail.com'}</div>
                               </div>
@@ -554,7 +544,7 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
                           </div>
                         )}
                       </div>
-                      {/* {isSelected && <div className='pt-2 text-white text-center uppercase tracking-widest font-semibold' style={{ letterSpacing: '0.4em' }}>{card.name}</div>} */}
+                      {isSelected && <div className='pt-2 text-white text-center uppercase tracking-widest font-semibold' style={{ letterSpacing: '0.4em' }}>{card.name}</div>}
                     </div>
                     :
                     <div className='flex text-white text-center h-32 justify-center items-center'></div>
@@ -573,48 +563,46 @@ export function CardSelectionPage({ values, onNext, onBack }: Props) {
             </div>
           )} */}
 
-          {/* Navigation Arrows - Only show when not at boundaries */}
-          {currentCardIndex > 0 && (
-            <button
-              onClick={() => {
-                // console.log('=== PREV BUTTON CLICKED ===')
-                // console.log('Current index:', currentCardIndex)
-                // console.log('Disabled:', currentCardIndex <= 0)
-                prevCard()
-              }}
-              className="absolute top-16 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
-            >
-              <svg className="w-6 h-6 
-              max-[375px]:w-16 max-[375px]:h-16
-              max-[390px]:w-8 max-[390px]:h-8
-              max-[414px]:w-10 max-[414px]:h-10
-              max-[430px]:w-12 max-[430px]:h-12
-              text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 15l7-7 7 7" />
-              </svg>
-            </button>
-          )}
+          {/* Navigation Arrows - Horizontal */}
+          <button
+            onClick={() => {
+              // console.log('=== PREV BUTTON CLICKED ===')
+              // console.log('Current index:', currentCardIndex)
+              // console.log('Disabled:', currentCardIndex <= 0)
+              prevCard()
+            }}
+            className="absolute top-16 sm:top-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
+            disabled={currentCardIndex <= 0}
+          >
+            <svg className="w-6 h-6 
+            max-[375px]:w-16 max-[375px]:h-16
+            max-[390px]:w-8 max-[390px]:h-8
+            max-[414px]:w-10 max-[414px]:h-10
+            max-[430px]:w-12 max-[430px]:h-12
+            text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
 
-          {currentCardIndex < cards.length - 1 && (
-            <button
-              onClick={() => {
-                // console.log('=== NEXT BUTTON CLICKED ===')
-                // console.log('Current index:', currentCardIndex)
-                // console.log('Disabled:', currentCardIndex >= cards.length - 1)
-                nextCard()
-              }}
-              className="absolute bottom-16 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
-            >
-              <svg className="w-6 h-6 
-              max-[375px]:w-16 max-[375px]:h-16
-              max-[390px]:w-8 max-[390px]:h-8
-              max-[414px]:w-10 max-[414px]:h-10
-              max-[430px]:w-12 max-[430px]:h-12
-              text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-          )}
+          <button
+            onClick={() => {
+              // console.log('=== NEXT BUTTON CLICKED ===')
+              // console.log('Current index:', currentCardIndex)
+              // console.log('Disabled:', currentCardIndex >= cards.length - 1)
+              nextCard()
+            }}
+            className="absolute bottom-16 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all"
+            disabled={currentCardIndex >= cards.length - 1}
+          >
+            <svg className="w-6 h-6 
+            max-[375px]:w-16 max-[375px]:h-16
+            max-[390px]:w-8 max-[390px]:h-8
+            max-[414px]:w-10 max-[414px]:h-10
+            max-[430px]:w-12 max-[430px]:h-12
+            text-white font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </div>
       </div>
 
